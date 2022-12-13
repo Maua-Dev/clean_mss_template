@@ -7,4 +7,7 @@ class IUserRepository(ABC):
 
     @abstractmethod
     def get_user(self, idUser: int) -> User:
+        """
+        If user not found raise NoItemsFound
+        """
         pass
