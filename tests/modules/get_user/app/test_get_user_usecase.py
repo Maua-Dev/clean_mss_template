@@ -1,6 +1,6 @@
 import pytest
 
-from src.modules.get_user.get_user_usecase import GetUserUsecase
+from src.modules.get_user.app.get_user_usecase import GetUserUsecase
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 

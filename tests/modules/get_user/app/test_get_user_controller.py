@@ -1,5 +1,5 @@
-from src.modules.get_user.get_user_controller import GetUserController
-from src.modules.get_user.get_user_usecase import GetUserUsecase
+from src.modules.get_user.app.get_user_controller import GetUserController
+from src.modules.get_user.app.get_user_usecase import GetUserUsecase
 from src.shared.helpers.http.http_models import HttpRequest
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
