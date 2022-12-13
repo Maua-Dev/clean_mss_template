@@ -1,3 +1,4 @@
+from src.shared.domain.entities.user import User
 from src.shared.domain.enums.state_enum import STATE
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
@@ -18,3 +19,12 @@ class Test_UserRepositoryMock:
         repo = UserRepositoryMock()
         with pytest.raises(NoItemsFound):
             user = repo.get_user(69)
+
+    def test_create_user(self):
+        repo = UserRepositoryMock()
+        user = User(
+            name="Vitor Soller",
+            email="dohype@vitin.com",
+            idUser=4,
+            state=STATE.PENDING
+        )
