@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 /pytest_html_report.html
 /output.json
+/archive/
