@@ -4,7 +4,7 @@ Template for microservices repositories based in Clean Arch
 ## Installation
 Clone the repository using template
 
-### Create virtual ambiente in python
+### Create virtual ambient in python (only first time)
 ###### Windows
     python -m venv venv
 ###### Linux
