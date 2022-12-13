@@ -16,7 +16,7 @@ class Test_GetUserViewModel:
         expected = {'idUser': 1,
                     'name': 'Vitor Soller',
                     'email': 'vitinho@hype.com',
-                1    'state': 'APPROVED',
+                    'state': 'APPROVED',
                     'message': 'the user was retrieved successfully'}
 
         assert expected == userViewmodel
