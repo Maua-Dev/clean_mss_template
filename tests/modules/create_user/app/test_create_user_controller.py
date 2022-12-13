@@ -10,7 +10,7 @@ class Test_CreateUserControler:
         usecase = CreateUserUsecase(repo=repo)
         controller = CreateUserController(usecase=usecase)
 
-        request = HttpRequest(query_params={
+        request = HttpRequest(body={
             'name': 'Branco do Branco Branco da Silva',
             'email': 'branco@branco.com'
         })
@@ -29,7 +29,7 @@ class Test_CreateUserControler:
         usecase = CreateUserUsecase(repo=repo)
         controller = CreateUserController(usecase=usecase)
 
-        request = HttpRequest(query_params={
+        request = HttpRequest(body={
             'email': '21.01444-2@maua.br'})
 
         response = controller(request=request)
@@ -43,7 +43,7 @@ class Test_CreateUserControler:
         usecase = CreateUserUsecase(repo=repo)
         controller = CreateUserController(usecase=usecase)
 
-        request = HttpRequest(query_params={
+        request = HttpRequest(body={
             'name': 'Branco do Branco Branco da Silva'})
 
         response = controller(request=request)
@@ -56,7 +56,7 @@ class Test_CreateUserControler:
         usecase = CreateUserUsecase(repo=repo)
         controller = CreateUserController(usecase=usecase)
 
-        request = HttpRequest(query_params={
+        request = HttpRequest(body={
             'name': 'Branco do Branco Branco da Silva',
             'email': 'branco@branco'})
 
@@ -70,7 +70,7 @@ class Test_CreateUserControler:
         usecase = CreateUserUsecase(repo=repo)
         controller = CreateUserController(usecase=usecase)
 
-        request = HttpRequest(query_params={
+        request = HttpRequest(body={
             'name': 'B',
             'email': 'branco@branco.com'})
 

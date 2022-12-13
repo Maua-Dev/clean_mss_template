@@ -14,14 +14,14 @@ class CreateUserController:
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
         try:
-            if request.query_params.get('name') is None:
+            if request.body.get('name') is None:
                 raise MissingParameters('name')
-            if request.query_params.get('email') is None:
+            if request.body.get('email') is None:
                 raise MissingParameters('email')
 
             user = self.CreateUserUsecase(
-                name=request.query_params.get('name'),
-                email=request.query_params.get('email')
+                name=request.body.get('name'),
+                email=request.body.get('email')
             )
 
             viewmodel = CreateUserViewmodel(user)
