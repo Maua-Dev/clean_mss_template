@@ -18,3 +18,6 @@ Clone the repository using template
 
 ### Install the requirements
     pip install -r requirements-dev.txt
+
+### Run the tests
+    pytest
