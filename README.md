@@ -21,3 +21,6 @@ Clone the repository using template
 
 ### Run the tests
     pytest
+
+### To run local set .env file
+    STAGE = TEST
