@@ -17,6 +17,6 @@ class Test_CreateUserViewModel:
                     'name': 'Vitor Soller',
                     'email': 'vitinho@hype.com',
                     'state': 'APPROVED',
-                    'message': 'the user was retrieved successfully'}
+                    'message': 'the user was created successfully'}
 
         assert expected == userViewmodel
