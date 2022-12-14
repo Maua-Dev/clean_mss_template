@@ -130,4 +130,6 @@ dmypy.json
 /pytest_html_report.html
 /output.json
 /archive/
+
 /.ideia/
+/.vscode/
