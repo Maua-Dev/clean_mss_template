@@ -7,7 +7,6 @@ from src.shared.helpers.errors.usecase_errors import NoItemsFound
 
 
 class UserRepositoryMock(IUserRepository):
-
     users: List[User]
 
     def __init__(self):
@@ -34,5 +33,13 @@ class UserRepositoryMock(IUserRepository):
         for idx, user in enumerate(self.users):
             if user.idUser == idUser:
                 return self.users.pop(idx)
+
+        raise NoItemsFound("idUser")
+
+    def update_user(self, idUser: int, new_name: str) -> User:
+        for user in self.users:
+            if user.idUser == idUser:
+                user.name = new_name
+                return user
 
         raise NoItemsFound("idUser")

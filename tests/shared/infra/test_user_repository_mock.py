@@ -47,3 +47,15 @@ class Test_UserRepositoryMock:
         with pytest.raises(NoItemsFound):
             user = repo.delete_user(69)
 
+    def test_update_user(self):
+        repo = UserRepositoryMock()
+        user = repo.update_user(1, "Bruno Guirão")
+
+        assert user.name == "Bruno Guirão"
+        assert repo.users[0].name == "Bruno Guirão"
+
+    def test_update_user_not_found(self):
+        repo = UserRepositoryMock()
+        with pytest.raises(NoItemsFound):
+            user = repo.update_user(69, "Bruno Guirão")
+

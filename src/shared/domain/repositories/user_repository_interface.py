@@ -27,3 +27,11 @@ class IUserRepository(ABC):
         If user not found raise NoItemsFound
         """
         pass
+
+    @abstractmethod
+    def update_user(self, idUser: int, new_name: str) -> User:
+        """
+        If user not found raise NoItemsFound
+        """
+        pass
+
