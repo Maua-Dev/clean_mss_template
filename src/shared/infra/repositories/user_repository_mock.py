@@ -29,3 +29,10 @@ class UserRepositoryMock(IUserRepository):
     def create_user(self, new_user: User) -> User:
         self.users.append(new_user)
         return new_user
+
+    def delete_user(self, idUser: int) -> User:
+        for idx, user in enumerate(self.users):
+            if user.idUser == idUser:
+                return self.users.pop(idx)
+
+        raise NoItemsFound("idUser")
