@@ -47,7 +47,7 @@ class Test_DeleteUserController:
             assert response.status_code == 400
             assert response.body == 'Field idUser is missing'
 
-    def test_delete_user_controller_entity_error(self):
+    def test_delete_user_controller_invalid_idUser(self):
             repo = UserRepositoryMock()
             usecase = DeleteUserUsecase(repo=repo)
             controller = DeleteUserController(usecase=usecase)
@@ -59,7 +59,7 @@ class Test_DeleteUserController:
             response = controller(request=request)
 
             assert response.status_code == 400
-            assert response.body == 'Field idUser is not valid'
+            assert response.body == "Field idUser isn't in the right type.\n Received: int.\n Expected: str"
 
     def test_delete_user_controller_no_items_found(self):
             repo = UserRepositoryMock()

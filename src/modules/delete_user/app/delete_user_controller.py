@@ -17,8 +17,11 @@ class DeleteUserController:
                 raise MissingParameters('idUser')
 
             if type(request.body.get('idUser')) != str:
-                raise EntityError("idUser")
-
+                raise WrongTypeParameter(
+                    fieldName="idUser",
+                    fieldTypeExpected="str",
+                    fieldTypeReceived=request.body.get('idUser').__class__.__name__
+                )
             if not request.body.get('idUser').isdecimal():
                 raise EntityError("idUser")
 
