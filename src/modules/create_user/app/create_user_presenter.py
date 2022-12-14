@@ -1,5 +1,5 @@
-from src.modules.create_user.app.create_user_controller import CreateUserController
-from src.modules.create_user.app.create_user_usecase import CreateUserUsecase
+from .create_user_controller import CreateUserController
+from .create_user_usecase import CreateUserUsecase
 from src.shared.environments import Environments
 from src.shared.helpers.http.http_lambda_requests import LambdaHttpRequest, LambdaHttpResponse
 
