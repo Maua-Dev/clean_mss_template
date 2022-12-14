@@ -20,6 +20,11 @@ class Test_UserRepositoryMock:
         with pytest.raises(NoItemsFound):
             user = repo.get_user(69)
 
+    def test_get_all_user(self):
+        repo = UserRepositoryMock()
+        users = repo.get_all_user()
+        assert len(users) == 3
+
     def test_create_user(self):
         repo = UserRepositoryMock()
         user = User(
@@ -28,3 +33,17 @@ class Test_UserRepositoryMock:
             idUser=4,
             state=STATE.PENDING
         )
+
+    def test_delete_user(self):
+        repo = UserRepositoryMock()
+        user = repo.delete_user(1)
+        assert user.name == "Bruno Soller"
+        assert user.email == "brancas@brancas.com"
+        assert user.idUser == 1
+        assert user.state == STATE.REJECTED
+
+    def test_delete_user_not_found(self):
+        repo = UserRepositoryMock()
+        with pytest.raises(NoItemsFound):
+            user = repo.delete_user(69)
+
