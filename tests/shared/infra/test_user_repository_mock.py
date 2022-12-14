@@ -38,9 +38,9 @@ class Test_UserRepositoryMock:
         repo = UserRepositoryMock()
         user = repo.delete_user(1)
         assert user.name == "Bruno Soller"
-        assert user.email == "brancas@brancas.com"
+        assert user.email == "soller@soller.com"
         assert user.idUser == 1
-        assert user.state == STATE.REJECTED
+        assert user.state == STATE.APPROVED
 
     def test_delete_user_not_found(self):
         repo = UserRepositoryMock()
