@@ -111,6 +111,11 @@ Our folder structure was developed specially for our projects.
 - "test" follow by class name (ex: `test_cadastrar_usuario_valido`, `test_cadastrar_usuario_sem_email`)
     - The files must start with "test" to pytest recognition
 
+### Commit 💢
+
+- Start with verb
+- Ends with emoji 😎
+
 ## Installation 👩‍💻
 
 Clone the repository using template
