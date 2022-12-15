@@ -108,7 +108,7 @@ Our folder structure was developed specially for our projects.
 ### Enums
 
 - SNAKE_CASE 🐍
-- Ends with "ENUM" (ex: "STATE_ENUM")
+- File name ends with "ENUM" (ex: "STATE_ENUM")
 
 ### Tests 📄
 
