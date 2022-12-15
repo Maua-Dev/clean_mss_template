@@ -21,7 +21,7 @@ class CreateUserUsecase:
         user = User(
             name=name,
             email=email,
-            idUser=len(self.repo.get_all_user()) + 1,
+            idUser=self.repo.get_user_counter(),
             state=STATE.PENDING
         )
 

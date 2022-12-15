@@ -34,6 +34,15 @@ class Test_UserRepositoryMock:
             state=STATE.PENDING
         )
 
+        repo.create_user(user)
+
+        assert repo.users[3].name == "Vitor Soller"
+        assert repo.users[3].email == "dohype@vitin.com"
+        assert repo.users[3].idUser == 4
+        assert repo.users[3].state == STATE.PENDING
+
+        assert repo.user_counter == 4
+
     def test_delete_user(self):
         repo = UserRepositoryMock()
         user = repo.delete_user(1)
@@ -58,4 +67,9 @@ class Test_UserRepositoryMock:
         repo = UserRepositoryMock()
         with pytest.raises(NoItemsFound):
             user = repo.update_user(69, "Bruno Guirão")
+
+    def test_get_users_counter(self):
+        repo = UserRepositoryMock()
+
+        assert repo.get_user_counter() == 3
 
