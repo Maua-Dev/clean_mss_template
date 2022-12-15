@@ -17,7 +17,10 @@ class HttpRequest(IRequest):
         self.query_params = query_params
 
         data_dict = {}
-        data_dict.update(body)
+        if type(body) is dict:
+            data_dict.update(body)
+        if type(body) is str:
+            data_dict.update({"body": body})
         data_dict.update(headers)
         data_dict.update(query_params)
         self.data = data_dict
@@ -49,7 +52,11 @@ class HttpResponse(IResponse):
         self.headers = headers
 
         data_dict = {}
-        data_dict.update(body)
+        if type(body) is dict:
+            data_dict.update(body)
+        if type(body) is str:
+            data_dict.update({"body": body})
+
         data_dict.update(headers)
         self.data = data_dict
 
@@ -63,7 +70,7 @@ class HttpResponse(IResponse):
 
     @property
     def status_code(self) -> dict:
-        return self._data
+        return self._status_code
 
     @status_code.setter
     def status_code(self, value: dict):
@@ -73,7 +80,3 @@ class HttpResponse(IResponse):
         return (
             f"HttpResponse (status_code={self.status_code}, body={self.body}, headers={self.headers})"
         )
-
-
-if __name__ == '__main__':
-    ht = HttpRequest(body={'a': 1}, query_params={'c': 3})

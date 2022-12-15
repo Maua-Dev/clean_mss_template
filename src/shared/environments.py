@@ -24,8 +24,8 @@ class Environments:
 
     def _configure_local(self):
         from dotenv import load_dotenv
-        os.environ["STAGE"] = STAGE.DOTENV.value
         load_dotenv()
+        os.environ["STAGE"] = os.environ.get("STAGE") or STAGE.DOTENV.value
 
     def load_envs(self):
         if "STAGE" not in os.environ or os.environ["STAGE"] == STAGE.DOTENV.value:
@@ -48,9 +48,8 @@ class Environments:
         # elif Environments.get_envs().stage == STAGE.PROD:
         #     from src.shared.infra.repositories.user_repository_dynamo import UserRepositoryDynamo
         #     return UserRepositoryDynamo
-        # else:
-        #     from src.shared.infra.repositories.user_repository_dynamo import UserRepositoryDynamo
-        #     return UserRepositoryDynamo
+        else:
+            raise Exception("No repository found for this stage")
 
     @staticmethod
     def get_envs() -> "Environments":
