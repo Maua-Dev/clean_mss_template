@@ -1,6 +1,6 @@
 from src.modules.create_user.app.create_user_controller import CreateUserController
 from src.modules.create_user.app.create_user_usecase import CreateUserUsecase
-from src.shared.helpers.http.http_models import HttpRequest
+from src.shared.helpers.external_interfaces.http_models import HttpRequest
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
 

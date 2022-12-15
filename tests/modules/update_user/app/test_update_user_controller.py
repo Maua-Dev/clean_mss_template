@@ -1,6 +1,6 @@
 from src.modules.update_user.app.update_user_controller import UpdateUserController
 from src.modules.update_user.app.update_user_usecase import UpdateUserUsecase
-from src.shared.helpers.http.http_models import HttpRequest
+from src.shared.helpers.external_interfaces.http_models import HttpRequest
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
 

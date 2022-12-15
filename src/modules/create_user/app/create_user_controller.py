@@ -1,10 +1,10 @@
+from src.shared.helpers.external_interfaces.external_interface import IResponse, IRequest
 from .create_user_usecase import CreateUserUsecase
 from .create_user_viewmodel import CreateUserViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
-from src.shared.helpers.http.http_models import HttpRequest, HttpResponse, NotFound, BadRequest, InternalServerError, \
-    Created
+from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError, Created
 
 
 class CreateUserController:
@@ -12,16 +12,16 @@ class CreateUserController:
     def __init__(self, usecase: CreateUserUsecase):
         self.CreateUserUsecase = usecase
 
-    def __call__(self, request: HttpRequest) -> HttpResponse:
+    def __call__(self, request: IRequest) -> IResponse:
         try:
-            if request.body.get('name') is None:
+            if request.data.get('name') is None:
                 raise MissingParameters('name')
-            if request.body.get('email') is None:
+            if request.data.get('email') is None:
                 raise MissingParameters('email')
 
             user = self.CreateUserUsecase(
-                name=request.body.get('name'),
-                email=request.body.get('email')
+                name=request.data.get('name'),
+                email=request.data.get('email')
             )
 
             viewmodel = CreateUserViewmodel(user)
