@@ -1,10 +1,9 @@
-
+from src.shared.helpers.external_interfaces.external_interface import IResponse, IRequest
 from .update_user_usecase import UpdateUserUsecase
 from .update_user_viewmodel import UpdateUserViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
-from src.shared.helpers.external_interfaces.http_models import HttpRequest, HttpResponse
 from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError
 
 
@@ -13,7 +12,7 @@ class UpdateUserController:
     def __init__(self, usecase: UpdateUserUsecase):
         self.UpdateUserUsecase = usecase
 
-    def __call__(self, request: HttpRequest) -> HttpResponse:
+    def __call__(self, request: IRequest) -> IResponse:
         try:
             if request.data.get('idUser') is None:
                 raise MissingParameters('idUser')
