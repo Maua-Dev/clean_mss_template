@@ -105,6 +105,11 @@ Our folder structure was developed specially for our projects.
 - snake_case 🐍
 - Avoid verbs
 
+### Enums
+
+- SNAKE_CASE 🐍
+- Ends with "ENUM" (ex: "STATE_ENUM")
+
 ### Tests 📄
 
 - snake_case 🐍
