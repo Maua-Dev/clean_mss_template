@@ -35,3 +35,9 @@ class IUserRepository(ABC):
         """
         pass
 
+    @abstractmethod
+    def get_user_counter(self) -> int:
+        """
+        Returns the number of all users that have ever been created
+        """
+        pass
