@@ -1,6 +1,6 @@
 import json
 
-from src.shared.helpers.http.http_models import HttpRequest, HttpResponse
+from src.shared.helpers.external_interfaces.http_models import HttpRequest, HttpResponse
 
 
 class LambdaHttpResponse(HttpResponse):
@@ -118,7 +118,7 @@ class LambdaHttpRequest(HttpRequest):
         self.raw_query_string = data.get("rawQueryString")
         self.query_string_parameters = data.get("queryStringParameters")
         self.request_context = data.get("requestContext")
-        self.http = LambdaDefaultHTTP(self.request_context.get("http") if self.request_context else None)
+        self.http = LambdaDefaultHTTP(self.request_context.get("external_interfaces") if self.request_context else None)
 
 class HttpResponseRedirect(HttpResponse):
 
