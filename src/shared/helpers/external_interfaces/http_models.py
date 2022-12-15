@@ -1,4 +1,5 @@
 from typing import Any
+from warnings import warn
 
 from src.shared.helpers.enum.http_status_code_enum import HttpStatusCodeEnum
 from src.shared.helpers.external_interfaces.external_interface import IRequest, IResponse
@@ -15,12 +16,23 @@ class HttpRequest(IRequest):
         self.body = body
         self.headers = headers
         self.query_params = query_params
-
         data_dict = {}
+
+        # check overlapping keys
         if type(body) is dict:
             data_dict.update(body)
+            if [key for key in self.body.keys() if key in self.query_params.keys()] or [key for key in self.body.keys()
+                                                                                        if key in self.headers.keys()]:
+                warn(
+                    f"body, query_params and/or headers have overlapping keys → {[key for key in self.body.keys() if key in self.query_params.keys()] or [key for key in self.body.keys() if key in self.headers.keys()]}")
+        else:
+            if [key for key in self.query_params.keys() if key in self.headers.keys()]:
+                warn(
+                    f"query_params and headers have overlapping keys → {[key for key in self.query_params.keys() if key in self.headers.keys()]}")
+
         if type(body) is str:
             data_dict.update({"body": body})
+
         data_dict.update(headers)
         data_dict.update(query_params)
         self.data = data_dict
@@ -35,7 +47,7 @@ class HttpRequest(IRequest):
 
     def __repr__(self):
         return (
-            f"HttpRequest (body={self.body}, headers={self.headers}, query_params={self.query_params})"
+            f"HttpRequest (body={self.body}, headers={self.headers}, query_params={self.query_params}, data={self.data})"
         )
 
 
@@ -80,3 +92,15 @@ class HttpResponse(IResponse):
         return (
             f"HttpResponse (status_code={self.status_code}, body={self.body}, headers={self.headers})"
         )
+
+
+if __name__ == '__main__':
+    # test
+    body = {"body": "body"}
+    headers = {"headers": "headers", "body": "body"}
+    query_params = {"query_params": "query_params"}
+    data = {"data": "data"}
+    request = HttpRequest(body, headers, query_params)
+    response = HttpResponse(200, body, headers)
+    print(request)
+    print(response)
