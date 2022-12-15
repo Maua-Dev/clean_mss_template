@@ -2,42 +2,6 @@
 
 Template for microservices repositories based in Clean Arch
 
-## Installation 👩‍💻
-
-Clone the repository using template
-
-### Create virtual ambient in python (only first time)
-
-###### Windows
-
-    python -m venv venv
-
-###### Linux
-
-    virtualenv -p python3.9 venv
-
-### Activate the venv
-
-###### Windows:
-
-    venv\Scripts\activate
-
-###### Linux:
-
-    source venv/bin/activate
-
-### Install the requirements
-
-    pip install -r requirements-dev.txt
-
-### Run the tests
-
-    pytest
-
-### To run local set .env file
-
-    STAGE = TEST
-
 ## The Project 📽
 
 ### Introduction and Objectives ⁉
@@ -115,44 +79,81 @@ Our folder structure was developed specially for our projects.
 ### Files and Directories 📁
 
 - Files have the same name as the classes
-- snake_case (ex: `./app/create_user_controller.py`)
+- snake_case 🐍 (ex: `./app/create_user_controller.py`)
 
 ### Classes 🕴
-#### Pattern 📟
+- #### Pattern 📟
 
-- CamelCase
+    - CamelCase 🐫🐪
 
-#### Types 🧭
+- #### Types 🧭
 
-- **Interface** starts with "I" --> `IUserRepository`, `ISelfieRepository` 😀
-- **Repository** have the same name as interface, without the "I" and the type in final (ex: `UserRepositoryMock`, `SelfieRepositoryDynamo`) 🥬
-- **Controller** ends with "Controller" --> `CreateUserController`, `GetSelfieController` 🎮
-- **Usecase** ends with "Usecase" --> `CreateUserUsecase`, `GetSelfieUsecase` 🏠
-- **Viewmodel** ends with "Viewmodel" --> `CreateUserViewmodel`, `GetSelfieViewmodel` 👀
-- **Presenter** ends with "Presenter" --> `CreateUserPresenter`, `GetSelfiePresenter`🎁
+    - **Interface** starts with "I" --> `IUserRepository`, `ISelfieRepository` 😀
+    - **Repository** have the same name as interface, without the "I" and the type in final (ex: `UserRepositoryMock`, `SelfieRepositoryDynamo`) 🥬
+    - **Controller** ends with "Controller" --> `CreateUserController`, `GetSelfieController` 🎮
+    - **Usecase** ends with "Usecase" --> `CreateUserUsecase`, `GetSelfieUsecase` 🏠
+    - **Viewmodel** ends with "Viewmodel" --> `CreateUserViewmodel`, `GetSelfieViewmodel` 👀
+    - **Presenter** ends with "Presenter" --> `CreateUserPresenter`, `GetSelfiePresenter`🎁
 
 ### Methods 👨‍🏫
 
-- snake_case
+- snake_case 🐍
 - Try associate with a verb (ex: `create_user`, `get_user`, `update_selfie`)
 
 ### Variables 🅰
 
-- snake_case
+- snake_case 🐍
 - Avoid verbs
 
 ### Tests 📄
 
-- snake_case
+- snake_case 🐍
 - "test" follow by class name (ex: `test_cadastrar_usuario_valido`, `test_cadastrar_usuario_sem_email`)
     - The files must start with "test" to pytest recognition
 
+## Installation 👩‍💻
+
+Clone the repository using template
+
+### Create virtual ambient in python (only first time)
+
+###### Windows
+
+    python -m venv venv
+
+###### Linux
+
+    virtualenv -p python3.9 venv
+
+### Activate the venv
+
+###### Windows:
+
+    venv\Scripts\activate
+
+###### Linux:
+
+    source venv/bin/activate
+
+### Install the requirements
+
+    pip install -r requirements-dev.txt
+
+### Run the tests
+
+    pytest
+
+### To run local set .env file
+
+    STAGE = TEST
+
+
 ## Contributors 💰🤝💰
 
-- Bruno Vilardi - [Brvilardi](https://github.com/Brvilardi)
-- Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini)
-- João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco)
-- Vitor Soller - [VgsStudio](https://github.com/VgsStudio)
+- Bruno Vilardi - [Brvilardi](https://github.com/Brvilardi) 👷‍♂️
+- Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini) 🧙‍♂️
+- João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco) 😎
+- Vitor Soller - [VgsStudio](https://github.com/VgsStudio) 🐱‍💻
 
 ## Especial Thanks 🙏
 
