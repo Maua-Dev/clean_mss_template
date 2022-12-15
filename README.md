@@ -50,7 +50,7 @@ mixed by the students of Mauá Institute of Technology, from the academic group 
 
 The project aims to help developers to start new projects with a good architecture, and with a good structure, so that anybody can create good applications.
 
-### Clean Architecture´🧼🏰
+### Clean Architecture 🧼🏰
 
 The purpose of the project is to learn and create a Clean Architecture for microservices stateless with AWS Lambda which is a way of structuring
 the code in layers, each of which has a
