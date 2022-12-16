@@ -17,7 +17,7 @@ class Test_UserRepositoryDynamo:
 
         assert True
 
-    # @pytest.mark.skip(reason="Needs dynamoDB")
+    @pytest.mark.skip(reason="Needs dynamoDB")
     def test_get_user(self):
         os.environ["STAGE"] = "TEST"
 
@@ -26,4 +26,15 @@ class Test_UserRepositoryDynamo:
         resp = user_repository.get_user(1)
 
         assert user_repository_mock.users[0].name == resp.name
+        assert True
+
+    @pytest.mark.skip(reason="Needs dynamoDB")
+    def test_delete_user(self):
+        os.environ["STAGE"] = "TEST"
+
+        user_repository = UserRepositoryDynamo()
+        user_repository_mock = UserRepositoryMock()
+        resp = user_repository.delete_user(3)
+
+        assert user_repository_mock.users[2].name == resp.name
         assert True

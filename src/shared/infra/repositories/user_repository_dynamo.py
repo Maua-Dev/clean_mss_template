@@ -4,6 +4,7 @@ from typing import List
 from src.shared.domain.entities.user import User
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
 from src.shared.environments import Environments
+from src.shared.helpers.errors.usecase_errors import NoItemsFound
 from src.shared.infra.dto.user_dynamo_dto import UserDynamoDto
 from src.shared.infra.external.dynamo.datasources.dynamo_datasource import DynamoDatasource
 
@@ -41,7 +42,12 @@ class UserRepositoryDynamo(IUserRepository):
         return new_user
 
     def delete_user(self, idUser: int) -> User:
-        pass
+        resp = self.dynamo.delete_item(partition_key=self.partition_key_format(idUser), sort_key=self.sort_key_format(idUser))
+
+        if "Attributes" not in resp:
+            raise NoItemsFound("idUser")
+
+        return UserDynamoDto.from_dynamo(resp['Attributes']).to_entity()
 
     def update_user(self, idUser: int, new_name: str) -> User:
         pass
