@@ -40,6 +40,19 @@ class UserDynamoDto:
             "state": self.state.value
         }
 
+    @staticmethod
+    def from_dynamo(user_data: dict) -> "UserDynamoDto":
+        """
+        Parse data from DynamoDB to UserDynamoDTO
+        @param user_data: dict from DynamoDB
+        """
+        return UserDynamoDto(
+            name=user_data["name"],
+            email=user_data["email"],
+            idUser=int(user_data["idUser"]),
+            state=STATE(user_data["state"])
+        )
+
     def __repr__(self):
         return f"UserDynamoDto(name={self.name}, email={self.email}, idUser={self.idUser}, state={self.state})"
 
