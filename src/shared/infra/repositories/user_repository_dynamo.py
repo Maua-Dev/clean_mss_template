@@ -27,6 +27,10 @@ class UserRepositoryDynamo(IUserRepository):
                                        sort_key=Environments.get_envs().dynamo_sort_key)
     def get_user(self, idUser: int) -> User:
         resp = self.dynamo.get_item(partition_key=self.partition_key_format(idUser), sort_key=self.sort_key_format(idUser))
+
+        if resp.get('Item') is None:
+            raise NoItemsFound("idUser")
+
         user_dto = UserDynamoDto.from_dynamo(resp["Item"])
         return user_dto.to_entity()
 
@@ -57,7 +61,19 @@ class UserRepositoryDynamo(IUserRepository):
         return UserDynamoDto.from_dynamo(resp['Attributes']).to_entity()
 
     def update_user(self, idUser: int, new_name: str) -> User:
-        pass
+
+        user = self.get_user(idUser=idUser)
+
+        item_to_update = {}
+
+        if new_name:
+            item_to_update['name'] = new_name
+        else:
+            raise NoItemsFound("Nothing to update")
+
+        resp = self.dynamo.update_item(partition_key=self.partition_key_format(idUser), sort_key=self.sort_key_format(idUser), update_dict=item_to_update)
+
+        return UserDynamoDto.from_dynamo(resp['Attributes']).to_entity()
 
     def get_user_counter(self) -> int:
 

@@ -46,3 +46,13 @@ class Test_UserRepositoryDynamo:
         resp = user_repository.get_all_user()
 
         assert len(user_repository_mock.users) == len(resp)
+
+    # @pytest.mark.skip(reason="Needs dynamoDB")
+    def test_update_user(self):
+        os.environ["STAGE"] = "TEST"
+
+        user_repository = UserRepositoryDynamo()
+        user_repository_mock = UserRepositoryMock()
+        resp = user_repository.update_user(idUser=1, new_name="Vitor Soller Soller")
+
+        assert resp.name == "Vitor Soller Soller"
