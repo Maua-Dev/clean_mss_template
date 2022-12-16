@@ -53,6 +53,17 @@ class UserDynamoDto:
             state=STATE(user_data["state"])
         )
 
+    def to_entity(self) -> User:
+        """
+        Parse data from UserDynamoDTO to User
+        """
+        return User(
+            name=self.name,
+            email=self.email,
+            idUser=self.idUser,
+            state=self.state
+        )
+
     def __repr__(self):
         return f"UserDynamoDto(name={self.name}, email={self.email}, idUser={self.idUser}, state={self.state})"
 

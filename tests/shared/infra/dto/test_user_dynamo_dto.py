@@ -70,3 +70,17 @@ class Test_UserDynamoDto:
         )
 
         assert user_dto == expected_user_dto
+
+    def test_to_entity(self):
+        repo = UserRepositoryMock()
+
+        user_dto = UserDynamoDto(
+            name=repo.users[0].name,
+            email=repo.users[0].email,
+            idUser=repo.users[0].idUser,
+            state=repo.users[0].state
+        )
+
+        user = user_dto.to_entity()
+
+        assert user.__repr__() == repo.users[0].__repr__()
