@@ -25,7 +25,9 @@ class UserRepositoryDynamo(IUserRepository):
                                        partition_key=Environments.get_envs().dynamo_partition_key,
                                        sort_key=Environments.get_envs().dynamo_sort_key)
     def get_user(self, idUser: int) -> User:
-        pass
+        resp = self.dynamo.get_item(partition_key=self.partition_key_format(idUser), sort_key=self.sort_key_format(idUser))
+        user_dto = UserDynamoDto.from_dynamo(resp["Item"])
+        return user_dto.to_entity()
 
     def get_all_user(self) -> List[User]:
         pass
