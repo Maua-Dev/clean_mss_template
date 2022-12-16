@@ -47,7 +47,7 @@ class Test_UserRepositoryDynamo:
 
         assert len(user_repository_mock.users) == len(resp)
 
-    # @pytest.mark.skip(reason="Needs dynamoDB")
+    @pytest.mark.skip(reason="Needs dynamoDB")
     def test_update_user(self):
         os.environ["STAGE"] = "TEST"
 
