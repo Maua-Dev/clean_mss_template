@@ -31,7 +31,14 @@ class UserRepositoryDynamo(IUserRepository):
         return user_dto.to_entity()
 
     def get_all_user(self) -> List[User]:
-        pass
+        resp = self.dynamo.get_all_items()
+        users = []
+        for item in resp['Items']:
+            if item.get("entity") == 'user':
+                users.append(UserDynamoDto.from_dynamo(item).to_entity())
+
+        return users
+
 
     def create_user(self, new_user: User) -> User:
         new_user.idUser = self.get_user_counter()
