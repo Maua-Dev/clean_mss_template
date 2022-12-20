@@ -12,7 +12,7 @@ class Test_UserRepositoryMock:
 
         assert user.name == "Bruno Soller"
         assert user.email == "soller@soller.com"
-        assert user.idUser == 1
+        assert user.user_id == 1
         assert user.state == STATE.APPROVED
 
     def test_get_user_not_found(self):
@@ -30,7 +30,7 @@ class Test_UserRepositoryMock:
         user = User(
             name="Vitor Soller",
             email="dohype@vitin.com",
-            idUser=4,
+            user_id=4,
             state=STATE.PENDING
         )
 
@@ -38,7 +38,7 @@ class Test_UserRepositoryMock:
 
         assert repo.users[3].name == "Vitor Soller"
         assert repo.users[3].email == "dohype@vitin.com"
-        assert repo.users[3].idUser == 4
+        assert repo.users[3].user_id == 4
         assert repo.users[3].state == STATE.PENDING
 
         assert repo.user_counter == 4
@@ -48,7 +48,7 @@ class Test_UserRepositoryMock:
         user = repo.delete_user(1)
         assert user.name == "Bruno Soller"
         assert user.email == "soller@soller.com"
-        assert user.idUser == 1
+        assert user.user_id == 1
         assert user.state == STATE.APPROVED
 
     def test_delete_user_not_found(self):

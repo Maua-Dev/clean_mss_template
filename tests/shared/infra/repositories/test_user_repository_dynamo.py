@@ -53,6 +53,6 @@ class Test_UserRepositoryDynamo:
 
         user_repository = UserRepositoryDynamo()
         user_repository_mock = UserRepositoryMock()
-        resp = user_repository.update_user(idUser=1, new_name="Vitor Soller Soller")
+        resp = user_repository.update_user(user_id=1, new_name="Vitor Soller Soller")
 
         assert resp.name == "Vitor Soller Soller"

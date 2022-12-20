@@ -14,21 +14,21 @@ class GetUserController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
-            if request.data.get('idUser') is None:
-                raise MissingParameters('idUser')
+            if request.data.get('user_id') is None:
+                raise MissingParameters('user_id')
 
-            if type(request.data.get('idUser')) != str:
+            if type(request.data.get('user_id')) != str:
                 raise WrongTypeParameter(
-                    fieldName="idUser",
+                    fieldName="user_id",
                     fieldTypeExpected="str",
-                    fieldTypeReceived=request.data.get('idUser').__class__.__name__
+                    fieldTypeReceived=request.data.get('user_id').__class__.__name__
                 )
 
-            if not request.data.get('idUser').isdecimal():
-                raise EntityError("idUser")
+            if not request.data.get('user_id').isdecimal():
+                raise EntityError("user_id")
 
             user = self.GetUserUsecase(
-                idUser=int(request.data.get('idUser'))
+                user_id=int(request.data.get('user_id'))
             )
 
             viewmodel = GetUserViewmodel(user)

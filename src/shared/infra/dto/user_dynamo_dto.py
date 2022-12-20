@@ -8,12 +8,12 @@ class UserDynamoDTO:
     name: str
     email: str
     state: STATE
-    idUser: int
+    user_id: int
 
-    def __init__(self, name: str, email: str, state: STATE, idUser: int):
+    def __init__(self, name: str, email: str, state: STATE, user_id: int):
         self.name = name
         self.email = email
-        self.idUser = idUser
+        self.user_id = user_id
         self.state = state
 
     @staticmethod
@@ -24,7 +24,7 @@ class UserDynamoDTO:
         return UserDynamoDTO(
             name=user.name,
             email=user.email,
-            idUser=user.idUser,
+            user_id=user.user_id,
             state=user.state
         )
 
@@ -36,7 +36,7 @@ class UserDynamoDTO:
             "entity": "user",
             "name": self.name,
             "email": self.email,
-            "idUser": Decimal(self.idUser),
+            "user_id": Decimal(self.user_id),
             "state": self.state.value
         }
 
@@ -49,7 +49,7 @@ class UserDynamoDTO:
         return UserDynamoDTO(
             name=user_data["name"],
             email=user_data["email"],
-            idUser=int(user_data["idUser"]),
+            user_id=int(user_data["user_id"]),
             state=STATE(user_data["state"])
         )
 
@@ -60,12 +60,12 @@ class UserDynamoDTO:
         return User(
             name=self.name,
             email=self.email,
-            idUser=self.idUser,
+            user_id=self.user_id,
             state=self.state
         )
 
     def __repr__(self):
-        return f"UserDynamoDto(name={self.name}, email={self.email}, idUser={self.idUser}, state={self.state})"
+        return f"UserDynamoDto(name={self.name}, email={self.email}, user_id={self.user_id}, state={self.state})"
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__

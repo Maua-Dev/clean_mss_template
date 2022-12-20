@@ -5,12 +5,12 @@ from src.shared.domain.enums.state_enum import STATE
 
 class Test_UpadateUserViewmodel:
     def test_update_user_viewmodel(self):
-        user = User(idUser=1, name="Test", email="teste@test.com", state=STATE.APPROVED)
+        user = User(user_id=1, name="Test", email="teste@test.com", state=STATE.APPROVED)
 
         updated_useer_viewmodel = UpdateUserViewmodel(user)
 
         expected = {
-            'idUser': 1,
+            'user_id': 1,
             'name': "Test",
             'email': "teste@test.com",
             'state': "APPROVED",

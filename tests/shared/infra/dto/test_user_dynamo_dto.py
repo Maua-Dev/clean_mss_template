@@ -15,7 +15,7 @@ class Test_UserDynamoDto:
         expected_selfie_dto = UserDynamoDTO(
             name=repo.users[0].name,
             email=repo.users[0].email,
-            idUser=repo.users[0].idUser,
+            user_id=repo.users[0].user_id,
             state=repo.users[0].state
         )
 
@@ -27,7 +27,7 @@ class Test_UserDynamoDto:
         user_dto = UserDynamoDTO(
             name=repo.users[0].name,
             email=repo.users[0].email,
-            idUser=repo.users[0].idUser,
+            user_id=repo.users[0].user_id,
             state=repo.users[0].state
         )
 
@@ -37,14 +37,14 @@ class Test_UserDynamoDto:
             "entity": "user",
             "name": repo.users[0].name,
             "email": repo.users[0].email,
-            "idUser": repo.users[0].idUser,
+            "user_id": repo.users[0].user_id,
             "state": repo.users[0].state.value
         }
 
         assert user_dto.to_dynamo() == expected_dict
 
     def test_from_dynamo(self):
-        dynamo_dict = {'Item': {'idUser': Decimal('1'),
+        dynamo_dict = {'Item': {'user_id': Decimal('1'),
                                 'name': 'Bruno Soller',
                                 'SK': '#1',
                                 'state': 'APPROVED',
@@ -66,7 +66,7 @@ class Test_UserDynamoDto:
         expected_user_dto = UserDynamoDTO(
             name="Bruno Soller",
             email='soller@soller.com',
-            idUser=1,
+            user_id=1,
             state=STATE.APPROVED
         )
 
@@ -78,7 +78,7 @@ class Test_UserDynamoDto:
         user_dto = UserDynamoDTO(
             name=repo.users[0].name,
             email=repo.users[0].email,
-            idUser=repo.users[0].idUser,
+            user_id=repo.users[0].user_id,
             state=repo.users[0].state
         )
 
@@ -86,11 +86,11 @@ class Test_UserDynamoDto:
 
         assert user.name == repo.users[0].name
         assert user.email == repo.users[0].email
-        assert user.idUser == repo.users[0].idUser
+        assert user.user_id == repo.users[0].user_id
         assert user.state == repo.users[0].state
 
     def test_from_dynamo_to_entity(self):
-        dynamo_item = {'Item': {'idUser': Decimal('1'),
+        dynamo_item = {'Item': {'user_id': Decimal('1'),
                                 'name': 'Bruno Soller',
                                 'SK': '#1',
                                 'state': 'APPROVED',
@@ -105,13 +105,13 @@ class Test_UserDynamoDto:
         expected_user = User(
             name="Bruno Soller",
             email="soller@soller.com",
-            idUser=1,
+            user_id=1,
             state=STATE.APPROVED
         )
 
         assert user.name == expected_user.name
         assert user.email == expected_user.email
-        assert user.idUser == expected_user.idUser
+        assert user.user_id == expected_user.user_id
         assert user.state == expected_user.state
 
     def test_from_entity_to_dynamo(self):
@@ -125,7 +125,7 @@ class Test_UserDynamoDto:
             "entity": "user",
             "name": repo.users[0].name,
             "email": repo.users[0].email,
-            "idUser": repo.users[0].idUser,
+            "user_id": repo.users[0].user_id,
             "state": repo.users[0].state.value
         }
 
