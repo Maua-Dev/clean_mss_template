@@ -84,7 +84,10 @@ class Test_UserDynamoDto:
 
         user = user_dto.to_entity()
 
-        assert user.__repr__() == repo.users[0].__repr__()
+        assert user.name == repo.users[0].name
+        assert user.email == repo.users[0].email
+        assert user.idUser == repo.users[0].idUser
+        assert user.state == repo.users[0].state
 
     def test_from_dynamo_to_entity(self):
         dynamo_item = {'Item': {'idUser': Decimal('1'),
@@ -106,7 +109,10 @@ class Test_UserDynamoDto:
             state=STATE.APPROVED
         )
 
-        assert user.__repr__() == expected_user.__repr__()
+        assert user.name == expected_user.name
+        assert user.email == expected_user.email
+        assert user.idUser == expected_user.idUser
+        assert user.state == expected_user.state
 
     def test_from_entity_to_dynamo(self):
         repo = UserRepositoryMock()
