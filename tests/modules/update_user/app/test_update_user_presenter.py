@@ -52,7 +52,7 @@ class Test_UpdateUserPresenter:
                 "time": "12/Mar/2020:19:03:58 +0000",
                 "timeEpoch": 1583348638390
             },
-            "body": '{"idUser": "1",  "new_name": "João Soller"}',
+            "body": '{"user_id": "1",  "new_name": "João Soller"}',
             "pathParameters": None,
             "isBase64Encoded": None,
             "stageVariables": None

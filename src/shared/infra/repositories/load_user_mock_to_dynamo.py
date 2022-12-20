@@ -76,7 +76,7 @@ def load_mock_to_local_dynamo():
 
     print('Loading mock data to dynamo...')
     for user in mock_repo.users:
-        print(f"Loading user {user.idUser} | {user.name} to dynamo")
+        print(f"Loading user {user.user_id} | {user.name} to dynamo")
         dynamo_repo.create_user(user)
         count += 1
 
