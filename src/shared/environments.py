@@ -6,7 +6,7 @@ from src.shared.domain.repositories.user_repository_interface import IUserReposi
 
 
 class STAGE(Enum):
-    LOCAL = "LOCAL"
+    DOTENV = "DOTENV"
     DEV = "DEV"
     PROD = "PROD"
     TEST = "TEST"
@@ -30,23 +30,24 @@ class Environments:
 
     def _configure_local(self):
         from dotenv import load_dotenv
-        os.environ["STAGE"] = STAGE.LOCAL.value
         load_dotenv()
+        os.environ["STAGE"] = os.environ.get("STAGE") or STAGE.DOTENV.value
 
     def load_envs(self):
-        if "STAGE" not in os.environ or os.environ["STAGE"] == STAGE.LOCAL.value:
+        if "STAGE" not in os.environ or os.environ["STAGE"] == STAGE.DOTENV.value:
             self._configure_local()
 
         self.stage = STAGE[os.environ.get("STAGE")]
 
         if self.stage == STAGE.TEST:
             self.s3_bucket_name = "bucket-test"
-            self.region = "us-east-1"
+            self.region = "sa-east-1"
             self.endpoint_url = "http://localhost:8000"
-            self.dynamo_table_name = "test_mss_user-table"
+            self.dynamo_table_name = "user_mss_template-table"
             self.dynamo_partition_key = "PK"
             self.dynamo_sort_key = "SK"
             self.cloud_front_distribution_domain = "https://d3q9q9q9q9q9q9.cloudfront.net"
+
         else:
             self.s3_bucket_name = os.environ.get("S3_BUCKET_NAME")
             self.region = os.environ.get("REGION")
@@ -56,15 +57,16 @@ class Environments:
             self.dynamo_sort_key = os.environ.get("DYNAMO_SORT_KEY")
             self.cloud_front_distribution_domain = os.environ.get("CLOUD_FRONT_DISTRIBUTION_DOMAIN")
 
-
     @staticmethod
     def get_user_repo() -> IUserRepository:
         if Environments.get_envs().stage == STAGE.TEST:
             from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
             return UserRepositoryMock
-        # else:
+        # elif Environments.get_envs().stage == STAGE.PROD:
         #     from src.shared.infra.repositories.user_repository_dynamo import UserRepositoryDynamo
         #     return UserRepositoryDynamo
+        else:
+            raise Exception("No repository found for this stage")
 
     @staticmethod
     def get_envs() -> "Environments":

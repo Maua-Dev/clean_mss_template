@@ -8,11 +8,11 @@ from src.shared.helpers.errors.domain_errors import EntityError
 class User(abc.ABC):
     name: str
     email: str
-    idUser: int
     state: STATE
     MIN_NAME_LENGTH = 2
+    user_id: int
 
-    def __init__(self, name: str, email: str, idUser: int, state: STATE):
+    def __init__(self, name: str, email: str, state: STATE, user_id: int = None):
         if not User.validate_name(name):
             raise EntityError("name")
         self.name = name
@@ -21,11 +21,14 @@ class User(abc.ABC):
             raise EntityError("email")
         self.email = email
 
-        if type(idUser) != int:
-            raise EntityError("idUser")
-        if idUser < 0:
-            raise EntityError("idUser")
-        self.idUser = idUser
+        if type(user_id) == int:
+            if user_id < 0:
+                raise EntityError("user_id")
+
+        if type(user_id) != int and user_id is not None:
+            raise EntityError("user_id")
+
+        self.user_id = user_id
 
         if type(state) != STATE:
             raise EntityError("state")
@@ -54,4 +57,4 @@ class User(abc.ABC):
 
 
     def __repr__(self):
-        return f"User(name={self.name}, email={self.email}, idUser={self.idUser}, state={self.state})"
+        return f"User(name={self.name}, email={self.email}, user_id={self.user_id}, state={self.state})"

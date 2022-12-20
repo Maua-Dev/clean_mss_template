@@ -6,36 +6,36 @@ import pytest
 
 class Test_User:
     def test_user(self):
-        User(name="VITOR", email="21.01444-2@maua.br", idUser=1, state=STATE.APPROVED)
+        User(name="VITOR", email="21.01444-2@maua.br", user_id=1, state=STATE.APPROVED)
 
     def test_user_name_is_none(self):
         with pytest.raises(EntityError):
-            User(name=None, email="21.01444-2@maua.br", idUser=1, state=STATE.APPROVED)
+            User(name=None, email="21.01444-2@maua.br", user_id=1, state=STATE.APPROVED)
 
     def test_user_name_is_not_str(self):
         with pytest.raises(EntityError):
-            User(name=1, email="21.01444-2@maua.br", idUser=1, state=STATE.APPROVED)
+            User(name=1, email="21.01444-2@maua.br", user_id=1, state=STATE.APPROVED)
 
     def test_user_name_is_shorter_than_min_length(self):
         with pytest.raises(EntityError):
-            User(name="V", email="21.01444-2@maua.br", idUser=1, state=STATE.APPROVED)
+            User(name="V", email="21.01444-2@maua.br", user_id=1, state=STATE.APPROVED)
 
     def test_user_email_is_none(self):
         with pytest.raises(EntityError):
-            User(name="VITOR", email=None, idUser=1, state=STATE.APPROVED)
+            User(name="VITOR", email=None, user_id=1, state=STATE.APPROVED)
 
     def test_user_email_is_not_valid(self):
         with pytest.raises(EntityError):
-            User(name="VITOR", email="21.01444-2maua.br", idUser=1, state=STATE.APPROVED)
+            User(name="VITOR", email="21.01444-2maua.br", user_id=1, state=STATE.APPROVED)
 
-    def test_user_idUser_is_not_int(self):
+    def test_user_user_id_is_not_int(self):
         with pytest.raises(EntityError):
-            User(name="VITOR", email="21.01444-2@maua.br", idUser="1", state=STATE.APPROVED)
+            User(name="VITOR", email="21.01444-2@maua.br", user_id="1", state=STATE.APPROVED)
 
-    def test_user_idUser_is_negative(self):
+    def test_user_user_id_is_negative(self):
         with pytest.raises(EntityError):
-            User(name="VITOR", email="21.01444-2@maua.br", idUser=-1, state=STATE.APPROVED)
+            User(name="VITOR", email="21.01444-2@maua.br", user_id=-1, state=STATE.APPROVED)
 
     def test_user_state_is_not_sate_enum(self):
         with pytest.raises(EntityError):
-            User(name="VITOR", email="21.01444-2@maua.br", idUser=1, state="APPROVED")
+            User(name="VITOR", email="21.01444-2@maua.br", user_id=1, state="APPROVED")

@@ -1,6 +1,6 @@
 from src.modules.create_user.app.create_user_controller import CreateUserController
 from src.modules.create_user.app.create_user_usecase import CreateUserUsecase
-from src.shared.helpers.http.http_models import HttpRequest
+from src.shared.helpers.external_interfaces.http_models import HttpRequest
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
 
@@ -18,7 +18,7 @@ class Test_CreateUserControler:
         response = controller(request=request)
 
         assert response.status_code == 201
-        assert response.body['idUser'] == repo.users[-1].idUser
+        assert response.body['user_id'] == repo.users[-1].user_id
         assert response.body['name'] == repo.users[-1].name
         assert response.body['email'] == repo.users[-1].email
         assert response.body['state'] == repo.users[-1].state.value

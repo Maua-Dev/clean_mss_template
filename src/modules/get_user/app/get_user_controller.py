@@ -3,7 +3,8 @@ from .get_user_viewmodel import GetUserViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
-from src.shared.helpers.http.http_models import HttpRequest, HttpResponse, OK, NotFound, BadRequest, InternalServerError
+from src.shared.helpers.external_interfaces.external_interface import IRequest, IResponse
+from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError
 
 
 class GetUserController:
@@ -11,23 +12,23 @@ class GetUserController:
     def __init__(self, usecase: GetUserUsecase):
         self.GetUserUsecase = usecase
 
-    def __call__(self, request: HttpRequest) -> HttpResponse:
+    def __call__(self, request: IRequest) -> IResponse:
         try:
-            if request.query_params.get('idUser') is None:
-                raise MissingParameters('idUser')
+            if request.data.get('user_id') is None:
+                raise MissingParameters('user_id')
 
-            if type(request.query_params.get('idUser')) != str:
+            if type(request.data.get('user_id')) != str:
                 raise WrongTypeParameter(
-                    fieldName="idUser",
+                    fieldName="user_id",
                     fieldTypeExpected="str",
-                    fieldTypeReceived=request.query_params.get('idUser').__class__.__name__
+                    fieldTypeReceived=request.data.get('user_id').__class__.__name__
                 )
 
-            if not request.query_params.get('idUser').isdecimal():
-                raise EntityError("idUser")
+            if not request.data.get('user_id').isdecimal():
+                raise EntityError("user_id")
 
             user = self.GetUserUsecase(
-                idUser=int(request.query_params.get('idUser'))
+                user_id=int(request.data.get('user_id'))
             )
 
             viewmodel = GetUserViewmodel(user)
