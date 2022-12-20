@@ -5,7 +5,7 @@ from src.shared.domain.entities.user import User
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
 from src.shared.environments import Environments
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
-from src.shared.infra.dto.user_dynamo_dto import UserDynamoDto
+from src.shared.infra.dto.user_dynamo_dto import UserDynamoDTO
 from src.shared.infra.external.dynamo.datasources.dynamo_datasource import DynamoDatasource
 
 
@@ -31,7 +31,7 @@ class UserRepositoryDynamo(IUserRepository):
         if resp.get('Item') is None:
             raise NoItemsFound("idUser")
 
-        user_dto = UserDynamoDto.from_dynamo(resp["Item"])
+        user_dto = UserDynamoDTO.from_dynamo(resp["Item"])
         return user_dto.to_entity()
 
     def get_all_user(self) -> List[User]:
@@ -39,14 +39,14 @@ class UserRepositoryDynamo(IUserRepository):
         users = []
         for item in resp['Items']:
             if item.get("entity") == 'user':
-                users.append(UserDynamoDto.from_dynamo(item).to_entity())
+                users.append(UserDynamoDTO.from_dynamo(item).to_entity())
 
         return users
 
 
     def create_user(self, new_user: User) -> User:
         new_user.idUser = self.get_user_counter()
-        user_dto = UserDynamoDto.from_entity(user=new_user)
+        user_dto = UserDynamoDTO.from_entity(user=new_user)
         resp = self.dynamo.put_item(partition_key=self.partition_key_format(new_user.idUser),
                                     sort_key=self.sort_key_format(idUser=new_user.idUser), item=user_dto.to_dynamo(),
                                     is_decimal=True)
@@ -58,7 +58,7 @@ class UserRepositoryDynamo(IUserRepository):
         if "Attributes" not in resp:
             raise NoItemsFound("idUser")
 
-        return UserDynamoDto.from_dynamo(resp['Attributes']).to_entity()
+        return UserDynamoDTO.from_dynamo(resp['Attributes']).to_entity()
 
     def update_user(self, idUser: int, new_name: str) -> User:
 
@@ -73,7 +73,7 @@ class UserRepositoryDynamo(IUserRepository):
 
         resp = self.dynamo.update_item(partition_key=self.partition_key_format(idUser), sort_key=self.sort_key_format(idUser), update_dict=item_to_update)
 
-        return UserDynamoDto.from_dynamo(resp['Attributes']).to_entity()
+        return UserDynamoDTO.from_dynamo(resp['Attributes']).to_entity()
 
     def get_user_counter(self) -> int:
 

@@ -4,7 +4,7 @@ from src.shared.domain.entities.user import User
 from src.shared.domain.enums.state_enum import STATE
 
 
-class UserDynamoDto:
+class UserDynamoDTO:
     name: str
     email: str
     state: STATE
@@ -17,11 +17,11 @@ class UserDynamoDto:
         self.state = state
 
     @staticmethod
-    def from_entity(user: User) -> "UserDynamoDto":
+    def from_entity(user: User) -> "UserDynamoDTO":
         """
         Parse data from User to UserDynamoDTO
         """
-        return UserDynamoDto(
+        return UserDynamoDTO(
             name=user.name,
             email=user.email,
             idUser=user.idUser,
@@ -41,12 +41,12 @@ class UserDynamoDto:
         }
 
     @staticmethod
-    def from_dynamo(user_data: dict) -> "UserDynamoDto":
+    def from_dynamo(user_data: dict) -> "UserDynamoDTO":
         """
         Parse data from DynamoDB to UserDynamoDTO
         @param user_data: dict from DynamoDB
         """
-        return UserDynamoDto(
+        return UserDynamoDTO(
             name=user_data["name"],
             email=user_data["email"],
             idUser=int(user_data["idUser"]),

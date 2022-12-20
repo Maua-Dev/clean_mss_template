@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from src.shared.domain.entities.user import User
 from src.shared.domain.enums.state_enum import STATE
-from src.shared.infra.dto.user_dynamo_dto import UserDynamoDto
+from src.shared.infra.dto.user_dynamo_dto import UserDynamoDTO
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
 
@@ -10,9 +10,9 @@ class Test_UserDynamoDto:
     def test_from_entity(self):
         repo = UserRepositoryMock()
 
-        user_dto = UserDynamoDto.from_entity(user=repo.users[0])
+        user_dto = UserDynamoDTO.from_entity(user=repo.users[0])
 
-        expected_selfie_dto = UserDynamoDto(
+        expected_selfie_dto = UserDynamoDTO(
             name=repo.users[0].name,
             email=repo.users[0].email,
             idUser=repo.users[0].idUser,
@@ -24,7 +24,7 @@ class Test_UserDynamoDto:
     def test_to_dynamo(self):
         repo = UserRepositoryMock()
 
-        user_dto = UserDynamoDto(
+        user_dto = UserDynamoDTO(
             name=repo.users[0].name,
             email=repo.users[0].email,
             idUser=repo.users[0].idUser,
@@ -61,9 +61,9 @@ class Test_UserDynamoDto:
                                                             'server': 'Jetty(9.4.48.v20220622)'},
                                             'RetryAttempts': 0}}
 
-        user_dto = UserDynamoDto.from_dynamo(user_data=dynamo_dict["Item"])
+        user_dto = UserDynamoDTO.from_dynamo(user_data=dynamo_dict["Item"])
 
-        expected_user_dto = UserDynamoDto(
+        expected_user_dto = UserDynamoDTO(
             name="Bruno Soller",
             email='soller@soller.com',
             idUser=1,
@@ -75,7 +75,7 @@ class Test_UserDynamoDto:
     def test_to_entity(self):
         repo = UserRepositoryMock()
 
-        user_dto = UserDynamoDto(
+        user_dto = UserDynamoDTO(
             name=repo.users[0].name,
             email=repo.users[0].email,
             idUser=repo.users[0].idUser,
@@ -98,7 +98,7 @@ class Test_UserDynamoDto:
                                 'entity': 'user',
                                 'email': 'soller@soller.com'}}
 
-        user_dto = UserDynamoDto.from_dynamo(user_data=dynamo_item["Item"])
+        user_dto = UserDynamoDTO.from_dynamo(user_data=dynamo_item["Item"])
 
         user = user_dto.to_entity()
 
@@ -117,7 +117,7 @@ class Test_UserDynamoDto:
     def test_from_entity_to_dynamo(self):
         repo = UserRepositoryMock()
 
-        user_dto = UserDynamoDto.from_entity(user=repo.users[0])
+        user_dto = UserDynamoDTO.from_entity(user=repo.users[0])
 
         user_dynamo = user_dto.to_dynamo()
 
