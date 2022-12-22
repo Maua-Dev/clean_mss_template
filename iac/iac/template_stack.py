@@ -5,15 +5,13 @@ from aws_cdk import (
 )
 from constructs import Construct
 
-class IacStack(Stack):
+from .template_dynamo_table import TemplateDynamoTable
+
+
+class TemplateStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # The code that defines your stack goes here
+        self.dynamo_table = TemplateDynamoTable(self, "TemplateDynamoTable")
 
-        # example resource
-        # queue = sqs.Queue(
-        #     self, "IacQueue",
-        #     visibility_timeout=Duration.seconds(300),
-        # )
