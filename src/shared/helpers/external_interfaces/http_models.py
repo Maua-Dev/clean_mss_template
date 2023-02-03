@@ -13,9 +13,9 @@ class HttpRequest(IRequest):
     data: dict
 
     def __init__(self, body: dict = {}, headers: dict = {}, query_params: dict = {}):
-        self.body = body
-        self.headers = headers
-        self.query_params = query_params
+        self.body = body or {}
+        self.headers = headers or {}
+        self.query_params = query_params or {}
         data_dict = {}
 
         # check overlapping keys
@@ -33,8 +33,8 @@ class HttpRequest(IRequest):
         if type(body) is str:
             data_dict.update({"body": body})
 
-        data_dict.update(headers)
-        data_dict.update(query_params)
+        data_dict.update(self.headers)
+        data_dict.update(self.query_params)
         self.data = data_dict
 
     @property

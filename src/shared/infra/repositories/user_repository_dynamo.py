@@ -45,7 +45,10 @@ class UserRepositoryDynamo(IUserRepository):
 
 
     def create_user(self, new_user: User) -> User:
+        print(f"repo entered.\n Repo:{self}")
+        print(self.dynamo.dynamo_table.__dict__)
         new_user.user_id = self.get_user_counter()
+        print(f"nre user id: {new_user.user_id}")
         user_dto = UserDynamoDTO.from_entity(user=new_user)
         resp = self.dynamo.put_item(partition_key=self.partition_key_format(new_user.user_id),
                                     sort_key=self.sort_key_format(user_id=new_user.user_id), item=user_dto.to_dynamo(),
@@ -80,7 +83,10 @@ class UserRepositoryDynamo(IUserRepository):
         return self.update_counter()
 
     def update_counter(self) -> int: #TODO fix this
+        print("updating counter")
         counter = int(self.dynamo.get_item(partition_key='COUNTER', sort_key='COUNTER')['Item']['COUNTER'])
+        print(f"counter: {counter}")
         resp = self.dynamo.update_item(partition_key='COUNTER', sort_key='COUNTER', update_dict={'COUNTER': Decimal(counter+1)})
+        print(f"resp: {resp}")
 
         return int(resp['Attributes']['COUNTER'])
