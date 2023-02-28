@@ -5,12 +5,15 @@ from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import NoItemsFound
 from src.shared.helpers.external_interfaces.external_interface import IRequest, IResponse
 from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError
+from aws_lambda_powertools import Logger
+
 
 
 class GetUserController:
 
-    def __init__(self, usecase: GetUserUsecase):
+    def __init__(self, usecase: GetUserUsecase, logger: Logger):
         self.GetUserUsecase = usecase
+        self.logger = logger
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
@@ -27,30 +30,32 @@ class GetUserController:
             if not request.data.get('user_id').isdecimal():
                 raise EntityError("user_id")
 
+
             user = self.GetUserUsecase(
                 user_id=int(request.data.get('user_id'))
             )
 
             viewmodel = GetUserViewmodel(user)
-
+            
+            self.logger.info(f"Request for user_id={request.data.get('user_id')} received")
             return OK(viewmodel.to_dict())
 
         except NoItemsFound as err:
-
+            self.logger.exception(msg=err.message)
             return NotFound(body=err.message)
 
         except MissingParameters as err:
-
+            self.logger.exception(msg=err.message)
             return BadRequest(body=err.message)
 
         except WrongTypeParameter as err:
-
+            self.logger.exception(msg=err.message)
             return BadRequest(body=err.message)
 
         except EntityError as err:
-
+            self.logger.exception(msg=err.message)
             return BadRequest(body=err.message)
 
         except Exception as err:
-
+            self.logger.exception(msg=err.message)
             return InternalServerError(body=err.args[0])

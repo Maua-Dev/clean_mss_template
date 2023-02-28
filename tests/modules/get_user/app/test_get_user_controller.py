@@ -2,13 +2,15 @@ from src.modules.get_user.app.get_user_controller import GetUserController
 from src.modules.get_user.app.get_user_usecase import GetUserUsecase
 from src.shared.helpers.external_interfaces.http_models import HttpRequest
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
+from aws_lambda_powertools import Logger
 
+logger = Logger()
 
 class Test_GetUserController:
     def test_get_user_controller(self):
         repo = UserRepositoryMock()
         usecase = GetUserUsecase(repo=repo)
-        controller = GetUserController(usecase=usecase)
+        controller = GetUserController(usecase=usecase, logger=logger)
 
         request = HttpRequest(query_params={
             'user_id': str(repo.users[1].user_id)
@@ -25,7 +27,7 @@ class Test_GetUserController:
     def test_get_user_controller_missing_parameters(self):
         repo = UserRepositoryMock()
         usecase = GetUserUsecase(repo=repo)
-        controller = GetUserController(usecase=usecase)
+        controller = GetUserController(usecase=usecase, logger=logger)
 
         request = HttpRequest(query_params={})
 
@@ -38,7 +40,7 @@ class Test_GetUserController:
     def test_get_user_contoller_wrong_type_parameter(self):
         repo = UserRepositoryMock()
         usecase = GetUserUsecase(repo=repo)
-        controller = GetUserController(usecase=usecase)
+        controller = GetUserController(usecase=usecase, logger=logger)
 
         request = HttpRequest(query_params={
             'user_id': 999
@@ -52,7 +54,7 @@ class Test_GetUserController:
     def test_get_user_contoller_entity_error(self):
         repo = UserRepositoryMock()
         usecase = GetUserUsecase(repo=repo)
-        controller = GetUserController(usecase=usecase)
+        controller = GetUserController(usecase=usecase, logger=logger)
 
         request = HttpRequest(query_params={
             'user_id': 'abc'
@@ -66,7 +68,7 @@ class Test_GetUserController:
     def test_get_user_controller_no_items_found(self):
         repo = UserRepositoryMock()
         usecase = GetUserUsecase(repo=repo)
-        controller = GetUserController(usecase=usecase)
+        controller = GetUserController(usecase=usecase, logger=logger)
 
         request = HttpRequest(query_params={
             'user_id': str(999)

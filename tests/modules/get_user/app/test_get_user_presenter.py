@@ -1,7 +1,15 @@
 import json
+from dataclasses import dataclass
+import pytest
 
 from src.modules.get_user.app.get_user_presenter import lambda_handler
 
+@dataclass
+class LambdaContext:
+    memory_limit_in_mb: int = 128
+    invoked_function_arn: str = "arn:aws:lambda:eu-west-1:809313241:function:test"
+    aws_request_id: str = "52fdfc07-2182-154f-163f-5f0f9a621d72"
+    function_name: str = "test"
 
 class Test_GetUserPresenter:
 
@@ -58,7 +66,7 @@ class Test_GetUserPresenter:
             "stageVariables": None
         }
 
-        response = lambda_handler(event, None)
+        response = lambda_handler(event, LambdaContext)
         assert response["statusCode"] == 200
         assert json.loads(response["body"])["name"] == "Bruno Soller"
         assert json.loads(response["body"])["email"] == "soller@soller.com"
