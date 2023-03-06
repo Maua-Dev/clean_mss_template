@@ -57,5 +57,5 @@ class GetUserController:
             return BadRequest(body=err.message)
 
         except Exception as err:
-            self.logger.exception(msg=err.message)
+            self.logger.exception(msg=err.args[0])
             return InternalServerError(body=err.args[0])

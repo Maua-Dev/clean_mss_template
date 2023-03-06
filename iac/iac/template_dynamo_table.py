@@ -1,3 +1,4 @@
+from decimal import Decimal
 from aws_cdk import (
     aws_dynamodb as dynamodb, RemovalPolicy,
 )
@@ -19,10 +20,11 @@ class TemplateDynamoTable(Construct):
             sort_key=dynamodb.Attribute(
                 name="SK",
                 type=dynamodb.AttributeType.STRING
-            ),
+            ), 
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=RemovalPolicy.DESTROY
-
         )
+        
+    
 
 

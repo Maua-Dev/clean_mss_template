@@ -24,6 +24,7 @@ class TemplateStack(Stack):
                                     "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
                                     "allow_headers": ["*"]
                                 },
+                                
                                 )
 
         api_gateway_resource = self.rest_api.root.add_resource("mss-template", default_cors_preflight_options=
@@ -52,3 +53,5 @@ class TemplateStack(Stack):
 
         for function in self.lambda_stack.functions_that_need_dynamo_permissions:
             self.dynamo_table.table.grant_read_write_data(function)
+
+        

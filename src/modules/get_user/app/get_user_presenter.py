@@ -21,7 +21,7 @@ def get_user_presenter(event):
     httpResponse = LambdaHttpResponse(status_code=response.status_code, body=response.body, headers=response.headers)
     return httpResponse.toDict()
     
-@tracer.capture_lambda_handler
+# @tracer.capture_lambda_handler
 @metrics.log_metrics(capture_cold_start_metric=True, default_dimensions={"environment": os.getenv("STAGE", "dev"), "another": "one"}) # ColdStart metrics and adding dimensions
 @logger.inject_lambda_context(log_event=True) # Log event
 def lambda_handler(event, context):

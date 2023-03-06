@@ -16,6 +16,8 @@ print("Finished adjusting the layer directory")
 
 
 app = cdk.App()
-TemplateStack(app, "IacStack", env={'region': 'us-east-2'})
+TemplateStack(app, "Test-Observability", env={'region': os.environ.get("REGION")})
+
+
 
 app.synth()
