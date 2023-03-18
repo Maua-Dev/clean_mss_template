@@ -16,15 +16,14 @@ class TemplateStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         self.rest_api = RestApi(self, "Template_RestApi",
-                                rest_api_name="Template_RestApi",
-                                description="This is the Template RestApi",
-                                default_cors_preflight_options=
-                                {
-                                    "allow_origins": Cors.ALL_ORIGINS,
-                                    "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-                                    "allow_headers": ["*"]
-                                },
-                                
+                                    rest_api_name="Template_RestApi",
+                                    description="This is the Template RestApi",
+                                    default_cors_preflight_options=
+                                    {
+                                        "allow_origins": Cors.ALL_ORIGINS,
+                                        "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+                                        "allow_headers": ["*"]
+                                    },
                                 )
 
         api_gateway_resource = self.rest_api.root.add_resource("mss-template", default_cors_preflight_options=
@@ -39,8 +38,7 @@ class TemplateStack(Stack):
 
         ENVIRONMENT_VARIABLES = {
             "STAGE": "DEV",
-            "ENDPOINT_URL": "http://dynamo:8000",
-            "DYNAMO_TABLE_NAME": "user_mss_template-table",
+            "DYNAMO_TABLE_NAME": self.dynamo_table.table.table_name,
             "DYNAMO_PARTITION_KEY": "PK",
             "DYNAMO_SORT_KEY": "SK",
             "REGION": self.region,
