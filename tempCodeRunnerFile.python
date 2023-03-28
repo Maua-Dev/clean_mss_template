@@ -1,0 +1,20 @@
+
+
+def presenter_decorators(presenter) -> None:
+    def presenter_wrapper(i):    
+        print("Entrou no Wrapper")
+        response = presenter(i)
+        print("Saiu do Wrapper")
+        
+        return response
+    return presenter_wrapper
+
+@presenter_decorators
+def presenter(i: int) -> int:
+    if i > 0:
+        return i + 1
+    raise Exception
+try:
+    presenter(-1)
+except Exception:
+    print("Entrou no Except")

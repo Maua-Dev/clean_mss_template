@@ -6,7 +6,7 @@ from src.shared.helpers.errors.usecase_errors import NoItemsFound
 from src.shared.infra.external.observability.observability_aws import ObservabilityAWS
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 
-observability = ObservabilityAWS(is_test=True)
+observability = ObservabilityAWS()
 
 class Test_GetUserUsecase:
 

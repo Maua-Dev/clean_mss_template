@@ -18,7 +18,7 @@ class GetUserController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
-            self.observability.log_info(f"In Controller")
+            self.observability.log_controller_in()
             if request.data.get('user_id') is None:
                 raise MissingParameters('user_id')
 
@@ -40,7 +40,7 @@ class GetUserController:
             viewmodel = GetUserViewmodel(user)
             
             response = OK(viewmodel.to_dict())
-            self.observability.log_info(f"Out of Controller with user_id: {user.user_id}")
+            self.observability.log_controller_out(input=user.user_id)
             return response
 
         except NoItemsFound as err:

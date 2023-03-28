@@ -10,9 +10,9 @@ class GetUserUsecase:
         self.observability = observability
 
     def __call__(self, user_id: int) -> User:
-        self.observability.log_info(f"In Usecase with user_id: {user_id}")
+        self.observability.log_usecase_in()
         if type(user_id) != int:
             raise EntityError("user_id")
         user = self.repo.get_user(user_id)
-        self.observability.log_info(f"Out of Usecase with user_id: {user_id}")
+        self.observability.log_usecase_out()
         return user

@@ -1,6 +1,7 @@
 import enum
 from enum import Enum
 import os
+from src.shared.domain.observability.observability_interface import IObservability
 
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
 
@@ -68,6 +69,16 @@ class Environments:
         else:
             raise Exception("No repository found for this stage")
 
+    @staticmethod
+    def get_observability() -> IObservability:
+        if Environments.get_envs().stage == STAGE.TEST:
+            from src.shared.infra.external.observability.observability_mock import ObservabilityMock
+            return ObservabilityMock
+        elif Environments.get_envs().stage == STAGE.DEV:
+            from src.shared.infra.external.observability.observability_aws import ObservabilityAWS
+            return ObservabilityAWS
+        else:
+            raise Exception("No repository found for this stage")
     @staticmethod
     def get_envs() -> "Environments":
         """

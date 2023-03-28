@@ -5,7 +5,7 @@ from src.shared.infra.external.observability.observability_aws import Observabil
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 from aws_lambda_powertools import Logger
 
-observability = ObservabilityAWS(is_test=True)
+observability = ObservabilityAWS()
 
 class Test_GetUserController:
     def test_get_user_controller(self):
