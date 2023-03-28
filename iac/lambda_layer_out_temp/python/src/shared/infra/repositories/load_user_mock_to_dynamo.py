@@ -2,9 +2,9 @@ from decimal import Decimal
 
 import boto3
 import dotenv
-from src.shared.environments import Environments
 from src.shared.infra.repositories.user_repository_dynamo import UserRepositoryDynamo
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
+from src.shared.environments import Environments
 
 
 def setup_dynamo_table():
@@ -90,7 +90,6 @@ def load_mock_to_real_dynamo():
     count = 0
 
     dynamodb = boto3.resource('dynamodb')
-
     table = dynamodb.Table(dynamo_table_name=Environments.get_envs().dynamo_table_name)
 
     print("Adding counter to table")

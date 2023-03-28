@@ -52,7 +52,7 @@ class Test_CreateUserPresenter:
                 "time": "12/Mar/2020:19:03:58 +0000",
                 "timeEpoch": 1583348638390
             },
-            "body": '{"name":"Vitor Guirão",  "email":"vitor@vitor.com"}',
+            "body": '{"name":"EhOLudjas",  "email":"eho@ludjas.com"}',
             "pathParameters": None,
             "isBase64Encoded": None,
             "stageVariables": None

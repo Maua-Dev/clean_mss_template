@@ -112,4 +112,4 @@ def load_mock_to_real_dynamo():
     
 if __name__ == '__main__':
     dotenv.load_dotenv()
-    load_mock_to_real_dynamo()
+    load_mock_to_local_dynamo()
