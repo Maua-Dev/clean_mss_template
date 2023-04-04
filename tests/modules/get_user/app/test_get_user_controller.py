@@ -1,11 +1,11 @@
 from src.modules.get_user.app.get_user_controller import GetUserController
 from src.modules.get_user.app.get_user_usecase import GetUserUsecase
 from src.shared.helpers.external_interfaces.http_models import HttpRequest
-from src.shared.infra.external.observability.observability_aws import ObservabilityAWS
+from src.shared.infra.external.observability.observability_mock import ObservabilityMock
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
 from aws_lambda_powertools import Logger
 
-observability = ObservabilityAWS()
+observability = ObservabilityMock(service_name="TEST-OBSERVABILITY")
 
 class Test_GetUserController:
     def test_get_user_controller(self):

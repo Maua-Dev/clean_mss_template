@@ -13,8 +13,20 @@ class ObservabilityAWS(IObservability):
         self.tracer = Tracer(service=service_name)
         self.metrics = Metrics(namespace=service_name)
     
-    def log_info(self, message: str) -> None:
+    def _log_info(self, message: str) -> None:
         self.logger.info(message)
+        
+    def log_controller_in(self) -> None:
+        self._log_info("In Controller")
+        
+    def log_controller_out(self, input) -> None:
+        self._log_info(f"Out of Controller with this input: {input}")
+        
+    def log_usecase_in(self) -> None:
+        self._log_info("In Usecase")
+        
+    def log_usecase_out(self) -> None:
+        self._log_info("Out of Usecase")
             
     def log_exception(self, message: str) -> None:
         self.logger.exception(message)
@@ -24,7 +36,7 @@ class ObservabilityAWS(IObservability):
             
     
     def presenter_decorators(self, presenter) -> None:
-        # @self.tracer.capture_method
+        @self.tracer.capture_method
         def presenter_wrapper(event):    
             start_time = time.monotonic() # Start - ProcessingTime metrics
             
@@ -39,7 +51,7 @@ class ObservabilityAWS(IObservability):
         return presenter_wrapper
     
     def handler_decorators(self, handler) -> None:
-        # @self.tracer.capture_lambda_handler
+        @self.tracer.capture_lambda_handler
         @self.metrics.log_metrics(capture_cold_start_metric=True, default_dimensions={"environment": os.getenv("STAGE", "dev"), "another": "one"}) # ColdStart metrics and adding dimensions
         @self.logger.inject_lambda_context(log_event=True) # Log event
         def handler_wrapper(event, context):    

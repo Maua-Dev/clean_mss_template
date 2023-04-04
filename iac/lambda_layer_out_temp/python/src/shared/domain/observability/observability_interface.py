@@ -7,10 +7,26 @@ class IObservability(ABC):
     def __init__(self, service_name: str = "default-service-name") -> None:
         pass
     
-    @abstractmethod
-    def log_info(self, message: str) -> None:
+    @abstractmethod        
+    def _log_info(self, message: str) -> None:
         pass
-            
+    
+    @abstractmethod    
+    def log_controller_in(self) -> None:
+        pass
+    
+    @abstractmethod    
+    def log_controller_out(self) -> None:
+        pass
+    
+    @abstractmethod    
+    def log_usecase_in(self) -> None:
+        pass
+    
+    @abstractmethod    
+    def log_usecase_out(self) -> None:
+        pass
+    
     @abstractmethod
     def log_exception(self, message: str) -> None:
         pass

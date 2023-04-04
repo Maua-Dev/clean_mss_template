@@ -78,7 +78,7 @@ class Environments:
             from src.shared.infra.external.observability.observability_aws import ObservabilityAWS
             return ObservabilityAWS
         else:
-            raise Exception("No repository found for this stage")
+            raise Exception("No observability class found for this stage")
     @staticmethod
     def get_envs() -> "Environments":
         """

@@ -34,7 +34,6 @@ class ObservabilityAWS(IObservability):
     def add_metric(self, name: str, unit: str, value: float) -> None:
         self.metrics.add_metric(name, unit, value)
             
-    
     def presenter_decorators(self, presenter) -> None:
         @self.tracer.capture_method
         def presenter_wrapper(event):    
