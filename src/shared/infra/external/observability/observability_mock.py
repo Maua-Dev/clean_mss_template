@@ -2,10 +2,11 @@ from src.shared.domain.observability.observability_interface import IObservabili
 
 
 class ObservabilityMock(IObservability):
-    service_name: str
+    module_name: str
+    mss_name: str
     
-    def __init__(self, service_name: str = "default-service-name") -> None:
-        self.service_name = service_name
+    def __init__(self, module_name: str) -> None:
+        super().__init__(module_name=module_name)
     
     def _log_info(self, message: str) -> None:
         print(message)

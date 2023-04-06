@@ -1,14 +1,12 @@
-import os
 from .get_user_controller import GetUserController
 from .get_user_usecase import GetUserUsecase
 from src.shared.environments import Environments
 from src.shared.helpers.external_interfaces.http_lambda_requests import LambdaHttpRequest, LambdaHttpResponse
-import time
 from src.shared.infra.external.observability.observability_aws import ObservabilityAWS
 from aws_lambda_powertools import Logger, Tracer, Metrics
 
 
-observability = Environments.get_observability()(service_name="TEST-OBSERVABILITY")
+observability = Environments.get_observability()(module_name="get_user")
 
 repo = Environments.get_user_repo()()
 usecase = GetUserUsecase(repo, observability=observability)

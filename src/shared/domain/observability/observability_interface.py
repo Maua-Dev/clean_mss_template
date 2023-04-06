@@ -1,11 +1,16 @@
+import os
 import time
 from aws_lambda_powertools import Logger, Tracer, Metrics
 from abc import ABC, abstractmethod
 
 class IObservability(ABC):
+    module_name: str
+    mss_name: str
+    
     @abstractmethod
-    def __init__(self, service_name: str = "default-service-name") -> None:
-        pass
+    def __init__(self, module_name: str) -> None:
+        self.module_name = module_name
+        self.mss_name = os.environ.get("MSS_NAME")
     
     @abstractmethod        
     def _log_info(self, message: str) -> None:

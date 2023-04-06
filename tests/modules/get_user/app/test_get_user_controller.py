@@ -3,9 +3,8 @@ from src.modules.get_user.app.get_user_usecase import GetUserUsecase
 from src.shared.helpers.external_interfaces.http_models import HttpRequest
 from src.shared.infra.external.observability.observability_mock import ObservabilityMock
 from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
-from aws_lambda_powertools import Logger
 
-observability = ObservabilityMock(service_name="TEST-OBSERVABILITY")
+observability = ObservabilityMock(module_name="get_user")
 
 class Test_GetUserController:
     def test_get_user_controller(self):

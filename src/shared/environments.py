@@ -28,6 +28,7 @@ class Environments:
     dynamo_partition_key: str
     dynamo_sort_key: str
     cloud_frontget_user_presenter_distribution_domain: str
+    mss_name: str 
 
     def _configure_local(self):
         from dotenv import load_dotenv
@@ -39,7 +40,8 @@ class Environments:
             self._configure_local()
 
         self.stage = STAGE[os.environ.get("STAGE")]
-
+        self.mss_name = os.environ.get("MSS_NAME")
+        
         if self.stage == STAGE.TEST:
             self.s3_bucket_name = "bucket-test"
             self.region = "sa-east-1"
