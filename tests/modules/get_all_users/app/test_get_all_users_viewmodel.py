@@ -60,5 +60,5 @@ class Test_GetAllUsersViewmodel:
 
         assert response == expected
 
-    
 
+    
