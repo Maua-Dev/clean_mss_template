@@ -12,6 +12,6 @@ class GetAllUsersUsecase:
         all_users_list = self.repo.get_all_user()
 
         if all_users_list is None or len(all_users_list) == 0:
-            raise NoItemsFound("No users found")
+            return []
 
         return all_users_list

@@ -1,7 +1,7 @@
 from typing import List
 
-from src.modules.get_all_users.app.get_all_users_usecase import GetAllUsersUsecase
-from src.modules.get_all_users.app.get_all_users_viewmodel import GetAllUsersViewmodel
+from .get_all_users_usecase import GetAllUsersUsecase
+from .get_all_users_viewmodel import GetAllUsersViewmodel
 from src.shared.domain.entities.user import User
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError

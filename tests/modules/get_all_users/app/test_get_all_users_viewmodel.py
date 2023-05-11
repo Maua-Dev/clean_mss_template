@@ -1,4 +1,4 @@
-from src.modules.get_all_users.app.get_all_users_viewmodel import GetAllUsersViewmodel
+from src.modules.get_all_users.app.get_all_users_viewmodel import GetAllUsersViewmodel, UserViewmodel
 from src.shared.domain.entities.user import User
 from src.shared.domain.enums.state_enum import STATE
 
@@ -41,15 +41,15 @@ class Test_GetAllUsersViewmodel:
 
         assert response == expected
 
-    def test_user_to_dict(self):
-        viewmodel = GetAllUsersViewmodel(self.all_users_list)
-
-        response = viewmodel.user_to_dict(
+    def test_user_viewmodel(self):
+        viewmodel = UserViewmodel(
             User(user_id=2,
                  name="Laura Blablachan",
                  email="laurinha@gmail.com",
                  state=STATE.APPROVED),
-        )
+)
+
+        response = viewmodel.to_dict()
 
         expected = {
                     'user_id': 2,

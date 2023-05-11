@@ -29,7 +29,7 @@ class Test_GetAllUsersPresenter:
             "message": "all users has been retrieved"
         }
 
-        response = lambda_handler()
+        response = lambda_handler(event={}, context={""})
 
         assert response["statusCode"] == 200
         assert json.loads(response["body"]) == expected_body

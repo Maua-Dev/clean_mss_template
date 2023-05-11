@@ -14,13 +14,3 @@ class Test_GetAllUsersController:
 
         assert response.status_code == 200
 
-    def test_controller_must_return_404_when_No_items_found(self):
-        repo_mock = UserRepositoryMock()
-        repo_mock.users = []
-        get_all_users_usecase = GetAllUsersUsecase(repo_mock)
-        controller = GetAllUsersController(get_all_users_usecase)
-
-        response = controller()
-
-        assert response.status_code == 404
-    
