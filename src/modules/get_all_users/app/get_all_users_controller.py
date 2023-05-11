@@ -1,5 +1,6 @@
 from typing import List
 
+from src.shared.helpers.external_interfaces.external_interface import IRequest
 from .get_all_users_usecase import GetAllUsersUsecase
 from .get_all_users_viewmodel import GetAllUsersViewmodel
 from src.shared.domain.entities.user import User
@@ -13,7 +14,7 @@ class GetAllUsersController:
     def __init__(self, usecase: GetAllUsersUsecase):
         self.usecase = usecase
 
-    def __call__(self):
+    def __call__(self, request: IRequest):
         try:
             all_users_list: List[User] = self.usecase()
 
