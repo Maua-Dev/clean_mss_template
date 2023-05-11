@@ -164,6 +164,7 @@ Clone the repository using template
 - Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini) 🧙‍♂️
 - João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco) 😎
 - Vitor Soller - [VgsStudio](https://github.com/VgsStudio) 🐱‍💻
+- Lucas Duez - [Lucasdvs10](https://github.com/Lucasdvs10) 🐱‍👤
 
 ## Especial Thanks 🙏
 
