@@ -10,7 +10,7 @@ class Test_GetAllUsersController:
         get_all_users_usecase = GetAllUsersUsecase(repo_mock)
         controller = GetAllUsersController(get_all_users_usecase)
 
-        response = controller()
+        response = controller(None)
 
         assert response.status_code == 200
 
