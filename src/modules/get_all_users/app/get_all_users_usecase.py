@@ -11,7 +11,4 @@ class GetAllUsersUsecase:
     def __call__(self) -> List[User]:
         all_users_list = self.repo.get_all_user()
 
-        if all_users_list is None or len(all_users_list) == 0:
-            return []
-
         return all_users_list
