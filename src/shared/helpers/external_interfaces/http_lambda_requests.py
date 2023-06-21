@@ -24,7 +24,7 @@ class LambdaHttpResponse(HttpResponse):
         _body = body or LambdaHttpResponse.body
         _headers = headers or LambdaHttpResponse.headers
         _headers['Access-Control-Allow-Origin'] = '*'
-        
+
         _status_code = status_code or LambdaHttpResponse.status_code
 
         if kwargs.get("add_default_cors_headers", True):
@@ -119,6 +119,7 @@ class LambdaHttpRequest(HttpRequest):
         self.query_string_parameters = data.get("queryStringParameters")
         self.request_context = data.get("requestContext")
         self.http = LambdaDefaultHTTP(self.request_context.get("external_interfaces") if self.request_context else None)
+
 
 class HttpResponseRedirect(HttpResponse):
 

@@ -121,6 +121,13 @@ Our folder structure was developed specially for our projects.
 - Start with verb
 - Ends with emoji 😎
 
+
+## Architecture Diagram 🏗
+![img.png](docs/architecture_diagram.png)
+
+
+
+
 ## Installation 👩‍💻
 
 Clone the repository using template

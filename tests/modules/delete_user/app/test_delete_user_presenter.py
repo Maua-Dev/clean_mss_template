@@ -66,5 +66,5 @@ class Test_DeleteUserPresenter:
                      'state': 'APPROVED',
                      'message': 'the user was deleted successfully'}
 
-        assert response["statusCode"] == 200
         assert json.loads(response["body"]) == expected
+        assert response["statusCode"] == 200
