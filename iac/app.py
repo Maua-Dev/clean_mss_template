@@ -16,8 +16,31 @@ print("Finished adjusting the layer directory")
 
 
 app = cdk.App()
-TemplateStack(app, "Test-Observability", env={'region': os.environ.get("REGION")})
 
+aws_region = os.environ.get("AWS_REGION")
+aws_account_id = os.environ.get("AWS_ACCOUNT_ID")
+stack_name = os.environ.get("STACK_NAME")
+
+if 'prod' in stack_name:
+    stage = 'PROD'
+
+elif 'homolog' in stack_name:
+    stage = 'HOMOLOG'
+
+elif 'dev' in stack_name:
+    stage = 'DEV'
+
+else:
+    stage = 'TEST'
+
+tags = {
+    'project': 'Template',
+    'stage': stage,
+    'stack': 'BACK',
+    'owner': 'DevCommunity'
+}
+
+TemplateStack(app,"Test-Observability", stack_name=stack_name, tags=tags, env={'region': os.environ.get("REGION")})
 
 
 app.synth()
