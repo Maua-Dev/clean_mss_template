@@ -40,7 +40,7 @@ tags = {
     'owner': 'DevCommunity'
 }
 
-TemplateStack(app,"Test-Observability", stack_name=stack_name, tags=tags, env={'region': os.environ.get("REGION")})
+TemplateStack(app,"Test-Observability", stack_name=stack_name, env=cdk.Environment(account=aws_account_id, region=aws_region), tags=tags)
 
 
 app.synth()
