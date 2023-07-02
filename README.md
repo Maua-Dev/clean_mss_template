@@ -171,9 +171,10 @@ Clone the repository using template
 - Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini) 🧙‍♂️
 - João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco) 😎
 - Vitor Soller - [VgsStudio](https://github.com/VgsStudio) 🐱‍💻
-- Lucas Duez - [Lucasdvs10](https://github.com/Lucasdvs10) 🐱‍👤
+- Lucas Duez - [Lucasdvs10](https://github.com/Lucasdvs10) 🤡
+- Rodrigo Morales - [RodrigoM2004](https://github.com/RodrigoM2004) 🚗
 
-## Especial Thanks 🙏
+## Special Thanks 🙏
 
 - [Dev. Community Mauá](https://www.instagram.com/devcommunitymaua/)
 - [Clean Architecture: A Craftsman's Guide to Software Structure and Design](https://www.amazon.com.br/Clean-Architecture-Craftsmans-Software-Structure/dp/0134494164)
