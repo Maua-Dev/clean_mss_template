@@ -170,7 +170,7 @@ Clone the repository using template
 - Bruno Vilardi - [Brvilardi](https://github.com/Brvilardi) 👷‍♂️
 - Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini) 🧙‍♂️
 - João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco) 😎
-- Vitor Soller - [VgsStudio](https://github.com/VgsStudio) 🐱‍💻
+- Vitor Soller - [VgsStudio](https://github.com/VgsStudio) ☀
 - Lucas Duez - [Lucasdvs10](https://github.com/Lucasdvs10) 🤡
 - Rodrigo Morales - [RodrigoM2004](https://github.com/RodrigoM2004) 🚗
 - Lucas Milani - [LucasKiller](https://github.com/LucasKiller) 🔪

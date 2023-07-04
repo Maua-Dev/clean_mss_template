@@ -2,15 +2,15 @@
 
 This guide will walk you through the steps to set up DynamoDB on your local machine using Docker and configure it for your project.
 
-## Installation
+## Installation (Only first time)
 
 Before getting started, make sure you have the following installed on your machine:
 
 - Docker: (https://docs.docker.com/desktop/install/windows-install/)
 - NoSQL Workbench: (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)
-- Amazon Web Services (AWS) Account: (https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- AWS CLI: (https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
-## AWS Settings
+### AWS Settings
 
 To interact with DynamoDB, you need to set up your AWS credentials. Follow the steps below to configure your credentials:
 
@@ -29,7 +29,7 @@ To interact with DynamoDB, you need to set up your AWS credentials. Follow the s
     Default output format: json
 ```
 
-## Project Settings
+### Docker Settings
 
 Next, you need to configure DynamoDB for your project and Docker compose. Follow the steps below:
 
@@ -40,40 +40,8 @@ Next, you need to configure DynamoDB for your project and Docker compose. Follow
     cd local
     docker-compose up -d
 ```
-3. Locate the directory or file named `load_product_mock_to_dynamo` within your project. This directory or file is responsible for loading mock data into DynamoDB
-4. If the `load_product_mock_to_dynamo` file doesn't exist, you need to create it.
-5. Once you have located or created the `load_product_mock_to_dynamo` file, make sure it is in the correct location within your project structure. The file should be located in the `src/shared/infra/repositories`
-6. This file is responsible for populating DynamoDB with mock data
-```bash
-.
-├── iac
-├── src
-│   ├── ...
-│   │     
-│   │    
-│   └── shared
-│       ├── domain
-│       │   └── ...
-│       │   
-│       ├── helpers
-│       │   └── ...
-│       │   
-│       └── infra
-│           ├── dto
-│           ├── external
-│           └── repositories
-│               └── -> [load_product_mock_to_dynamo] <-
-...
-```
 
-## Launch DynamoDB in Docker
-
-Start the DynamoDB Local container using Docker:
-
-1. Open Docker
-2. Start dynamodb-local container
-
-### Create virtual ambient in python (only first time)
+### Create virtual enviroments in python (once for project)
 
 ###### Windows
 
@@ -97,22 +65,55 @@ Start the DynamoDB Local container using Docker:
 
     pip install -r requirements-dev.txt
 
-## Configure Environment Variables
+### Configure Environment Variables
 
 Create a file named `.env` in the root directory and add the following line to the file:
 ```
     STAGE=TEST
 ```
 
+## Launch DynamoDB in Docker 
+
+Start the DynamoDB Local container using Docker:
+
+1. Open Docker
+2. Start dynamodb-local container
+
 ## Running the `load_user_mock_to_dynamo` Script
 
 Finally, you can run the `load_user_mock_to_dynamo` script to load mock data into DynamoDB. Follow the steps below:
 
-1. Make sure you are in the root directory of your project
-2. Run the following command to execute the script:
+1. Locate the directory or file named `load_user_mock_to_dynamo` within your project. This directory or file is responsible for loading mock data into DynamoDB
+2. If the `load_user_mock_to_dynamo` file doesn't exist, you need to create it.
+3. Once you have located or created the `load_user_mock_to_dynamo` file, make sure it is in the correct location within your project structure. The file should be located in the `src/shared/infra/repositories`
+```bash
+.
+├── iac
+├── src
+│   ├── ...
+│   │     
+│   │    
+│   └── shared
+│       ├── domain
+│       │   └── ...
+│       │   
+│       ├── helpers
+│       │   └── ...
+│       │   
+│       └── infra
+│           ├── dto
+│           ├── external
+│           └── repositories
+│               └── -> [load_user_mock_to_dynamo] <-
+...
+```
+4. This file is responsible for populating DynamoDB with mock data
+5. Then, make sure you are in the root directory of your project again
+6. Run the following command to execute the script:
    ```
    py -m src.shared.infra.repositories.load_user_mock_to_dynamo
    ```
+
 
 This command will run the `load_user_mock_to_dynamo` script and populate DynamoDB with the provided mock data
 
