@@ -1,0 +1,13 @@
+name: Create PR
+
+on:
+  push:
+    branches:
+      - dev
+      - homolog
+
+jobs:
+  pull_request:
+    uses: maua-dev/ci_workflows_reusable/.github/workflows/pull_request.yml@V1.0
+    with:
+      repository: ${{ github.repository }}
