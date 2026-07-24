@@ -3,8 +3,12 @@ package-lock.json
 __pycache__
 .pytest_cache
 .venv
+venv
+./venv
 *.egg-info
 lambda_layer_out_temp/
+./build
+.DS_Store
 
 # CDK asset staging directory
 .cdk.staging
