@@ -1,60 +1,117 @@
-import abc
-import re
 
-from src.shared.domain.enums.state_enum import STATE
+
+from typing import Annotated
+from uuid import UUID
+from pydantic import AnyUrl, BaseModel, Field, field_validator
+import time
+
+from src.shared.domain.enums.item_type_enum import ItemTypeEnum
 from src.shared.helpers.errors.domain_errors import EntityError
 
 
-class User(abc.ABC):
-    name: str
-    email: str
-    state: STATE
-    MIN_NAME_LENGTH = 2
-    user_id: int
+class Item(BaseModel):
+    
+    # detalhe: item_id e outros campos armazenam o tipo pythoniano, e nao o valor do uuid em string.
+    # dito isso, no model dump (transição do objeto dynamo para entidade) precisamos inserir explicitamente
+    # que queremos a saída em string, e nao pythoniana!
+    # ......model_dump(mode="JSON")
+    
+    # o campo default factory faz um uuid automaticamente na criação da entidade, isso quer dizer que não precisamos
+    # passar um id na hora de criar a entidade
 
-    def __init__(self, name: str, email: str, state: STATE, user_id: int = None):
-        if not User.validate_name(name):
-            raise EntityError("name")
-        self.name = name
+    
+    item_id: Annotated[
+        UUID, 
+        Field(
+            default_factory=lambda: UUID.uuid4(),
+            frozen=True,
+            validate_default=True,
+            title="Item id",
+            description="Item id in uuid4 format. Will be used as Dyano PK"
+        )
+    ]
+    
+    # @field_validator("item_id")
+    # @classmethod
+    # ...
+    
+    
+    
+    item_name: Annotated[
+        str, 
+        Field(
+            max_length=30,
+            title="Item name",
+            description="Item name, visual usage in frontend"
+        )
+    ]
+    
+    @field_validator("item_name")
+    @classmethod
+    def name_must_not_be_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise EntityError("item_name")
+        return value.strip()
+    
+    
+    
+    item_description: str = Field(
+        max_length=500,
+        title="Item description",
+        description="Item description, visual usage in frontend"
+    )
+    
+    @field_validator("item_description")
+    @classmethod
+    def description_must_not_be_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise EntityError("item_description")
+        return value.strip()
+    
+    
+    # como podemos escrever um capo não obrigatório:
 
-        if not User.validate_email(email):
-            raise EntityError("email")
-        self.email = email
+    item_type: Annotated[
+        ItemTypeEnum,
+        None,
+        Field(
+            default=None,
+            title="Item Type",
+            description="Enum describing the type of item. Optional."
+        )
+    ]
+    
+    # @field_validator("item_type")
+    # @classmethod
+    # ...
+    
+        
+    item_image: Annotated[
+        AnyUrl,
+        Field(
+            title="Item image URL",
+            description="URL of the item image stored in S3"
+        )
+    ]
+    
+    # @field_validator("item_image")
+    # @classmethod
+    # ...
+    
+    
+    created_at: Annotated[
+        int, 
+        Field(
+            default_factory=lambda: int(time.time()),
+            validate_default=True,
+            gt=0,
+            frozen=True,
+            title="Creation timestamp (seconds)", 
+            description="Created at timestamp in seconds, generated when object is created at runtime"
+        )
+    ]
+    
+    # @field_validator("created_at")
+    # @classmethod
+    # ...
 
-        if type(user_id) == int:
-            if user_id < 0:
-                raise EntityError("user_id")
-
-        if type(user_id) != int and user_id is not None:
-            raise EntityError("user_id")
-
-        self.user_id = user_id
-
-        if type(state) != STATE:
-            raise EntityError("state")
-        self.state = state
-
-    @staticmethod
-    def validate_name(name: str) -> bool:
-        if name is None:
-            return False
-        elif type(name) != str:
-            return False
-        elif len(name) < User.MIN_NAME_LENGTH:
-            return False
-
-        return True
-
-    @staticmethod
-    def validate_email(email: str) -> bool:
-        if email is None:
-            return False
-
-        regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-
-        return bool(re.fullmatch(regex, email))
-
-
-
-    def __repr__(self):
-        return f"User(name={self.name}, email={self.email}, user_id={self.user_id}, state={self.state})"
