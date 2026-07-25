@@ -175,6 +175,7 @@ Clone the repository using template
 - Rodrigo Morales - [RodrigoM2004](https://github.com/RodrigoM2004) 🚗
 - Lucas Milani - [LucasKiller](https://github.com/LucasKiller) 🔪
 - Rafael Rubio - [Rubiozito](https://github.com/Rubiozito) 🎸
+- Leonardo Iorio - [lseixas](https://github.com/lseixas) 🐉
 
 ## Special Thanks 🙏
 
