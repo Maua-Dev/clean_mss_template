@@ -41,7 +41,7 @@ class Test_GetUserPresenter:
                 },
                 "domainName": "<url-id>.lambda-url.us-west-2.on.aws",
                 "domainPrefix": "<url-id>",
-                "external_interfaces": {
+                "http": {
                     "method": "POST",
                     "path": "/my/path",
                     "protocol": "HTTP/1.1",
