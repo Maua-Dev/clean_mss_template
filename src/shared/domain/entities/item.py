@@ -1,7 +1,7 @@
 
 
 from typing import Annotated
-from uuid import UUID
+from uuid import UUID, uuid4
 from pydantic import AnyUrl, BaseModel, Field, field_validator
 import time
 
@@ -23,7 +23,7 @@ class Item(BaseModel):
     item_id: Annotated[
         UUID, 
         Field(
-            default_factory=lambda: UUID.uuid4(),
+            default_factory=uuid4,
             frozen=True,
             validate_default=True,
             title="Item id",
@@ -72,8 +72,7 @@ class Item(BaseModel):
     # como podemos escrever um capo não obrigatório:
 
     item_type: Annotated[
-        ItemTypeEnum,
-        None,
+        ItemTypeEnum | None,
         Field(
             default=None,
             title="Item Type",

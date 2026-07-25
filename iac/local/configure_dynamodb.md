@@ -79,43 +79,41 @@ Start the DynamoDB Local container using Docker:
 1. Open Docker
 2. Start dynamodb-local container
 
-## Running the `load_user_mock_to_dynamo` Script
+## Running the `load_item_mock_to_dynamo` Script
 
-Finally, you can run the `load_user_mock_to_dynamo` script to load mock data into DynamoDB. Follow the steps below:
+Seed mock `Item` data into DynamoDB. Two targets:
 
-1. Locate the directory or file named `load_user_mock_to_dynamo` within your project. This directory or file is responsible for loading mock data into DynamoDB
-2. If the `load_user_mock_to_dynamo` file doesn't exist, you need to create it.
-3. Once you have located or created the `load_user_mock_to_dynamo` file, make sure it is in the correct location within your project structure. The file should be located in the `src/shared/infra/repositories`
+### Local (DynamoDB Local / Docker)
+
+Creates the table (with GSI) if missing, then loads mock items:
+
 ```bash
-.
-├── iac
-├── src
-│   ├── ...
-│   │     
-│   │    
-│   └── shared
-│       ├── domain
-│       │   └── ...
-│       │   
-│       ├── helpers
-│       │   └── ...
-│       │   
-│       └── infra
-│           ├── dto
-│           ├── external
-│           └── repositories
-│               └── -> [load_user_mock_to_dynamo] <-
-...
+# from repo root, with STAGE=TEST (default)
+python -m src.shared.infra.repositories.load_item_mock_to_dynamo
+# or explicitly:
+python -m src.shared.infra.repositories.load_item_mock_to_dynamo --target local
 ```
-4. This file is responsible for populating DynamoDB with mock data
-5. Then, make sure you are in the root directory of your project again
-6. Run the following command to execute the script:
-   ```
-   py -m src.shared.infra.repositories.load_user_mock_to_dynamo
-   ```
 
+### AWS DEV / HOMOLOG (manual, after CDK deploy)
 
-This command will run the `load_user_mock_to_dynamo` script and populate DynamoDB with the provided mock data
+Does **not** create the table — CDK already did. Only seeds data. Refuses `PROD`.
+
+```bash
+STAGE=DEV \
+REGION=sa-east-1 \
+DYNAMO_TABLE_NAME=TemplateTable1-dev \
+DYNAMO_PARTITION_KEY=pk \
+DYNAMO_SORT_KEY=sk \
+python -m src.shared.infra.repositories.load_item_mock_to_dynamo --target aws
+```
+
+Use your real table name / region from the deployed stack. Do not run this against production.
+
+The script file lives at:
+
+```bash
+src/shared/infra/repositories/load_item_mock_to_dynamo.py
+```
 
 ## Launch NoSQL WorkBench
 

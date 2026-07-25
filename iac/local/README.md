@@ -6,7 +6,8 @@
 
 ## Setup dynamodb local
 - `docker run -p 8000:8000 amazon/dynamodb-local -sharedDB -inMemory`
-- run `src/shared/infra/repositories/load_user_mock_to_dynamo.py`
+- seed local: `python -m src.shared.infra.repositories.load_item_mock_to_dynamo --target local`
+- seed AWS DEV/HOMOLOG (after cdk deploy): `python -m src.shared.infra.repositories.load_item_mock_to_dynamo --target aws` (set STAGE + Dynamo env vars; blocked on PROD)
 
 
 ## Build cdk (/iac)
