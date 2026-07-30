@@ -42,7 +42,21 @@ Our folder structure was developed specially for our projects.
 │   │   │   └── app
 │   │   ├── get_all_items
 │   │   │   └── app
-│   │   └── update_item
+│   │   ├── get_items_by_type
+│   │   │   └── app
+│   │   ├── update_item
+│   │   │   └── app
+│   │   ├── create_user
+│   │   │   └── app
+│   │   ├── delete_user
+│   │   │   └── app
+│   │   ├── get_user
+│   │   │   └── app
+│   │   ├── get_user_by_email
+│   │   │   └── app
+│   │   ├── get_all_users
+│   │   │   └── app
+│   │   └── update_user
 │   │       └── app
 │   └── shared
 │       ├── domain
@@ -68,7 +82,21 @@ Our folder structure was developed specially for our projects.
     │   │   └── app
     │   ├── get_all_items
     │   │   └── app
-    │   └── update_item
+    │   ├── get_items_by_type
+    │   │   └── app
+    │   ├── update_item
+    │   │   └── app
+    │   ├── create_user
+    │   │   └── app
+    │   ├── delete_user
+    │   │   └── app
+    │   ├── get_user
+    │   │   └── app
+    │   ├── get_user_by_email
+    │   │   └── app
+    │   ├── get_all_users
+    │   │   └── app
+    │   └── update_user
     │       └── app
     └── shared
         ├── domain
