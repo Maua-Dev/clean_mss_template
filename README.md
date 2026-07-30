@@ -34,13 +34,15 @@ Our folder structure was developed specially for our projects.
 ├── iac
 ├── src
 │   ├── modules
-│   │   ├── create_user
+│   │   ├── create_item
 │   │   │   └── app
-│   │   ├── delete_user
+│   │   ├── delete_item
 │   │   │   └── app
-│   │   ├── get_user
+│   │   ├── get_item
 │   │   │   └── app
-│   │   └── update_user
+│   │   ├── get_all_items
+│   │   │   └── app
+│   │   └── update_item
 │   │       └── app
 │   └── shared
 │       ├── domain
@@ -58,13 +60,15 @@ Our folder structure was developed specially for our projects.
 │           └── repositories
 └── tests
     ├── modules
-    │   ├── create_user
+    │   ├── create_item
     │   │   └── app
-    │   ├── delete_user
+    │   ├── delete_item
     │   │   └── app
-    │   ├── get_user
+    │   ├── get_item
     │   │   └── app
-    │   └── update_user
+    │   ├── get_all_items
+    │   │   └── app
+    │   └── update_item
     │       └── app
     └── shared
         ├── domain
@@ -79,7 +83,7 @@ Our folder structure was developed specially for our projects.
 ### Files and Directories 📁
 
 - Files have the same name as the classes
-- snake_case 🐍 (ex: `./app/create_user_controller.py`)
+- snake_case 🐍 (ex: `./app/create_item_controller.py`)
 
 ### Classes 🕴
 - #### Pattern 📟
@@ -88,17 +92,17 @@ Our folder structure was developed specially for our projects.
 
 - #### Types 🧭
 
-    - **Interface** starts with "I" --> `IUserRepository`, `ISelfieRepository` 😀
-    - **Repository** have the same name as interface, without the "I" and the type in final (ex: `UserRepositoryMock`, `SelfieRepositoryDynamo`) 🥬
-    - **Controller** ends with "Controller" --> `CreateUserController`, `GetSelfieController` 🎮
-    - **Usecase** ends with "Usecase" --> `CreateUserUsecase`, `GetSelfieUsecase` 🏠
-    - **Viewmodel** ends with "Viewmodel" --> `CreateUserViewmodel`, `GetSelfieViewmodel` 👀
-    - **Presenter** ends with "Presenter" --> `CreateUserPresenter`, `GetSelfiePresenter`🎁
+    - **Interface** starts with "I" --> `IItemRepository`, `ISelfieRepository` 😀
+    - **Repository** have the same name as interface, without the "I" and the type in final (ex: `ItemRepositoryMock`, `SelfieRepositoryDynamo`) 🥬
+    - **Controller** ends with "Controller" --> `CreateItemController`, `GetSelfieController` 🎮
+    - **Usecase** ends with "Usecase" --> `CreateItemUsecase`, `GetSelfieUsecase` 🏠
+    - **Viewmodel** ends with "Viewmodel" --> `CreateItemViewmodel`, `GetSelfieViewmodel` 👀
+    - **Presenter** ends with "Presenter" --> `CreateItemPresenter`, `GetSelfiePresenter`🎁
 
 ### Methods 👨‍🏫
 
 - snake_case 🐍
-- Try associate with a verb (ex: `create_user`, `get_user`, `update_selfie`)
+- Try associate with a verb (ex: `create_item`, `get_item`, `update_selfie`)
 
 ### Variables 🅰
 

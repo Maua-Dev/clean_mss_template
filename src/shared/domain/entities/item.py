@@ -2,7 +2,7 @@
 
 from typing import Annotated
 from uuid import UUID, uuid4
-from pydantic import AnyUrl, BaseModel, Field, field_validator
+from pydantic import AnyUrl, BaseModel, Field, ValidationError, field_validator
 import time
 
 from src.shared.domain.enums.item_type_enum import ItemTypeEnum
@@ -10,6 +10,15 @@ from src.shared.helpers.errors.domain_errors import EntityError
 
 
 class Item(BaseModel):
+
+    def __init__(self, **data):
+        # Qualquer falha de validação do Pydantic vira EntityError com o campo culpado,
+        # então o usecase não precisa conhecer o ValidationError.
+        try:
+            super().__init__(**data)
+        except ValidationError as err:
+            raise EntityError(str(err.errors()[0]["loc"][0])) from err
+
     
     # detalhe: item_id e outros campos armazenam o tipo pythoniano, e nao o valor do uuid em string.
     # dito isso, no model dump (transição do objeto dynamo para entidade) precisamos inserir explicitamente
@@ -55,11 +64,14 @@ class Item(BaseModel):
     
     
     
-    item_description: str = Field(
-        max_length=500,
-        title="Item description",
-        description="Item description, visual usage in frontend"
-    )
+    item_description: Annotated[
+        str,
+        Field(
+            max_length=500,
+            title="Item description",
+            description="Item description, visual usage in frontend"
+        )
+    ]
     
     @field_validator("item_description")
     @classmethod
