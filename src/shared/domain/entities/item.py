@@ -36,7 +36,7 @@ class Item(BaseModel):
             frozen=True,
             validate_default=True,
             title="Item id",
-            description="Item id in uuid4 format. Will be used as Dyano PK"
+            description="Item id in uuid4 format"
         )
     ]
     

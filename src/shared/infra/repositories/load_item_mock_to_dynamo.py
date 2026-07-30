@@ -10,6 +10,9 @@ from src.shared.infra.external.dynamo.dynamo_keys import (
     GSI1_NAME,
     GSI1_PK_ATTR,
     GSI1_SK_ATTR,
+    GSI2_NAME,
+    GSI2_PK_ATTR,
+    GSI2_SK_ATTR,
 )
 from src.shared.infra.repositories.item_repository_dynamo import ItemRepositoryDynamo
 from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMock
@@ -42,6 +45,8 @@ def setup_dynamo_table():
             {"AttributeName": sk, "AttributeType": "S"},
             {"AttributeName": GSI1_PK_ATTR, "AttributeType": "S"},
             {"AttributeName": GSI1_SK_ATTR, "AttributeType": "S"},
+            {"AttributeName": GSI2_PK_ATTR, "AttributeType": "S"},
+            {"AttributeName": GSI2_SK_ATTR, "AttributeType": "S"},
         ],
         GlobalSecondaryIndexes=[
             {
@@ -51,7 +56,15 @@ def setup_dynamo_table():
                     {"AttributeName": GSI1_SK_ATTR, "KeyType": "RANGE"},
                 ],
                 "Projection": {"ProjectionType": "ALL"},
-            }
+            },
+            {
+                "IndexName": GSI2_NAME,
+                "KeySchema": [
+                    {"AttributeName": GSI2_PK_ATTR, "KeyType": "HASH"},
+                    {"AttributeName": GSI2_SK_ATTR, "KeyType": "RANGE"},
+                ],
+                "Projection": {"ProjectionType": "ALL"},
+            },
         ],
         BillingMode="PAY_PER_REQUEST",
     )

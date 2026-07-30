@@ -7,6 +7,7 @@ from constructs import Construct
 # Mantenha alinhado com src.shared.infra.external.dynamo.dynamo_keys / Environments
 _TEMPLATE_TABLE1_PREFIX = "TemplateTable1"
 _ITEM_TYPE_INDEX_NAME = "ItemTypeIndex"
+_USER_EMAIL_INDEX_NAME = "UserEmailIndex"
 
 RETAINED_STAGES = {"prod", "homolog"}
 
@@ -50,9 +51,7 @@ class DynamoConstruct(Construct):
             ),
         )
 
-        # Exemplo de GSI: listar items por tipo (access pattern secundário).
-        # Atributos gsi1pk/gsi1sk são preenchidos no DTO (índice sparse: omitidos quando item_type é None).
-        # Query no repo: dynamo.query(Key("gsi1pk").eq(...), IndexName="ItemTypeIndex")
+        # Exemplo de GSI sparse: listar items por tipo.
         self.template_table1.add_global_secondary_index(
             index_name=_ITEM_TYPE_INDEX_NAME,
             partition_key=dynamodb.Attribute(
@@ -61,6 +60,20 @@ class DynamoConstruct(Construct):
             ),
             sort_key=dynamodb.Attribute(
                 name="gsi1sk",
+                type=dynamodb.AttributeType.STRING,
+            ),
+            projection_type=dynamodb.ProjectionType.ALL,
+        )
+
+        # Exemplo de GSI denso: buscar user por email.
+        self.template_table1.add_global_secondary_index(
+            index_name=_USER_EMAIL_INDEX_NAME,
+            partition_key=dynamodb.Attribute(
+                name="gsi2pk",
+                type=dynamodb.AttributeType.STRING,
+            ),
+            sort_key=dynamodb.Attribute(
+                name="gsi2sk",
                 type=dynamodb.AttributeType.STRING,
             ),
             projection_type=dynamodb.ProjectionType.ALL,
