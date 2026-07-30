@@ -27,7 +27,7 @@ class ItemDynamoDTO:
         return {
             **item.model_dump(mode="json"),
             "pk": partition_key(kind=EntityKind.ITEM),
-            "sk": sort_key(item_id=item.item_id, kind=EntityKind.ITEM),
+            "sk": sort_key(id=item.item_id, kind=EntityKind.ITEM),
             **build_gsi1_attributes(item.item_type, item.created_at),
         }
 
