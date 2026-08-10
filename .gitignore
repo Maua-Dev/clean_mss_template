@@ -133,5 +133,6 @@ dmypy.json
 
 /.vscode/
 /.idea/
+.DS_Store
 iac/local/docker/dynamodb/shared-local-instance.db
 iac/local/docker/minio/
