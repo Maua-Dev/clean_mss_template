@@ -1,17 +1,14 @@
 from src.modules.item.get_item.app.get_item_controller import GetItemController
 from src.modules.item.get_item.app.get_item_usecase import GetItemUsecase
 from src.shared.helpers.external_interfaces.http_models import HttpRequest
-from src.shared.infra.external.observability.observability_mock import ObservabilityMock
 from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMock
-
-observability = ObservabilityMock(module_name="get_item")
 
 
 class Test_GetItemController:
     def test_get_item_controller(self):
         repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo, observability=observability)
-        controller = GetItemController(usecase=usecase, observability=observability)
+        usecase = GetItemUsecase(repo=repo)
+        controller = GetItemController(usecase=usecase)
 
         item = repo.items[1]
         request = HttpRequest(query_params={"item_id": str(item.item_id)})
@@ -27,8 +24,8 @@ class Test_GetItemController:
 
     def test_get_item_controller_missing_parameters(self):
         repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo, observability=observability)
-        controller = GetItemController(usecase=usecase, observability=observability)
+        usecase = GetItemUsecase(repo=repo)
+        controller = GetItemController(usecase=usecase)
 
         request = HttpRequest(query_params={})
 
@@ -39,8 +36,8 @@ class Test_GetItemController:
 
     def test_get_item_controller_wrong_type_parameter(self):
         repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo, observability=observability)
-        controller = GetItemController(usecase=usecase, observability=observability)
+        usecase = GetItemUsecase(repo=repo)
+        controller = GetItemController(usecase=usecase)
 
         request = HttpRequest(query_params={"item_id": 999})
 
@@ -53,8 +50,8 @@ class Test_GetItemController:
 
     def test_get_item_controller_entity_error(self):
         repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo, observability=observability)
-        controller = GetItemController(usecase=usecase, observability=observability)
+        usecase = GetItemUsecase(repo=repo)
+        controller = GetItemController(usecase=usecase)
 
         request = HttpRequest(query_params={"item_id": "abc"})
 
@@ -65,8 +62,8 @@ class Test_GetItemController:
 
     def test_get_item_controller_no_items_found(self):
         repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo, observability=observability)
-        controller = GetItemController(usecase=usecase, observability=observability)
+        usecase = GetItemUsecase(repo=repo)
+        controller = GetItemController(usecase=usecase)
 
         request = HttpRequest(query_params={
             "item_id": "99999999-9999-4999-8999-999999999999"

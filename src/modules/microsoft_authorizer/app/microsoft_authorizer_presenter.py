@@ -5,6 +5,7 @@ from src.modules.microsoft_authorizer.app.microsoft_authorizer_usecase import (
 )
 from src.shared.environments import Environments
 from src.shared.helpers.auth.iam_policy import generate_policy
+from src.shared.helpers.observability.wrap_handler import observed_handler
 from src.shared.infra.external.microsoft.graph_client import MicrosoftGraphClient
 
 _DEFAULT_GRAPH_ENDPOINT = "https://graph.microsoft.com/v1.0/me"
@@ -22,6 +23,7 @@ def _build_usecase() -> MicrosoftAuthorizerUsecase:
     )
 
 
+@observed_handler("microsoft_authorizer")
 def lambda_handler(event, context):
     """
     API Gateway TOKEN authorizer.
