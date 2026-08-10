@@ -32,7 +32,8 @@ class IacStack(Stack):
 
         self.apigw_construct = ApigwConstruct(
             self, 
-            construct_id=f"Apigw", 
+            construct_id=f"Apigw",
+            stack_name=stack_name,
             stage=stage
         )
         
