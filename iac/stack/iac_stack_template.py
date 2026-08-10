@@ -64,8 +64,14 @@ class IacStack(Stack):
         #     stage=stage
         # )
 
+        # alinhado com Environments.load_envs() (stages DEV/HOMOLOG/PROD)
         ENVIRONMENT_VARIABLES = {
             "STAGE": stage.upper(),
+            "REGION": self.region,
+            "DYNAMO_TABLE_NAME": self.dynamo_construct.template_table1.table_name,
+            "DYNAMO_PARTITION_KEY": "pk",
+            "DYNAMO_SORT_KEY": "sk",
+            "MSS_NAME": stack_name,
             # "EVENT_SECRET_ARN": self.sm_construct.event_secret.secret_arn
             # variaveis acessives às funções lambda
             # coisas como bucket name, table name etc...
@@ -90,12 +96,13 @@ class IacStack(Stack):
         # ambiente no CD do front vinda do BACK ( nada de route 53 aqui )
         
         # esse construct exige um apigw
+        # path SSM: /{stack_name}/{stage}/api/url  (mesmo STACK_NAME do CD)
         
         self.ssm_construct = SsmConstruct(
             self,
             stage=stage,
             construct_id=f"{stack_name}SystemsManager",
-            mss_name_identification_for_path="templatecleanmss", # troque isso para o nome do projeto quando for  diferenciar
+            stack_name=stack_name,
             api=self.apigw_construct.rest_api,
             api_gateway_resource=self.apigw_construct.api_gateway_resource,
             buckets=None, # o que deve ser salvo são os CDNs, visto que os buckets devem bloquear acesso pela URL publica

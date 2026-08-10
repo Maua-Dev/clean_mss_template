@@ -12,10 +12,10 @@ class LambdaConstruct(Construct):
     
     stage: str
     stack_name: str
-    functions_that_need_dynamo_db_access: list[lambda_.Function] = []
-    functions_that_need_s3_access: list[lambda_.Function] = []
-    functions_that_need_aurora_db_access: list[lambda_.Function] = []
-    functions_that_need_other_permissions: list[lambda_.Function] = []
+    functions_that_need_dynamo_db_access: list[lambda_.Function]
+    functions_that_need_s3_access: list[lambda_.Function]
+    functions_that_need_aurora_db_access: list[lambda_.Function]
+    functions_that_need_other_permissions: list[lambda_.Function]
     lambda_layer: lambda_.LayerVersion
 
     def create_lambda_api_gateway_integration(
@@ -114,6 +114,10 @@ class LambdaConstruct(Construct):
         
         self.stage = stage
         self.stack_name = stack_name
+        self.functions_that_need_dynamo_db_access = []
+        self.functions_that_need_s3_access = []
+        self.functions_that_need_aurora_db_access = []
+        self.functions_that_need_other_permissions = []
 
         self.lambda_layer = lambda_.LayerVersion(
             self, 
@@ -131,6 +135,7 @@ class LambdaConstruct(Construct):
             api_resource=api_gateway_resource,
             environment_variables=environment_variables,
         )
+        self.functions_that_need_dynamo_db_access.append(self.create_user)
         
         # funções com exemplo em public e integração com ses para email
         # descomente esse código conforme for necessário, ficará aqui de exemplo
