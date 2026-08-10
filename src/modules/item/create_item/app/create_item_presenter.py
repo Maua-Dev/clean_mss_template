@@ -2,20 +2,21 @@ from .create_item_controller import CreateItemController
 from .create_item_usecase import CreateItemUsecase
 from src.shared.environments import Environments
 from src.shared.helpers.external_interfaces.http_lambda_requests import LambdaHttpRequest, LambdaHttpResponse
+from src.shared.helpers.observability.wrap_handler import observed_handler
 
-repo = Environments.get_item_repo()()
-usecase = CreateItemUsecase(repo)
+item_repo = Environments.get_item_repo()()
+user_repo = Environments.get_user_repo()()
+usecase = CreateItemUsecase(item_repo, user_repo)
 controller = CreateItemController(usecase)
 
+
+@observed_handler("create_item")
 def lambda_handler(event, context):
-
-    from pprint import pprint
-
-    pprint(event)
-
-    httpRequest = LambdaHttpRequest(data=event)
-    response = controller(httpRequest)
-    httpResponse = LambdaHttpResponse(status_code=response.status_code, body=response.body, headers=response.headers)
-
-    return httpResponse.toDict()
-
+    http_request = LambdaHttpRequest(data=event)
+    response = controller(http_request)
+    http_response = LambdaHttpResponse(
+        status_code=response.status_code,
+        body=response.body,
+        headers=response.headers
+    )
+    return http_response.toDict()
