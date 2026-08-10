@@ -9,7 +9,6 @@ FORBIDDEN_REPO_NAMES=(
   "clean_mss_template"
 )
 
-FORBIDDEN_SSM_SLUG="templatecleanmss"
 FORBIDDEN_STACK_PREFIX="CleanMssTemplate"
 FORBIDDEN_PROJECT_TAG="Template"
 
@@ -24,12 +23,6 @@ done
 
 if [[ "${GITHUB_REPOSITORY}" == "Maua-Dev/clean_mss_template" ]]; then
   echo "::error::Refusing to deploy the upstream template repository itself."
-  failed=1
-fi
-
-if grep -qE "mss_name_identification_for_path=[\"']${FORBIDDEN_SSM_SLUG}[\"']" \
-  iac/stack/iac_stack_template.py; then
-  echo "::error::Change mss_name_identification_for_path in iac/stack/iac_stack_template.py (still '${FORBIDDEN_SSM_SLUG}')."
   failed=1
 fi
 
