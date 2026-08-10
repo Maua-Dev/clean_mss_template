@@ -18,9 +18,7 @@ app = cdk.App()
 aws_region = os.environ.get("AWS_REGION")
 aws_account_id = os.environ.get("AWS_ACCOUNT_ID")
 stack_name = os.environ.get("STACK_NAME")
-
-stage = os.environ.get("GITHUB_REF_NAME").lower()
-stack_name = os.environ.get("STACK_NAME")
+stage = (os.environ.get("GITHUB_REF_NAME") or "dev").lower()
 
 tags = {
     'project': 'Template',
