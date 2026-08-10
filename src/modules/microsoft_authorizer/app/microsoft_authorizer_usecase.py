@@ -1,7 +1,7 @@
-import json
 import re
 
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
+from src.shared.helpers.auth.authorizer_user import build_authorizer_user_context
 from src.shared.helpers.auth.iam_policy import generate_policy
 from src.shared.helpers.errors.usecase_errors import NoUsersFound
 from src.shared.infra.external.microsoft.graph_client import MicrosoftGraphClient
@@ -23,24 +23,27 @@ class MicrosoftAuthorizerUsecase:
 
     def __call__(self, authorization_token: str, method_arn: str) -> dict:
         token = authorization_token.replace("Bearer ", "", 1).strip()
-        user_data = self.graph_client.get_user_profile(token)
+        profile = self.graph_client.get_user_profile(token)
 
-        email = self._extract_email(user_data)
-        if not _MAUA_EMAIL_REGEX.match(email):
+        sub = str(profile.get("id") or "").strip()
+        mail = self._extract_email(profile)
+        name = str(profile.get("displayName") or profile.get("name") or "").strip()
+
+        if not sub or not mail or not _MAUA_EMAIL_REGEX.match(mail):
             return generate_policy("user", "Deny", method_arn)
 
         if not self._is_onboarding_route(method_arn):
             try:
-                self.user_repo.get_user_by_email(email)
+                self.user_repo.get_user_by_email(mail)
             except NoUsersFound:
                 return generate_policy("user", "Deny", method_arn)
 
-        principal_id = str(user_data.get("id") or "user")
+        # context só com claims Microsoft → LambdaHttpRequest.data["user_from_authorizer"]
         return generate_policy(
-            principal_id,
+            sub,
             "Allow",
             method_arn,
-            {"user": json.dumps(user_data)},
+            build_authorizer_user_context(sub=sub, mail=mail, name=name),
         )
 
     @staticmethod

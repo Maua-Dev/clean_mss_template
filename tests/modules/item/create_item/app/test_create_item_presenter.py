@@ -5,6 +5,12 @@ os.environ["STAGE"] = "TEST"
 
 from src.modules.item.create_item.app.create_item_presenter import lambda_handler
 
+_ADMIN_CONTEXT = json.dumps({
+    "sub": "ms-admin",
+    "mail": "alice@example.com",
+    "name": "Alice Admin",
+})
+
 
 class Test_CreateItemPresenter:
     def test_create_item(self):
@@ -27,6 +33,7 @@ class Test_CreateItemPresenter:
                     "sourceIp": "123.123.123.123",
                     "userAgent": "agent"
                 },
+                "authorizer": {"user": _ADMIN_CONTEXT},
                 "requestId": "id",
                 "routeKey": "$default",
                 "stage": "$default",

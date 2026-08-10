@@ -47,7 +47,12 @@ class Test_MicrosoftAuthorizerUsecase:
 
         assert policy["principalId"] == "ms-graph-id-1"
         assert policy["policyDocument"]["Statement"][0]["Effect"] == "Allow"
-        assert json.loads(policy["context"]["user"])["mail"] == "alice@maua.br"
+        context_user = json.loads(policy["context"]["user"])
+        assert context_user == {
+            "sub": "ms-graph-id-1",
+            "mail": "alice@maua.br",
+            "name": "Alice",
+        }
         assert graph.last_token == "token-123"
 
     def test_deny_non_maua_email(self):

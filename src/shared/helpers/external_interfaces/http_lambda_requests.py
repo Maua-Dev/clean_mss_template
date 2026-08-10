@@ -1,6 +1,10 @@
 import json
 from typing import Any
 
+from src.shared.helpers.auth.authorizer_user import (
+    USER_FROM_AUTHORIZER_KEY,
+    parse_authorizer_user_from_event,
+)
 from src.shared.helpers.external_interfaces.http_models import HttpRequest, HttpResponse
 
 
@@ -125,4 +129,11 @@ class LambdaHttpRequest(HttpRequest):
         self.raw_query_string = data.get("rawQueryString")
         self.query_string_parameters = data.get("queryStringParameters")
         self.request_context = data.get("requestContext")
-        self.http = LambdaDefaultHTTP(self.request_context.get("http") if self.request_context else None) 
+        self.http = LambdaDefaultHTTP(self.request_context.get("http") if self.request_context else None)
+
+        # injeta DEPOIS do body/query para o cliente não spoofar via payload
+        authorizer_user = parse_authorizer_user_from_event(data)
+        if authorizer_user is not None:
+            self.data[USER_FROM_AUTHORIZER_KEY] = authorizer_user
+        else:
+            self.data.pop(USER_FROM_AUTHORIZER_KEY, None)

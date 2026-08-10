@@ -1,23 +1,41 @@
 from src.modules.item.update_item.app.update_item_controller import UpdateItemController
 from src.modules.item.update_item.app.update_item_usecase import UpdateItemUsecase
+from src.shared.helpers.auth.authorizer_user import USER_FROM_AUTHORIZER_KEY
 from src.shared.helpers.external_interfaces.http_models import HttpRequest
 from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMock
+from src.shared.infra.repositories.user_repository_mock import UserRepositoryMock
+
+_ADMIN_CLAIMS = {
+    "sub": "ms-admin",
+    "mail": "alice@example.com",
+    "name": "Alice Admin",
+}
+_USER_CLAIMS = {
+    "sub": "ms-user",
+    "mail": "bob@example.com",
+    "name": "Bob User",
+}
+
+
+def _body(**fields):
+    return {USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS, **fields}
 
 
 class Test_UpdateItemController:
     def test_update_item_controller(self):
-        repo = ItemRepositoryMock()
-        usecase = UpdateItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        user_repo = UserRepositoryMock()
+        usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
-        item = repo.items[0]
-        request = HttpRequest(body={
-            "item_id": str(item.item_id),
-            "item_name": "Ultrabook",
-            "item_description": "Updated description",
-            "item_type": "type2",
-            "item_image": "https://example.com/images/ultrabook.png"
-        })
+        item = item_repo.items[0]
+        request = HttpRequest(body=_body(
+            item_id=str(item.item_id),
+            item_name="Ultrabook",
+            item_description="Updated description",
+            item_type="type2",
+            item_image="https://example.com/images/ultrabook.png"
+        ))
 
         response = controller(request=request)
 
@@ -28,17 +46,59 @@ class Test_UpdateItemController:
         assert response.body["item_type"] == "type2"
         assert response.body["message"] == "the item was updated successfully"
 
-    def test_update_item_controller_missing_item_id(self):
-        repo = ItemRepositoryMock()
-        usecase = UpdateItemUsecase(repo=repo)
+    def test_update_item_controller_forbidden_without_authorizer_user(self):
+        item_repo = ItemRepositoryMock()
+        user_repo = UserRepositoryMock()
+        usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
+        item = item_repo.items[0]
         request = HttpRequest(body={
+            "item_id": str(item.item_id),
             "item_name": "Ultrabook",
             "item_description": "Updated description",
             "item_type": "type2",
             "item_image": "https://example.com/images/ultrabook.png"
         })
+
+        response = controller(request=request)
+
+        assert response.status_code == 403
+        assert response.body == "That action is forbidden for this user"
+
+    def test_update_item_controller_forbidden_for_non_admin(self):
+        item_repo = ItemRepositoryMock()
+        user_repo = UserRepositoryMock()
+        usecase = UpdateItemUsecase(item_repo, user_repo)
+        controller = UpdateItemController(usecase=usecase)
+
+        item = item_repo.items[0]
+        request = HttpRequest(body={
+            USER_FROM_AUTHORIZER_KEY: _USER_CLAIMS,
+            "item_id": str(item.item_id),
+            "item_name": "Ultrabook",
+            "item_description": "Updated description",
+            "item_type": "type2",
+            "item_image": "https://example.com/images/ultrabook.png"
+        })
+
+        response = controller(request=request)
+
+        assert response.status_code == 403
+        assert response.body == "That action is forbidden for this user"
+
+    def test_update_item_controller_missing_item_id(self):
+        item_repo = ItemRepositoryMock()
+        user_repo = UserRepositoryMock()
+        usecase = UpdateItemUsecase(item_repo, user_repo)
+        controller = UpdateItemController(usecase=usecase)
+
+        request = HttpRequest(body=_body(
+            item_name="Ultrabook",
+            item_description="Updated description",
+            item_type="type2",
+            item_image="https://example.com/images/ultrabook.png"
+        ))
 
         response = controller(request=request)
 
@@ -46,16 +106,17 @@ class Test_UpdateItemController:
         assert response.body == "Field item_id is missing"
 
     def test_update_item_controller_missing_item_name(self):
-        repo = ItemRepositoryMock()
-        usecase = UpdateItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        user_repo = UserRepositoryMock()
+        usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
-        request = HttpRequest(body={
-            "item_id": str(repo.items[0].item_id),
-            "item_description": "Updated description",
-            "item_type": "type2",
-            "item_image": "https://example.com/images/ultrabook.png"
-        })
+        request = HttpRequest(body=_body(
+            item_id=str(item_repo.items[0].item_id),
+            item_description="Updated description",
+            item_type="type2",
+            item_image="https://example.com/images/ultrabook.png"
+        ))
 
         response = controller(request=request)
 
@@ -63,17 +124,18 @@ class Test_UpdateItemController:
         assert response.body == "Field item_name is missing"
 
     def test_update_item_controller_wrong_type_item_id(self):
-        repo = ItemRepositoryMock()
-        usecase = UpdateItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        user_repo = UserRepositoryMock()
+        usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
-        request = HttpRequest(body={
-            "item_id": 3,
-            "item_name": "Ultrabook",
-            "item_description": "Updated description",
-            "item_type": "type2",
-            "item_image": "https://example.com/images/ultrabook.png"
-        })
+        request = HttpRequest(body=_body(
+            item_id=3,
+            item_name="Ultrabook",
+            item_description="Updated description",
+            item_type="type2",
+            item_image="https://example.com/images/ultrabook.png"
+        ))
 
         response = controller(request=request)
 
@@ -83,17 +145,18 @@ class Test_UpdateItemController:
         )
 
     def test_update_item_not_found(self):
-        repo = ItemRepositoryMock()
-        usecase = UpdateItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        user_repo = UserRepositoryMock()
+        usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
-        request = HttpRequest(body={
-            "item_id": "99999999-9999-4999-8999-999999999999",
-            "item_name": "Ultrabook",
-            "item_description": "Updated description",
-            "item_type": "type2",
-            "item_image": "https://example.com/images/ultrabook.png"
-        })
+        request = HttpRequest(body=_body(
+            item_id="99999999-9999-4999-8999-999999999999",
+            item_name="Ultrabook",
+            item_description="Updated description",
+            item_type="type2",
+            item_image="https://example.com/images/ultrabook.png"
+        ))
 
         response = controller(request=request)
 
