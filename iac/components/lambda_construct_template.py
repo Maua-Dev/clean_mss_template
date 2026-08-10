@@ -124,8 +124,17 @@ class LambdaConstruct(Construct):
             compatible_runtimes=[lambda_.Runtime.PYTHON_3_13]
         )
         
+        self.create_user = self.create_lambda_api_gateway_integration(
+            module_name="create_user", # nome da pasta
+            method="POST",
+            subfolder="user", # nome da subfolder ( se tiver )
+            api_resource=api_gateway_resource,
+            environment_variables=environment_variables,
+        )
+        
         # funções com exemplo em public e integração com ses para email
         # descomente esse código conforme for necessário, ficará aqui de exemplo
+        # na dúvida, use public=False !!!!!!!!!
         
         # self.contact_us = self.create_lambda_api_gateway_integration(
         #     module_name="contact_us",
