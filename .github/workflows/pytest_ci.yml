@@ -1,0 +1,13 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  testApp:
+    uses: maua-dev/ci_workflows_reusable/.github/workflows/pytest_ci_313.yml@V1.2
+
+  cdkSynth:
+    uses: ./.github/workflows/cdk_synth_ci.yml
