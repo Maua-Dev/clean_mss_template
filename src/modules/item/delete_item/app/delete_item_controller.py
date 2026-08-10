@@ -1,12 +1,19 @@
 from uuid import UUID
 
+from src.shared.helpers.auth.authorizer_user import USER_FROM_AUTHORIZER_KEY
 from src.shared.helpers.external_interfaces.external_interface import IRequest, IResponse
 from .delete_item_usecase import DeleteItemUsecase
 from .delete_item_viewmodel import DeleteItemViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
-from src.shared.helpers.errors.usecase_errors import NoItemsFound
-from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError
+from src.shared.helpers.errors.usecase_errors import ForbiddenAction, NoItemsFound
+from src.shared.helpers.external_interfaces.http_codes import (
+    OK,
+    NotFound,
+    BadRequest,
+    InternalServerError,
+    Forbidden,
+)
 
 
 class DeleteItemController:
@@ -16,6 +23,7 @@ class DeleteItemController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
+            user_from_authorizer = request.data.get(USER_FROM_AUTHORIZER_KEY)
             item_id = request.data.get("item_id")
 
             if item_id is None:
@@ -33,28 +41,29 @@ class DeleteItemController:
             except ValueError:
                 raise EntityError("item_id")
 
-            item = self.DeleteItemUsecase(item_id=parsed_item_id)
+            item = self.DeleteItemUsecase(
+                item_id=parsed_item_id,
+                user_from_authorizer=user_from_authorizer,
+            )
 
             viewmodel = DeleteItemViewmodel(item=item)
 
             return OK(viewmodel.to_dict())
 
-        except NoItemsFound as err:
+        except ForbiddenAction as err:
+            return Forbidden(body=err.message)
 
+        except NoItemsFound as err:
             return NotFound(body=err.message)
 
         except MissingParameters as err:
-
             return BadRequest(body=err.message)
 
         except WrongTypeParameter as err:
-
             return BadRequest(body=err.message)
 
         except EntityError as err:
-
             return BadRequest(body=err.message)
 
         except Exception as err:
-
             return InternalServerError(body=err.args[0])

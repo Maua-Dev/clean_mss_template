@@ -1,12 +1,19 @@
 from uuid import UUID
 
+from src.shared.helpers.auth.authorizer_user import USER_FROM_AUTHORIZER_KEY
 from src.shared.helpers.external_interfaces.external_interface import IResponse, IRequest
 from .update_item_usecase import UpdateItemUsecase
 from .update_item_viewmodel import UpdateItemViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
-from src.shared.helpers.errors.usecase_errors import NoItemsFound
-from src.shared.helpers.external_interfaces.http_codes import OK, NotFound, BadRequest, InternalServerError
+from src.shared.helpers.errors.usecase_errors import ForbiddenAction, NoItemsFound
+from src.shared.helpers.external_interfaces.http_codes import (
+    OK,
+    NotFound,
+    BadRequest,
+    InternalServerError,
+    Forbidden,
+)
 
 
 class UpdateItemController:
@@ -16,6 +23,7 @@ class UpdateItemController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
+            user_from_authorizer = request.data.get(USER_FROM_AUTHORIZER_KEY)
             item_id = request.data.get("item_id")
             item_name = request.data.get("item_name")
             item_description = request.data.get("item_description")
@@ -74,29 +82,28 @@ class UpdateItemController:
                 item_name=item_name,
                 item_description=item_description,
                 item_type=item_type,
-                item_image=item_image
+                item_image=item_image,
+                user_from_authorizer=user_from_authorizer,
             )
 
             viewmodel = UpdateItemViewmodel(item=item)
 
             return OK(viewmodel.to_dict())
 
-        except NoItemsFound as err:
+        except ForbiddenAction as err:
+            return Forbidden(body=err.message)
 
+        except NoItemsFound as err:
             return NotFound(body=err.message)
 
         except MissingParameters as err:
-
             return BadRequest(body=err.message)
 
         except WrongTypeParameter as err:
-
             return BadRequest(body=err.message)
 
         except EntityError as err:
-
             return BadRequest(body=err.message)
 
         except Exception as err:
-
             return InternalServerError(body=err.args[0])
