@@ -92,6 +92,27 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
+    def reallocate_user(self, updated_user: User) -> User:
+        """Replace the user matched by email with authorizer data (may change user_id).
+
+        Looks up by ``updated_user.user_email``, then substitutes stored fields
+        with the given user. When ``user_id`` changes, the old partition key is
+        removed and the new one is written.
+
+        Args:
+            updated_user: User built from MSS authorizer claims (id, name, email)
+                plus preserved domain fields (role, created_at).
+
+        Returns:
+            The substituted user.
+
+        Raises:
+            NoUsersFound: If no user exists with the given email.
+            DuplicatedUser: If the new user_id already belongs to another user.
+        """
+        pass
+
+    @abstractmethod
     def get_user_counter(self) -> int:
         """Return the total number of users ever created.
 

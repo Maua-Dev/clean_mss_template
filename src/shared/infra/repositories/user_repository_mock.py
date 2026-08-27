@@ -81,5 +81,23 @@ class UserRepositoryMock(IUserRepository):
 
         raise NoUsersFound("user_id")
 
+    def reallocate_user(self, updated_user: User) -> User:
+        email = str(updated_user.user_email).lower()
+        matched_idx = None
+        for idx, user in enumerate(self.users):
+            if str(user.user_email).lower() == email:
+                matched_idx = idx
+                break
+
+        if matched_idx is None:
+            raise NoUsersFound("user_email")
+
+        for idx, user in enumerate(self.users):
+            if user.user_id == updated_user.user_id and idx != matched_idx:
+                raise DuplicatedUser("user_id")
+
+        self.users[matched_idx] = updated_user
+        return updated_user
+
     def get_user_counter(self) -> int:
         return self.user_counter
