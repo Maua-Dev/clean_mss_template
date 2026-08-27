@@ -131,7 +131,12 @@ class LambdaHttpRequest(HttpRequest):
         self.request_context = data.get("requestContext")
         self.http = LambdaDefaultHTTP(self.request_context.get("http") if self.request_context else None)
 
-        # injeta DEPOIS do body/query para o cliente não spoofar via payload
+        # path params ganham de body/query (fonte do id na URL REST)
+        path_parameters = data.get("pathParameters") or {}
+        if isinstance(path_parameters, dict):
+            self.data.update(path_parameters)
+
+        # injeta DEPOIS do body/query/path para o cliente não spoofar via payload
         authorizer_user = parse_authorizer_user_from_event(data)
         if authorizer_user is not None:
             self.data[USER_FROM_AUTHORIZER_KEY] = authorizer_user
