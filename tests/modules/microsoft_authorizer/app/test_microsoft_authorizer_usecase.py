@@ -30,7 +30,7 @@ class Test_MicrosoftAuthorizerUsecase:
             created_at=1_700_000_000,
         )
         self.method_arn = (
-            "arn:aws:execute-api:sa-east-1:123456789012:abcdef123/dev/GET/get-user"
+            "arn:aws:execute-api:sa-east-1:123456789012:abcdef123/dev/GET/users/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
         )
 
     def test_allow_existing_maua_user(self):
@@ -80,7 +80,7 @@ class Test_MicrosoftAuthorizerUsecase:
         )
         usecase = MicrosoftAuthorizerUsecase(graph, self.user_repo)
         method_arn = (
-            "arn:aws:execute-api:sa-east-1:123456789012:abcdef123/dev/POST/auth-user"
+            "arn:aws:execute-api:sa-east-1:123456789012:abcdef123/dev/POST/auth"
         )
 
         policy = usecase("Bearer token-123", method_arn)
