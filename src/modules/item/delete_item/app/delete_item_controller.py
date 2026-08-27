@@ -3,12 +3,11 @@ from uuid import UUID
 from src.shared.helpers.auth.authorizer_user import USER_FROM_AUTHORIZER_KEY
 from src.shared.helpers.external_interfaces.external_interface import IRequest, IResponse
 from .delete_item_usecase import DeleteItemUsecase
-from .delete_item_viewmodel import DeleteItemViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import ForbiddenAction, NoItemsFound
 from src.shared.helpers.external_interfaces.http_codes import (
-    OK,
+    NoContent,
     NotFound,
     BadRequest,
     InternalServerError,
@@ -41,14 +40,11 @@ class DeleteItemController:
             except ValueError:
                 raise EntityError("item_id")
 
-            item = self.DeleteItemUsecase(
+            self.DeleteItemUsecase(
                 item_id=parsed_item_id,
                 user_from_authorizer=user_from_authorizer,
             )
-
-            viewmodel = DeleteItemViewmodel(item=item)
-
-            return OK(viewmodel.to_dict())
+            return NoContent()
 
         except ForbiddenAction as err:
             return Forbidden(body=err.message)

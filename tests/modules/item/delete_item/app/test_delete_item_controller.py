@@ -32,10 +32,8 @@ class Test_DeleteItemController:
 
         response = controller(request=request)
 
-        assert response.status_code == 200
-        assert response.body["item_id"] == item_id
-        assert response.body["item_name"] == "Notebook"
-        assert response.body["message"] == "the item was deleted successfully"
+        assert response.status_code == 204
+        assert not response.body
 
     def test_delete_item_controller_forbidden_without_authorizer_user(self):
         item_repo = ItemRepositoryMock()
