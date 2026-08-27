@@ -7,7 +7,13 @@ from .auth_user_viewmodel import AuthUserViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import DuplicatedUser
-from src.shared.helpers.external_interfaces.http_codes import OK, BadRequest, InternalServerError
+from src.shared.helpers.external_interfaces.http_codes import (
+    OK,
+    Created,
+    BadRequest,
+    InternalServerError,
+    Conflict,
+)
 
 
 class AuthUserController:
@@ -63,7 +69,10 @@ class AuthUserController:
                 user_email=user_email,
             )
 
-            return OK(AuthUserViewmodel(user=user, case_number=case_number).to_dict())
+            viewmodel = AuthUserViewmodel(user=user, case_number=case_number).to_dict()
+            if case_number == 1:
+                return Created(viewmodel)
+            return OK(viewmodel)
 
         except MissingParameters as err:
             return BadRequest(body=err.message)
@@ -72,6 +81,6 @@ class AuthUserController:
         except EntityError as err:
             return BadRequest(body=err.message)
         except DuplicatedUser as err:
-            return BadRequest(body=err.message)
+            return Conflict(body=err.message)
         except Exception as err:
             return InternalServerError(body=err.args[0])
