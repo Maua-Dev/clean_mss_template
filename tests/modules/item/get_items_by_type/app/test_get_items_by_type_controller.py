@@ -6,8 +6,8 @@ from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMoc
 
 class Test_GetItemsByTypeController:
     def test_get_items_by_type_controller(self):
-        repo = ItemRepositoryMock()
-        controller = GetItemsByTypeController(GetItemsByTypeUsecase(repo))
+        item_repo = ItemRepositoryMock()
+        controller = GetItemsByTypeController(GetItemsByTypeUsecase(item_repo))
 
         response = controller(HttpRequest(query_params={"item_type": "type1"}))
 
@@ -17,8 +17,8 @@ class Test_GetItemsByTypeController:
         assert response.body["message"] == "items by type have been retrieved"
 
     def test_get_items_by_type_invalid(self):
-        repo = ItemRepositoryMock()
-        controller = GetItemsByTypeController(GetItemsByTypeUsecase(repo))
+        item_repo = ItemRepositoryMock()
+        controller = GetItemsByTypeController(GetItemsByTypeUsecase(item_repo))
 
         response = controller(HttpRequest(query_params={"item_type": "invalid"}))
 
@@ -26,8 +26,8 @@ class Test_GetItemsByTypeController:
         assert response.body == "Field item_type is not valid"
 
     def test_get_items_by_type_missing(self):
-        repo = ItemRepositoryMock()
-        controller = GetItemsByTypeController(GetItemsByTypeUsecase(repo))
+        item_repo = ItemRepositoryMock()
+        controller = GetItemsByTypeController(GetItemsByTypeUsecase(item_repo))
 
         response = controller(HttpRequest(query_params={}))
 

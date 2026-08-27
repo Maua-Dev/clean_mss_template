@@ -4,11 +4,11 @@ from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMoc
 
 class Test_GetAllItemsUsecase:
     def test_get_all_items(self):
-        repo = ItemRepositoryMock()
-        usecase = GetAllItemsUsecase(repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetAllItemsUsecase(item_repo)
 
         items = usecase()
 
         assert len(items) == 3
         assert items[0].item_name == "Notebook"
-        assert items == repo.items
+        assert items == item_repo.items

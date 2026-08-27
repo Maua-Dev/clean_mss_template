@@ -4,6 +4,6 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_GetAllUsersViewmodel:
     def test_get_all_users_viewmodel(self):
-        repo = UserRepositoryMock()
-        result = GetAllUsersViewmodel(repo.users).to_dict()
+        user_repo = UserRepositoryMock()
+        result = GetAllUsersViewmodel(user_repo.users).to_dict()
         assert len(result["all_users"]) == 3

@@ -6,9 +6,9 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_DeleteUserController:
     def test_delete_user_controller(self):
-        repo = UserRepositoryMock()
-        controller = DeleteUserController(DeleteUserUsecase(repo))
-        user_id = str(repo.users[0].user_id)
+        user_repo = UserRepositoryMock()
+        controller = DeleteUserController(DeleteUserUsecase(user_repo))
+        user_id = str(user_repo.users[0].user_id)
 
         response = controller(HttpRequest(body={"user_id": user_id}))
 
@@ -17,8 +17,8 @@ class Test_DeleteUserController:
         assert response.body["message"] == "the user was deleted successfully"
 
     def test_delete_user_not_found(self):
-        repo = UserRepositoryMock()
-        controller = DeleteUserController(DeleteUserUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = DeleteUserController(DeleteUserUsecase(user_repo))
 
         response = controller(HttpRequest(body={
             "user_id": "99999999-9999-4999-8999-999999999999"

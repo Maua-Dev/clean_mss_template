@@ -9,19 +9,19 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_DeleteUserUsecase:
     def test_delete_user(self):
-        repo = UserRepositoryMock()
-        usecase = DeleteUserUsecase(repo)
-        user_id = repo.users[0].user_id
+        user_repo = UserRepositoryMock()
+        usecase = DeleteUserUsecase(user_repo)
+        user_id = user_repo.users[0].user_id
 
         deleted = usecase(user_id)
 
         assert deleted.user_id == user_id
         with pytest.raises(NoUsersFound):
-            repo.get_user(user_id)
+            user_repo.get_user(user_id)
 
     def test_delete_user_not_found(self):
-        repo = UserRepositoryMock()
-        usecase = DeleteUserUsecase(repo)
+        user_repo = UserRepositoryMock()
+        usecase = DeleteUserUsecase(user_repo)
 
         with pytest.raises(NoUsersFound):
             usecase(UUID("99999999-9999-4999-8999-999999999999"))

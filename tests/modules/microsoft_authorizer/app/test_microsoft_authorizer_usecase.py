@@ -21,8 +21,8 @@ class FakeGraphClient:
 
 class Test_MicrosoftAuthorizerUsecase:
     def setup_method(self):
-        self.repo = UserRepositoryMock()
-        self.repo.users[0] = User(
+        self.user_repo = UserRepositoryMock()
+        self.user_repo.users[0] = User(
             user_id=UUID("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"),
             user_name="Alice Admin",
             user_email="alice@maua.br",
@@ -41,7 +41,7 @@ class Test_MicrosoftAuthorizerUsecase:
                 "displayName": "Alice",
             }
         )
-        usecase = MicrosoftAuthorizerUsecase(graph, self.repo)
+        usecase = MicrosoftAuthorizerUsecase(graph, self.user_repo)
 
         policy = usecase("Bearer token-123", self.method_arn)
 
@@ -57,7 +57,7 @@ class Test_MicrosoftAuthorizerUsecase:
 
     def test_deny_non_maua_email(self):
         graph = FakeGraphClient({"id": "x", "mail": "alice@example.com"})
-        usecase = MicrosoftAuthorizerUsecase(graph, self.repo)
+        usecase = MicrosoftAuthorizerUsecase(graph, self.user_repo)
 
         policy = usecase("token-123", self.method_arn)
 
@@ -65,7 +65,7 @@ class Test_MicrosoftAuthorizerUsecase:
 
     def test_deny_when_user_not_in_db(self):
         graph = FakeGraphClient({"id": "x", "mail": "newuser@maua.br"})
-        usecase = MicrosoftAuthorizerUsecase(graph, self.repo)
+        usecase = MicrosoftAuthorizerUsecase(graph, self.user_repo)
 
         policy = usecase("token-123", self.method_arn)
 
@@ -78,7 +78,7 @@ class Test_MicrosoftAuthorizerUsecase:
                 "mail": "newuser@maua.br",
             }
         )
-        usecase = MicrosoftAuthorizerUsecase(graph, self.repo)
+        usecase = MicrosoftAuthorizerUsecase(graph, self.user_repo)
         method_arn = (
             "arn:aws:execute-api:sa-east-1:123456789012:abcdef123/dev/POST/create-user"
         )
@@ -96,7 +96,7 @@ class Test_MicrosoftAuthorizerUsecase:
                 "userPrincipalName": "alice@maua.br",
             }
         )
-        usecase = MicrosoftAuthorizerUsecase(graph, self.repo)
+        usecase = MicrosoftAuthorizerUsecase(graph, self.user_repo)
 
         policy = usecase("token-123", self.method_arn)
 

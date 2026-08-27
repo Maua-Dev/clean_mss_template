@@ -8,8 +8,8 @@ from src.shared.helpers.errors.usecase_errors import ForbiddenAction, NoUsersFou
 
 
 class UpdateItemUsecase:
-    def __init__(self, repo: IItemRepository, user_repo: IUserRepository):
-        self.repo = repo
+    def __init__(self, item_repo: IItemRepository, user_repo: IUserRepository):
+        self.item_repo = item_repo
         self.user_repo = user_repo
 
     def __call__(
@@ -33,7 +33,7 @@ class UpdateItemUsecase:
         if user.user_role != UserRoleEnum.ADMIN:
             raise ForbiddenAction("user")
 
-        existing = self.repo.get_item(item_id)
+        existing = self.item_repo.get_item(item_id)
 
         updated_item = Item(
             item_id=existing.item_id,
@@ -44,4 +44,4 @@ class UpdateItemUsecase:
             created_at=existing.created_at,
         )
 
-        return self.repo.update_item(updated_item)
+        return self.item_repo.update_item(updated_item)

@@ -4,8 +4,8 @@ from src.shared.environments import Environments
 from src.shared.helpers.external_interfaces.http_lambda_requests import LambdaHttpRequest, LambdaHttpResponse
 from src.shared.helpers.observability.wrap_handler import observed_handler
 
-repo = Environments.get_item_repo()()
-usecase = GetItemsByTypeUsecase(repo)
+item_repo = Environments.get_item_repo()()
+usecase = GetItemsByTypeUsecase(item_repo)
 controller = GetItemsByTypeController(usecase)
 
 

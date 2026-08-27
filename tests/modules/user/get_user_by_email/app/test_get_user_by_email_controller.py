@@ -6,8 +6,8 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_GetUserByEmailController:
     def test_get_user_by_email_controller(self):
-        repo = UserRepositoryMock()
-        controller = GetUserByEmailController(GetUserByEmailUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = GetUserByEmailController(GetUserByEmailUsecase(user_repo))
 
         response = controller(HttpRequest(query_params={"user_email": "bob@example.com"}))
 
@@ -16,8 +16,8 @@ class Test_GetUserByEmailController:
         assert response.body["message"] == "the user was retrieved successfully"
 
     def test_get_user_by_email_missing(self):
-        repo = UserRepositoryMock()
-        controller = GetUserByEmailController(GetUserByEmailUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = GetUserByEmailController(GetUserByEmailUsecase(user_repo))
 
         response = controller(HttpRequest(query_params={}))
 
@@ -25,8 +25,8 @@ class Test_GetUserByEmailController:
         assert response.body == "Field user_email is missing"
 
     def test_get_user_by_email_not_found(self):
-        repo = UserRepositoryMock()
-        controller = GetUserByEmailController(GetUserByEmailUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = GetUserByEmailController(GetUserByEmailUsecase(user_repo))
 
         response = controller(HttpRequest(query_params={"user_email": "nobody@example.com"}))
 

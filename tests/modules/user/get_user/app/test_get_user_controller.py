@@ -6,9 +6,9 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_GetUserController:
     def test_get_user_controller(self):
-        repo = UserRepositoryMock()
-        controller = GetUserController(GetUserUsecase(repo))
-        user = repo.users[1]
+        user_repo = UserRepositoryMock()
+        controller = GetUserController(GetUserUsecase(user_repo))
+        user = user_repo.users[1]
 
         response = controller(HttpRequest(query_params={"user_id": str(user.user_id)}))
 
@@ -17,8 +17,8 @@ class Test_GetUserController:
         assert response.body["message"] == "the user was retrieved successfully"
 
     def test_get_user_missing(self):
-        repo = UserRepositoryMock()
-        controller = GetUserController(GetUserUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = GetUserController(GetUserUsecase(user_repo))
 
         response = controller(HttpRequest(query_params={}))
 
@@ -26,8 +26,8 @@ class Test_GetUserController:
         assert response.body == "Field user_id is missing"
 
     def test_get_user_not_found(self):
-        repo = UserRepositoryMock()
-        controller = GetUserController(GetUserUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = GetUserController(GetUserUsecase(user_repo))
 
         response = controller(HttpRequest(query_params={
             "user_id": "99999999-9999-4999-8999-999999999999"

@@ -7,16 +7,16 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_GetUserByEmailUsecase:
     def test_get_user_by_email(self):
-        repo = UserRepositoryMock()
-        usecase = GetUserByEmailUsecase(repo)
+        user_repo = UserRepositoryMock()
+        usecase = GetUserByEmailUsecase(user_repo)
 
         user = usecase("alice@example.com")
 
         assert user.user_name == "Alice Admin"
 
     def test_get_user_by_email_not_found(self):
-        repo = UserRepositoryMock()
-        usecase = GetUserByEmailUsecase(repo)
+        user_repo = UserRepositoryMock()
+        usecase = GetUserByEmailUsecase(user_repo)
 
         with pytest.raises(NoUsersFound):
             usecase("nobody@example.com")

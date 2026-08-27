@@ -5,8 +5,8 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_GetAllUsersController:
     def test_get_all_users_controller(self):
-        repo = UserRepositoryMock()
-        controller = GetAllUsersController(GetAllUsersUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = GetAllUsersController(GetAllUsersUsecase(user_repo))
 
         response = controller(None)
 
