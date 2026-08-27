@@ -6,34 +6,39 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_CreateUserController:
     def test_create_user_controller(self):
-        repo = UserRepositoryMock()
-        controller = CreateUserController(CreateUserUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = CreateUserController(CreateUserUsecase(user_repo))
 
         response = controller(HttpRequest(body={
+            "user_id": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
             "user_name": "Dave",
             "user_email": "dave@example.com",
-            "user_role": "User",
         }))
 
         assert response.status_code == 201
+        assert response.body["user_id"] == "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"
         assert response.body["user_name"] == "Dave"
         assert response.body["user_email"] == "dave@example.com"
         assert response.body["message"] == "the user was created successfully"
 
     def test_create_user_missing_email(self):
-        repo = UserRepositoryMock()
-        controller = CreateUserController(CreateUserUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = CreateUserController(CreateUserUsecase(user_repo))
 
-        response = controller(HttpRequest(body={"user_name": "Dave"}))
+        response = controller(HttpRequest(body={
+            "user_id": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
+            "user_name": "Dave",
+        }))
 
         assert response.status_code == 400
         assert response.body == "Field user_email is missing"
 
     def test_create_user_duplicated_email(self):
-        repo = UserRepositoryMock()
-        controller = CreateUserController(CreateUserUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = CreateUserController(CreateUserUsecase(user_repo))
 
         response = controller(HttpRequest(body={
+            "user_id": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
             "user_name": "Alice Clone",
             "user_email": "alice@example.com",
         }))
