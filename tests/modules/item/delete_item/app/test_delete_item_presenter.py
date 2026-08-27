@@ -48,7 +48,5 @@ class Test_DeleteItemPresenter:
 
         response = lambda_handler(event, None)
 
-        assert response["statusCode"] == 200
-        body = json.loads(response["body"])
-        assert body["item_name"] == "Notebook"
-        assert body["message"] == "the item was deleted successfully"
+        assert response["statusCode"] == 204
+        assert response["body"] in ("null", "{}", "\"\"", "")

@@ -1,4 +1,3 @@
-import json
 import os
 
 os.environ["STAGE"] = "TEST"
@@ -18,5 +17,5 @@ class Test_DeleteUserPresenter:
         }
 
         response = lambda_handler(event, None)
-        assert response["statusCode"] == 200
-        assert json.loads(response["body"])["user_name"] == "Alice Admin"
+        assert response["statusCode"] == 204
+        assert response["body"] in ("null", "{}", "\"\"", "")

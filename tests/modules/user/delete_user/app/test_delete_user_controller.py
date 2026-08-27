@@ -12,9 +12,8 @@ class Test_DeleteUserController:
 
         response = controller(HttpRequest(body={"user_id": user_id}))
 
-        assert response.status_code == 200
-        assert response.body["user_id"] == user_id
-        assert response.body["message"] == "the user was deleted successfully"
+        assert response.status_code == 204
+        assert not response.body
 
     def test_delete_user_not_found(self):
         user_repo = UserRepositoryMock()
