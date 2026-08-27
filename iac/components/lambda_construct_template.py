@@ -94,7 +94,7 @@ class LambdaConstruct(Construct):
             runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[self.lambda_layer],
             environment=environment_variables,
-            timeout=Duration.seconds(300),
+            timeout=Duration.seconds(300), # tempo aumentado pois esse tipo de integracao envolve pdfs e bedrock (ate hoje)
             memory_size=1024,
             tracing=lambda_.Tracing.ACTIVE,
         )
