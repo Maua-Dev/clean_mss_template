@@ -168,54 +168,37 @@ class LambdaConstruct(Construct):
 
         self.create_user = self.create_lambda_api_gateway_integration(
             module_name="create_user", # nome da pasta
-            method=apigw.HttpMethod.POST,
+            method="POST",
             subfolder="user", # nome da subfolder ( se tiver )
             api_resource=api_gateway_resource,
             environment_variables=environment_variables,
             authorizer=self.token_authorizer,
         )
         self.functions_that_need_dynamo_db_access.append(self.create_user)
-        
+
         self.get_user = self.create_lambda_api_gateway_integration(
             module_name="get_user", # nome da pasta
-            method=apigw.HttpMethod.GET,
+            method="GET",
             subfolder="user", # nome da subfolder ( se tiver )
             api_resource=api_gateway_resource,
             environment_variables=environment_variables,
             authorizer=self.token_authorizer,
         )
+        self.functions_that_need_dynamo_db_access.append(self.get_user)
 
         self.auth_user = self.create_lambda_api_gateway_integration(
             module_name="auth_user",
-            method=apigw.HttpMethod.POST,
+            method="POST",
             subfolder="user",
             api_resource=api_gateway_resource,
             environment_variables=environment_variables,
             authorizer=self.token_authorizer,
         )
         self.functions_that_need_dynamo_db_access.append(self.auth_user)
-        
-        self.create_project = self.create_lambda_api_gateway_integration(
-            module_name="create_project",
-            method=apigw.HttpMethod.POST,
-            subfolder="project",
-            api_resource=api_gateway_resource,
-            environment_variables=environment_variables,
-            authorizer=self.token_authorizer,
-        )
-        self.functions_that_need_dynamo_db_access.append(self.create_project)
-        
-        self.get_project = self.create_lambda_api_gateway_integration(
-            module_name="get_project",
-            method=apigw.HttpMethod.GET,
-            subfolder="project",
-            api_resource=api_gateway_resource,
-            environment_variables=environment_variables,
-            authorizer=self.token_authorizer,
-       
-        )
-        self.functions_that_need_dynamo_db_access.append(self.get_project)
-   
+
+        # Demais rotas User/Item existem em src/modules como referência.
+        # Para expor no API Gateway, registre aqui com create_lambda_api_gateway_integration
+        # e (se usar Dynamo) append em functions_that_need_dynamo_db_access.
 
         # funções com exemplo em public e integração com ses para email
         # descomente esse código conforme for necessário, ficará aqui de exemplo
@@ -223,7 +206,7 @@ class LambdaConstruct(Construct):
 
         # self.contact_us = self.create_lambda_api_gateway_integration(
         #     module_name="contact_us",
-        #     method=apigw.HttpMethod.POST,
+        #     method="POST",
         #     api_resource=api_gateway_resource,
         #     environment_variables=environment_variables,
         #     public=True
@@ -250,6 +233,6 @@ class LambdaConstruct(Construct):
         #     environment_variables=environment_variables
         # )
 
-        # self.funtions_that_need_dynamo_db_access.append(self.plans_extractor_function)
-        # self.functions_that_need_s3_bucket1_access.append(self.plans_extractor_function)
+        # self.functions_that_need_dynamo_db_access.append(self.plans_extractor_function)
+        # self.functions_that_need_s3_access.append(self.plans_extractor_function)
         # self.functions_that_need_other_permissions.append(self.plans_extractor_function) # permissao bedrock, por exemplo
