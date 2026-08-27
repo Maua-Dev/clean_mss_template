@@ -25,9 +25,9 @@ class Test_CreateUserPresenter:
                 }
             },
             "body": json.dumps({
+                "user_id": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
                 "user_name": "Dave",
                 "user_email": "dave@example.com",
-                "user_role": "User"
             }),
         }
 

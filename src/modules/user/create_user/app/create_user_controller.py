@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from src.shared.helpers.external_interfaces.external_interface import IResponse, IRequest
 from .create_user_usecase import CreateUserUsecase
 from .create_user_viewmodel import CreateUserViewmodel
@@ -14,15 +16,23 @@ class CreateUserController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
+            user_id = request.data.get("user_id")
             user_name = request.data.get("user_name")
             user_email = request.data.get("user_email")
-            user_role = request.data.get("user_role")
 
+            if user_id is None:
+                raise MissingParameters("user_id")
             if user_name is None:
                 raise MissingParameters("user_name")
             if user_email is None:
                 raise MissingParameters("user_email")
 
+            if not isinstance(user_id, str):
+                raise WrongTypeParameter(
+                    fieldName="user_id",
+                    fieldTypeExpected="str",
+                    fieldTypeReceived=type(user_id).__name__
+                )
             if not isinstance(user_name, str):
                 raise WrongTypeParameter(
                     fieldName="user_name",
@@ -35,17 +45,16 @@ class CreateUserController:
                     fieldTypeExpected="str",
                     fieldTypeReceived=type(user_email).__name__
                 )
-            if user_role is not None and not isinstance(user_role, str):
-                raise WrongTypeParameter(
-                    fieldName="user_role",
-                    fieldTypeExpected="str",
-                    fieldTypeReceived=type(user_role).__name__
-                )
+
+            try:
+                parsed_user_id = UUID(user_id)
+            except ValueError:
+                raise EntityError("user_id")
 
             user = self.CreateUserUsecase(
+                user_id=parsed_user_id,
                 user_name=user_name,
                 user_email=user_email,
-                user_role=user_role,
             )
 
             viewmodel = CreateUserViewmodel(user)
