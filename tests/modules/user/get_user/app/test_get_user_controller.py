@@ -10,7 +10,7 @@ class Test_GetUserController:
         controller = GetUserController(GetUserUsecase(user_repo))
         user = user_repo.users[1]
 
-        response = controller(HttpRequest(query_params={"user_id": str(user.user_id)}))
+        response = controller(HttpRequest(path_params={"user_id": str(user.user_id)}))
 
         assert response.status_code == 200
         assert response.body["user_email"] == "bob@example.com"
@@ -20,7 +20,7 @@ class Test_GetUserController:
         user_repo = UserRepositoryMock()
         controller = GetUserController(GetUserUsecase(user_repo))
 
-        response = controller(HttpRequest(query_params={}))
+        response = controller(HttpRequest(path_params={}))
 
         assert response.status_code == 400
         assert response.body == "Field user_id is missing"
@@ -29,7 +29,7 @@ class Test_GetUserController:
         user_repo = UserRepositoryMock()
         controller = GetUserController(GetUserUsecase(user_repo))
 
-        response = controller(HttpRequest(query_params={
+        response = controller(HttpRequest(path_params={
             "user_id": "99999999-9999-4999-8999-999999999999"
         }))
 

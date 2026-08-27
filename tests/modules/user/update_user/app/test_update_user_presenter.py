@@ -10,12 +10,20 @@ class Test_UpdateUserPresenter:
     def test_update_user(self):
         event = {
             "version": "2.0",
-            "rawPath": "/my/path",
+            "rawPath": "/users/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
             "headers": {},
             "queryStringParameters": None,
-            "requestContext": {"http": {"method": "POST", "path": "/my/path", "protocol": "HTTP/1.1", "sourceIp": "1.1.1.1", "userAgent": "agent"}},
+            "pathParameters": {"user_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"},
+            "requestContext": {
+                "http": {
+                    "method": "PUT",
+                    "path": "/users/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+                    "protocol": "HTTP/1.1",
+                    "sourceIp": "1.1.1.1",
+                    "userAgent": "agent",
+                }
+            },
             "body": json.dumps({
-                "user_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
                 "user_name": "Alice Updated",
                 "user_email": "alice.updated@example.com",
                 "user_role": "Admin",

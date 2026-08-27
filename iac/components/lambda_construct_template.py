@@ -22,57 +22,51 @@ class LambdaConstruct(Construct):
     lambda_layer: lambda_.LayerVersion
     token_authorizer: TokenAuthorizer
 
-    def create_lambda_api_gateway_integration(
+    def create_lambda_function(
         self,
         module_name: str,
-        method: str,
-        api_resource: Resource,
-        api_key_required: bool = False,
         environment_variables: dict = {"STAGE": "TEST"},
-        public: bool = False,
         subfolder: str = "",
-        authorizer: Optional[TokenAuthorizer] = None,
     ) -> lambda_.Function:
-
-        code = lambda_.Code.from_asset(f"../src/modules/{subfolder}/{module_name}") if subfolder else lambda_.Code.from_asset(f"../src/modules/{module_name}")
-        handler = f"app.{module_name}_presenter.lambda_handler"
-
-        function = lambda_.Function(
-            self, module_name.title(),
+        """Cria a Lambda do módulo (uma pasta = uma função)."""
+        code = (
+            lambda_.Code.from_asset(f"../src/modules/{subfolder}/{module_name}")
+            if subfolder
+            else lambda_.Code.from_asset(f"../src/modules/{module_name}")
+        )
+        return lambda_.Function(
+            self,
+            module_name.title().replace("_", ""),
             code=code,
-            handler=handler,
+            handler=f"app.{module_name}_presenter.lambda_handler",
             function_name=f"{module_name}-{self.stack_name}-{self.stage}"[:63],
             runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[self.lambda_layer],
             environment=environment_variables,
             timeout=Duration.seconds(60),
-            memory_size=512
+            memory_size=512,
         )
 
+    def add_method_to_resource(
+        self,
+        resource: Resource,
+        method: str,
+        function: lambda_.Function,
+        authorizer: Optional[TokenAuthorizer] = None,
+        api_key_required: bool = False,
+    ) -> None:
+        """Anexa um HTTP method a um resource já criado (REST path)."""
         method_options = {
             "integration": LambdaIntegration(function),
             "api_key_required": api_key_required,
         }
-
-        # rotas public=True ficam sem authorizer; demais usam CUSTOM quando passado
-        if not public and authorizer is not None:
+        if authorizer is not None:
             method_options["authorization_type"] = apigw.AuthorizationType.CUSTOM
             method_options["authorizer"] = authorizer
         else:
             method_options["authorization_type"] = apigw.AuthorizationType.NONE
 
-        if public:
-            api_resource.add_resource("public").add_resource(module_name.replace("_", "-")).add_method(
-                method,
-                **method_options,
-            )
-        else:
-            api_resource.add_resource(module_name.replace("_", "-")).add_method(
-                method,
-                **method_options,
-            )
-
-        return function
+        resource.add_method(method, **method_options)
 
     def create_lambda_s3_object_creation_deletion_trigger_integration(
         self,
@@ -83,7 +77,11 @@ class LambdaConstruct(Construct):
         subfolder: str = "",
     ) -> lambda_.Function:
 
-        code = lambda_.Code.from_asset(f"../src/modules/{subfolder}/{module_name}") if subfolder else lambda_.Code.from_asset(f"../src/modules/{module_name}")
+        code = (
+            lambda_.Code.from_asset(f"../src/modules/{subfolder}/{module_name}")
+            if subfolder
+            else lambda_.Code.from_asset(f"../src/modules/{module_name}")
+        )
         handler = f"app.{module_name}_presenter.lambda_handler"
 
         function: lambda_.Function = lambda_.Function(
@@ -95,23 +93,22 @@ class LambdaConstruct(Construct):
             runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[self.lambda_layer],
             environment=environment_variables,
-            timeout=Duration.seconds(300), # tempo aumentado pois esse tipo de integracao envolve pdfs e bedrock (ate hoje)
-            memory_size=1024
+            timeout=Duration.seconds(300),
+            memory_size=1024,
         )
 
         bucket.add_event_notification(
             s3.EventType.OBJECT_CREATED,
-            s3n.LambdaDestination(function)
+            s3n.LambdaDestination(function),
         )
 
         if deletion:
             bucket.add_event_notification(
                 s3.EventType.OBJECT_REMOVED_DELETE,
-                s3n.LambdaDestination(function)
+                s3n.LambdaDestination(function),
             )
 
         return function
-
 
     def __init__(
         self,
@@ -120,9 +117,8 @@ class LambdaConstruct(Construct):
         stage: str,
         stack_name: str,
         api_gateway_resource: Resource,
-        # bucket1: s3.Bucket,
         environment_variables: dict,
-        **kargs
+        **kargs,
     ) -> None:
 
         super().__init__(scope, construct_id, **kargs)
@@ -138,9 +134,8 @@ class LambdaConstruct(Construct):
             self,
             id=f"{stack_name}_LambdaLayer_{stage}",
             layer_version_name=f"{stack_name}-LambdaLayer-{self.stage}",
-            # a pasta .build foi obtida do adjust layer directory, certifique-se de que a configuração da pasta layer gerada la esta igual
             code=lambda_.Code.from_asset("./build"),
-            compatible_runtimes=[lambda_.Runtime.PYTHON_3_13]
+            compatible_runtimes=[lambda_.Runtime.PYTHON_3_13],
         )
 
         self.microsoft_authorizer_function = lambda_.Function(
@@ -166,73 +161,149 @@ class LambdaConstruct(Construct):
             results_cache_ttl=Duration.seconds(0),
         )
 
-        self.create_user = self.create_lambda_api_gateway_integration(
-            module_name="create_user", # nome da pasta
-            method="POST",
-            subfolder="user", # nome da subfolder ( se tiver )
-            api_resource=api_gateway_resource,
-            environment_variables=environment_variables,
-            authorizer=self.token_authorizer,
-        )
-        self.functions_that_need_dynamo_db_access.append(self.create_user)
+        # --- REST resources (criados uma vez) ---
+        auth_resource = api_gateway_resource.add_resource("auth")
+        users_resource = api_gateway_resource.add_resource("users")
+        user_id_resource = users_resource.add_resource("{user_id}")
+        users_by_email_resource = users_resource.add_resource("by-email")
+        items_resource = api_gateway_resource.add_resource("items")
+        item_id_resource = items_resource.add_resource("{item_id}")
+        items_by_type_resource = items_resource.add_resource("by-type")
 
-        self.get_user = self.create_lambda_api_gateway_integration(
-            module_name="get_user", # nome da pasta
-            method="GET",
-            subfolder="user", # nome da subfolder ( se tiver )
-            api_resource=api_gateway_resource,
-            environment_variables=environment_variables,
-            authorizer=self.token_authorizer,
-        )
-        self.functions_that_need_dynamo_db_access.append(self.get_user)
-
-        self.auth_user = self.create_lambda_api_gateway_integration(
+        # --- User ---
+        self.auth_user = self.create_lambda_function(
             module_name="auth_user",
-            method="POST",
             subfolder="user",
-            api_resource=api_gateway_resource,
             environment_variables=environment_variables,
-            authorizer=self.token_authorizer,
+        )
+        self.add_method_to_resource(
+            auth_resource, "POST", self.auth_user, authorizer=self.token_authorizer
         )
         self.functions_that_need_dynamo_db_access.append(self.auth_user)
 
-        # Demais rotas User/Item existem em src/modules como referência.
-        # Para expor no API Gateway, registre aqui com create_lambda_api_gateway_integration
-        # e (se usar Dynamo) append em functions_that_need_dynamo_db_access.
+        self.create_user = self.create_lambda_function(
+            module_name="create_user",
+            subfolder="user",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            users_resource, "POST", self.create_user, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.create_user)
 
-        # funções com exemplo em public e integração com ses para email
-        # descomente esse código conforme for necessário, ficará aqui de exemplo
-        # na dúvida, use public=False !!!!!!!!!
+        self.get_all_users = self.create_lambda_function(
+            module_name="get_all_users",
+            subfolder="user",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            users_resource, "GET", self.get_all_users, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.get_all_users)
 
-        # self.contact_us = self.create_lambda_api_gateway_integration(
-        #     module_name="contact_us",
-        #     method="POST",
-        #     api_resource=api_gateway_resource,
-        #     environment_variables=environment_variables,
-        #     public=True
-        # )
+        self.get_user = self.create_lambda_function(
+            module_name="get_user",
+            subfolder="user",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            user_id_resource, "GET", self.get_user, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.get_user)
 
-        # ses_send_policy = iam.PolicyStatement(
-        #     effect=iam.Effect.ALLOW,
-        #     actions=["ses:SendEmail"],
-        #     resources=["*"],
-        #     conditions={
-        #         "StringEquals": {
-        #             "ses:FromAddress": environment_variables.get("FROM_EMAIL")
-        #         }
-        #     }
-        # )
-        # self.contact_us.add_to_role_policy(ses_send_policy)
+        self.update_user = self.create_lambda_function(
+            module_name="update_user",
+            subfolder="user",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            user_id_resource, "PUT", self.update_user, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.update_user)
 
-        # exemplo de função integrada com s3. tem uma relação com bedrock.
+        self.delete_user = self.create_lambda_function(
+            module_name="delete_user",
+            subfolder="user",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            user_id_resource, "DELETE", self.delete_user, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.delete_user)
 
-        # self.plans_extractor_function = self.create_lambda_s3_object_creation_deletion_trigger_integration(
-        #     module_name="plans_extractor",
-        #     bucket1 é requisitado e passado pelo init desse construct!
-        #     bucket=bucket1,
-        #     environment_variables=environment_variables
-        # )
+        self.get_user_by_email = self.create_lambda_function(
+            module_name="get_user_by_email",
+            subfolder="user",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            users_by_email_resource,
+            "GET",
+            self.get_user_by_email,
+            authorizer=self.token_authorizer,
+        )
+        self.functions_that_need_dynamo_db_access.append(self.get_user_by_email)
 
-        # self.functions_that_need_dynamo_db_access.append(self.plans_extractor_function)
-        # self.functions_that_need_s3_access.append(self.plans_extractor_function)
-        # self.functions_that_need_other_permissions.append(self.plans_extractor_function) # permissao bedrock, por exemplo
+        # --- Item ---
+        self.create_item = self.create_lambda_function(
+            module_name="create_item",
+            subfolder="item",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            items_resource, "POST", self.create_item, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.create_item)
+
+        self.get_all_items = self.create_lambda_function(
+            module_name="get_all_items",
+            subfolder="item",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            items_resource, "GET", self.get_all_items, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.get_all_items)
+
+        self.get_item = self.create_lambda_function(
+            module_name="get_item",
+            subfolder="item",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            item_id_resource, "GET", self.get_item, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.get_item)
+
+        self.update_item = self.create_lambda_function(
+            module_name="update_item",
+            subfolder="item",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            item_id_resource, "PUT", self.update_item, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.update_item)
+
+        self.delete_item = self.create_lambda_function(
+            module_name="delete_item",
+            subfolder="item",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            item_id_resource, "DELETE", self.delete_item, authorizer=self.token_authorizer
+        )
+        self.functions_that_need_dynamo_db_access.append(self.delete_item)
+
+        self.get_items_by_type = self.create_lambda_function(
+            module_name="get_items_by_type",
+            subfolder="item",
+            environment_variables=environment_variables,
+        )
+        self.add_method_to_resource(
+            items_by_type_resource,
+            "GET",
+            self.get_items_by_type,
+            authorizer=self.token_authorizer,
+        )
+        self.functions_that_need_dynamo_db_access.append(self.get_items_by_type)

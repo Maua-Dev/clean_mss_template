@@ -7,7 +7,7 @@ from src.shared.helpers.errors.usecase_errors import NoUsersFound
 from src.shared.infra.external.microsoft.graph_client import MicrosoftGraphClient
 
 # Routes where the user may not exist in our DB yet (first login / self-registration).
-_ONBOARDING_PATH_MARKERS = ("/auth-user",)
+_ONBOARDING_PATH_MARKERS = ("/auth",)
 
 _MAUA_EMAIL_REGEX = re.compile(r"^[^@\s]+@maua\.br$", re.IGNORECASE)
 

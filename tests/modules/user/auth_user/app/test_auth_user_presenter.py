@@ -11,14 +11,14 @@ class Test_AuthUserPresenter:
         event = {
             "version": "2.0",
             "routeKey": "$default",
-            "rawPath": "/auth-user",
+            "rawPath": "/auth",
             "rawQueryString": "",
             "headers": {},
             "queryStringParameters": None,
             "requestContext": {
                 "http": {
                     "method": "POST",
-                    "path": "/auth-user",
+                    "path": "/auth",
                     "protocol": "HTTP/1.1",
                     "sourceIp": "123.123.123.123",
                     "userAgent": "agent"

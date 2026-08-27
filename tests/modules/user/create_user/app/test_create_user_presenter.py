@@ -11,24 +11,28 @@ class Test_CreateUserPresenter:
         event = {
             "version": "2.0",
             "routeKey": "$default",
-            "rawPath": "/my/path",
+            "rawPath": "/users",
             "rawQueryString": "",
             "headers": {},
             "queryStringParameters": None,
+            "pathParameters": None,
             "requestContext": {
                 "http": {
                     "method": "POST",
-                    "path": "/my/path",
+                    "path": "/users",
                     "protocol": "HTTP/1.1",
                     "sourceIp": "123.123.123.123",
                     "userAgent": "agent"
-                }
+                },
+                "authorizer": {
+                    "user": json.dumps({
+                        "sub": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
+                        "name": "Dave",
+                        "mail": "dave@example.com",
+                    })
+                },
             },
-            "body": json.dumps({
-                "user_id": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
-                "user_name": "Dave",
-                "user_email": "dave@example.com",
-            }),
+            "body": None,
         }
 
         response = lambda_handler(event, None)
@@ -36,3 +40,4 @@ class Test_CreateUserPresenter:
 
         assert response["statusCode"] == 201
         assert body["user_name"] == "Dave"
+        assert body["user_id"] == "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"

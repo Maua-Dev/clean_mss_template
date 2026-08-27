@@ -10,10 +10,19 @@ class Test_GetUserByEmailPresenter:
     def test_get_user_by_email(self):
         event = {
             "version": "2.0",
-            "rawPath": "/my/path",
+            "rawPath": "/users/by-email",
             "headers": {},
-            "queryStringParameters": {"user_email": "carol@example.com"},
-            "requestContext": {"http": {"method": "GET", "path": "/my/path", "protocol": "HTTP/1.1", "sourceIp": "1.1.1.1", "userAgent": "agent"}},
+            "queryStringParameters": {"email": "carol@example.com"},
+            "pathParameters": None,
+            "requestContext": {
+                "http": {
+                    "method": "GET",
+                    "path": "/users/by-email",
+                    "protocol": "HTTP/1.1",
+                    "sourceIp": "1.1.1.1",
+                    "userAgent": "agent",
+                }
+            },
             "body": None,
         }
 

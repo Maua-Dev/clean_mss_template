@@ -16,7 +16,7 @@ class Test_LambdaHttpRequestAuthorizerUser:
             "queryStringParameters": None,
             "body": json.dumps({"item_name": "Monitor"}),
             "requestContext": {
-                "http": {"method": "POST", "path": "/create-item"},
+                "http": {"method": "POST", "path": "/items"},
                 "authorizer": {"user": json.dumps(user)},
             },
         }
@@ -39,7 +39,7 @@ class Test_LambdaHttpRequestAuthorizerUser:
                 "item_name": "Monitor",
             }),
             "requestContext": {
-                "http": {"method": "POST", "path": "/create-item"},
+                "http": {"method": "POST", "path": "/items"},
                 "authorizer": {
                     "user": json.dumps({
                         "sub": "ms-user",
@@ -54,3 +54,19 @@ class Test_LambdaHttpRequestAuthorizerUser:
 
         assert request.data[USER_FROM_AUTHORIZER_KEY]["mail"] == "bob@example.com"
         assert request.data[USER_FROM_AUTHORIZER_KEY]["sub"] == "ms-user"
+
+    def test_path_parameters_win_over_body_and_query(self):
+        event = {
+            "headers": {},
+            "queryStringParameters": {"user_id": "from-query"},
+            "pathParameters": {"user_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"},
+            "body": json.dumps({"user_id": "from-body", "user_name": "Dave"}),
+            "requestContext": {
+                "http": {"method": "GET", "path": "/users/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"},
+            },
+        }
+
+        request = LambdaHttpRequest(data=event)
+
+        assert request.data["user_id"] == "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
+        assert request.data["user_name"] == "Dave"

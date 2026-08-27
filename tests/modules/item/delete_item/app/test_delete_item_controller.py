@@ -25,10 +25,10 @@ class Test_DeleteItemController:
         controller = DeleteItemController(usecase=usecase)
 
         item_id = str(item_repo.items[0].item_id)
-        request = HttpRequest(body={
-            USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS,
-            "item_id": item_id,
-        })
+        request = HttpRequest(
+            path_params={"item_id": item_id},
+            body={USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS},
+        )
 
         response = controller(request=request)
 
@@ -41,7 +41,7 @@ class Test_DeleteItemController:
         usecase = DeleteItemUsecase(item_repo, user_repo)
         controller = DeleteItemController(usecase=usecase)
 
-        request = HttpRequest(body={"item_id": str(item_repo.items[0].item_id)})
+        request = HttpRequest(path_params={"item_id": str(item_repo.items[0].item_id)})
 
         response = controller(request=request)
 
@@ -54,10 +54,10 @@ class Test_DeleteItemController:
         usecase = DeleteItemUsecase(item_repo, user_repo)
         controller = DeleteItemController(usecase=usecase)
 
-        request = HttpRequest(body={
-            USER_FROM_AUTHORIZER_KEY: _USER_CLAIMS,
-            "item_id": str(item_repo.items[0].item_id),
-        })
+        request = HttpRequest(
+            path_params={"item_id": str(item_repo.items[0].item_id)},
+            body={USER_FROM_AUTHORIZER_KEY: _USER_CLAIMS},
+        )
 
         response = controller(request=request)
 
@@ -70,10 +70,10 @@ class Test_DeleteItemController:
         usecase = DeleteItemUsecase(item_repo, user_repo)
         controller = DeleteItemController(usecase=usecase)
 
-        request = HttpRequest(body={
-            USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS,
-            "item_id": "not-a-uuid",
-        })
+        request = HttpRequest(
+            path_params={"item_id": "not-a-uuid"},
+            body={USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS},
+        )
 
         response = controller(request=request)
 
@@ -86,10 +86,10 @@ class Test_DeleteItemController:
         usecase = DeleteItemUsecase(item_repo, user_repo)
         controller = DeleteItemController(usecase=usecase)
 
-        request = HttpRequest(body={
-            USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS,
-            "id": "1",
-        })
+        request = HttpRequest(
+            path_params={},
+            body={USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS},
+        )
 
         response = controller(request=request)
 
@@ -102,10 +102,10 @@ class Test_DeleteItemController:
         usecase = DeleteItemUsecase(item_repo, user_repo)
         controller = DeleteItemController(usecase=usecase)
 
-        request = HttpRequest(body={
-            USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS,
-            "item_id": 2,
-        })
+        request = HttpRequest(
+            path_params={"item_id": 2},
+            body={USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS},
+        )
 
         response = controller(request=request)
 
@@ -120,10 +120,10 @@ class Test_DeleteItemController:
         usecase = DeleteItemUsecase(item_repo, user_repo)
         controller = DeleteItemController(usecase=usecase)
 
-        request = HttpRequest(body={
-            USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS,
-            "item_id": "99999999-9999-4999-8999-999999999999",
-        })
+        request = HttpRequest(
+            path_params={"item_id": "99999999-9999-4999-8999-999999999999"},
+            body={USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS},
+        )
 
         response = controller(request=request)
 

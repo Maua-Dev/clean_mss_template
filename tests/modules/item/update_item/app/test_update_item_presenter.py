@@ -17,7 +17,7 @@ class Test_UpdateItemPresenter:
         event = {
             "version": "2.0",
             "routeKey": "$default",
-            "rawPath": "/my/path",
+            "rawPath": "/items/11111111-1111-4111-8111-111111111111",
             "rawQueryString": "",
             "headers": {},
             "queryStringParameters": None,
@@ -27,8 +27,8 @@ class Test_UpdateItemPresenter:
                 "domainName": "<url-id>.lambda-url.us-west-2.on.aws",
                 "domainPrefix": "<url-id>",
                 "http": {
-                    "method": "POST",
-                    "path": "/my/path",
+                    "method": "PUT",
+                    "path": "/items/11111111-1111-4111-8111-111111111111",
                     "protocol": "HTTP/1.1",
                     "sourceIp": "123.123.123.123",
                     "userAgent": "agent"
@@ -41,13 +41,12 @@ class Test_UpdateItemPresenter:
                 "timeEpoch": 1583348638390
             },
             "body": json.dumps({
-                "item_id": "11111111-1111-4111-8111-111111111111",
                 "item_name": "Ultrabook",
                 "item_description": "Updated description",
                 "item_type": "type2",
                 "item_image": "https://example.com/images/ultrabook.png"
             }),
-            "pathParameters": None,
+            "pathParameters": {"item_id": "11111111-1111-4111-8111-111111111111"},
             "isBase64Encoded": None,
             "stageVariables": None
         }

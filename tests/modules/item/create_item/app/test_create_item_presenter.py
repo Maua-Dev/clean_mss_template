@@ -17,7 +17,7 @@ class Test_CreateItemPresenter:
         event = {
             "version": "2.0",
             "routeKey": "$default",
-            "rawPath": "/my/path",
+            "rawPath": "/items",
             "rawQueryString": "",
             "headers": {},
             "queryStringParameters": None,
@@ -28,7 +28,7 @@ class Test_CreateItemPresenter:
                 "domainPrefix": "<url-id>",
                 "http": {
                     "method": "POST",
-                    "path": "/my/path",
+                    "path": "/items",
                     "protocol": "HTTP/1.1",
                     "sourceIp": "123.123.123.123",
                     "userAgent": "agent"
