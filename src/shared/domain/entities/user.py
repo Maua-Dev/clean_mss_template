@@ -1,60 +1,67 @@
-import abc
-import re
+import time
+from typing import Annotated
+from uuid import UUID, uuid4
 
-from src.shared.domain.enums.state_enum import STATE
+from pydantic import BaseModel, EmailStr, Field, ValidationError
+
+from src.shared.domain.enums.user_role_enum import UserRoleEnum
 from src.shared.helpers.errors.domain_errors import EntityError
 
 
-class User(abc.ABC):
-    name: str
-    email: str
-    state: STATE
-    MIN_NAME_LENGTH = 2
-    user_id: int
+class User(BaseModel):
 
-    def __init__(self, name: str, email: str, state: STATE, user_id: int = None):
-        if not User.validate_name(name):
-            raise EntityError("name")
-        self.name = name
+    def __init__(self, **data):
+        try:
+            super().__init__(**data)
+        except ValidationError as err:
+            raise EntityError(str(err.errors()[0]["loc"][0])) from err
 
-        if not User.validate_email(email):
-            raise EntityError("email")
-        self.email = email
+    user_id: Annotated[
+        UUID,
+        Field(
+            default_factory=uuid4,
+            frozen=True,
+            validate_default=True,
+            title="User id",
+            description="User id in uuid4 format"
+        )
+    ]
 
-        if type(user_id) == int:
-            if user_id < 0:
-                raise EntityError("user_id")
+    user_name: Annotated[
+        str,
+        Field(
+            max_length=30,
+            min_length=2,
+            title="User name",
+            description="User name, visual usage in frontend"
+        )
+    ]
 
-        if type(user_id) != int and user_id is not None:
-            raise EntityError("user_id")
+    user_email: Annotated[
+        EmailStr,
+        Field(
+            title="User email",
+            description="User email, used possibly as GSI"
+        )
+    ]
 
-        self.user_id = user_id
+    user_role: Annotated[
+        UserRoleEnum,
+        Field(
+            default=UserRoleEnum.USER,
+            title="User role",
+            description="User role, used to authorize actions"
+        )
+    ]
 
-        if type(state) != STATE:
-            raise EntityError("state")
-        self.state = state
-
-    @staticmethod
-    def validate_name(name: str) -> bool:
-        if name is None:
-            return False
-        elif type(name) != str:
-            return False
-        elif len(name) < User.MIN_NAME_LENGTH:
-            return False
-
-        return True
-
-    @staticmethod
-    def validate_email(email: str) -> bool:
-        if email is None:
-            return False
-
-        regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-
-        return bool(re.fullmatch(regex, email))
-
-
-
-    def __repr__(self):
-        return f"User(name={self.name}, email={self.email}, user_id={self.user_id}, state={self.state})"
+    created_at: Annotated[
+        int,
+        Field(
+            default_factory=lambda: int(time.time()),
+            validate_default=True,
+            gt=0,
+            frozen=True,
+            title="Creation timestamp (seconds)",
+            description="Created at timestamp in seconds, generated when object is created at runtime"
+        )
+    ]

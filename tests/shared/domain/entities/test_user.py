@@ -1,41 +1,69 @@
-from src.shared.domain.entities.user import User
-from src.shared.domain.enums.state_enum import STATE
-from src.shared.helpers.errors.domain_errors import EntityError
+from uuid import UUID
+
 import pytest
+
+from src.shared.domain.entities.user import User
+from src.shared.domain.enums.user_role_enum import UserRoleEnum
+from src.shared.helpers.errors.domain_errors import EntityError
 
 
 class Test_User:
-    def test_user(self):
-        User(name="VITOR", email="21.01444-2@maua.br", user_id=1, state=STATE.APPROVED)
+    def test_create_user_valid(self):
+        user = User(
+            user_name="Dave",
+            user_email="dave@example.com",
+        )
 
-    def test_user_name_is_none(self):
-        with pytest.raises(EntityError):
-            User(name=None, email="21.01444-2@maua.br", user_id=1, state=STATE.APPROVED)
+        assert isinstance(user.user_id, UUID)
+        assert user.user_role == UserRoleEnum.USER
+        assert user.created_at > 0
 
-    def test_user_name_is_not_str(self):
-        with pytest.raises(EntityError):
-            User(name=1, email="21.01444-2@maua.br", user_id=1, state=STATE.APPROVED)
+    def test_create_user_admin(self):
+        user = User(
+            user_name="Alice",
+            user_email="alice@example.com",
+            user_role=UserRoleEnum.ADMIN,
+        )
 
-    def test_user_name_is_shorter_than_min_length(self):
-        with pytest.raises(EntityError):
-            User(name="V", email="21.01444-2@maua.br", user_id=1, state=STATE.APPROVED)
+        assert user.user_role == UserRoleEnum.ADMIN
 
-    def test_user_email_is_none(self):
-        with pytest.raises(EntityError):
-            User(name="VITOR", email=None, user_id=1, state=STATE.APPROVED)
+    def test_user_invalid_email(self):
+        with pytest.raises(EntityError) as err:
+            User(user_name="Dave", user_email="not-an-email")
+        assert err.value.message == "Field user_email is not valid"
 
-    def test_user_email_is_not_valid(self):
+    def test_user_name_too_short(self):
         with pytest.raises(EntityError):
-            User(name="VITOR", email="21.01444-2maua.br", user_id=1, state=STATE.APPROVED)
+            User(user_name="D", user_email="dave@example.com")
 
-    def test_user_user_id_is_not_int(self):
+    def test_user_invalid_role(self):
         with pytest.raises(EntityError):
-            User(name="VITOR", email="21.01444-2@maua.br", user_id="1", state=STATE.APPROVED)
+            User(
+                user_name="Dave",
+                user_email="dave@example.com",
+                user_role="SuperUser",
+            )
 
-    def test_user_user_id_is_negative(self):
-        with pytest.raises(EntityError):
-            User(name="VITOR", email="21.01444-2@maua.br", user_id=-1, state=STATE.APPROVED)
+    def test_user_frozen_created_at(self):
+        user = User(
+            user_name="Dave",
+            user_email="dave@example.com",
+            created_at=1_700_000_000,
+        )
 
-    def test_user_state_is_not_sate_enum(self):
-        with pytest.raises(EntityError):
-            User(name="VITOR", email="21.01444-2@maua.br", user_id=1, state="APPROVED")
+        with pytest.raises(Exception):
+            user.created_at = 2
+
+    def test_model_dump_json_mode(self):
+        user = User(
+            user_id=UUID("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"),
+            user_name="Alice",
+            user_email="alice@example.com",
+            user_role="Admin",
+            created_at=1_700_000_000,
+        )
+        dumped = user.model_dump(mode="json")
+
+        assert dumped["user_id"] == "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
+        assert dumped["user_role"] == "Admin"
+        assert dumped["user_email"] == "alice@example.com"

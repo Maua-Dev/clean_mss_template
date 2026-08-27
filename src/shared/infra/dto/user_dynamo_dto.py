@@ -1,71 +1,44 @@
-from decimal import Decimal
-
 from src.shared.domain.entities.user import User
-from src.shared.domain.enums.state_enum import STATE
+from src.shared.infra.external.dynamo.dynamo_keys import (
+    EntityKind,
+    build_gsi2_attributes,
+    partition_key,
+    sort_key,
+    strip_keys,
+)
 
 
 class UserDynamoDTO:
-    name: str
-    email: str
-    state: STATE
-    user_id: int
-
-    def __init__(self, name: str, email: str, state: STATE, user_id: int):
-        self.name = name
-        self.email = email
-        self.user_id = user_id
-        self.state = state
 
     @staticmethod
-    def from_entity(user: User) -> "UserDynamoDTO":
+    def from_entity_to_dynamo(user: User) -> dict:
         """
-        Parse data from User to UserDynamoDTO
-        """
-        return UserDynamoDTO(
-            name=user.name,
-            email=user.email,
-            user_id=user.user_id,
-            state=user.state
-        )
+        Converts an User entity to a dictionary compatible with DynamoDB.
 
-    def to_dynamo(self) -> dict:
-        """
-        Parse data from UserDynamoDTO to dict
+        Includes base keys (pk/sk).
+
+        Args:
+            user: The User entity to serialize.
+
+        Returns:
+            Dict as expected by DynamoDB put_item.
         """
         return {
-            "entity": "user",
-            "name": self.name,
-            "email": self.email,
-            "user_id": Decimal(self.user_id),
-            "state": self.state.value
+            **user.model_dump(mode="json"),
+            "pk": partition_key(kind=EntityKind.USER),
+            "sk": sort_key(id=user.user_id, kind=EntityKind.USER),
+            **build_gsi2_attributes(user.user_email, user.created_at),
         }
 
     @staticmethod
-    def from_dynamo(user_data: dict) -> "UserDynamoDTO":
+    def from_dynamo_to_entity(user_data: dict) -> User:
         """
-        Parse data from DynamoDB to UserDynamoDTO
-        @param user_data: dict from DynamoDB
-        """
-        return UserDynamoDTO(
-            name=user_data["name"],
-            email=user_data["email"],
-            user_id=int(user_data["user_id"]),
-            state=STATE(user_data["state"])
-        )
+        Converts a DynamoDB item dict into a User entity.
 
-    def to_entity(self) -> User:
-        """
-        Parse data from UserDynamoDTO to User
-        """
-        return User(
-            name=self.name,
-            email=self.email,
-            user_id=self.user_id,
-            state=self.state
-        )
+        Args:
+            user_data: Dictionary from DynamoDB.
 
-    def __repr__(self):
-        return f"UserDynamoDto(name={self.name}, email={self.email}, user_id={self.user_id}, state={self.state})"
-
-    def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+        Returns:
+            User entity with storage keys removed.
+        """
+        return User.model_validate(obj=strip_keys(user_data))

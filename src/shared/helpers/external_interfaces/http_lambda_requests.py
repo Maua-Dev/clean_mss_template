@@ -1,5 +1,10 @@
 import json
+from typing import Any
 
+from src.shared.helpers.auth.authorizer_user import (
+    USER_FROM_AUTHORIZER_KEY,
+    parse_authorizer_user_from_event,
+)
 from src.shared.helpers.external_interfaces.http_models import HttpRequest, HttpResponse
 
 
@@ -9,26 +14,30 @@ class LambdaHttpResponse(HttpResponse):
     docs: https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html
     """
     status_code: int = 200
-    body: any = {"message": "No response"}
+    body: Any = {"message": "No response"}
     headers: dict = {"Content-Type": "application/json"}
 
-    def __init__(self, body: any = None, status_code: int = None, headers: dict = None, **kwargs) -> None:
+    def __init__(
+        self, 
+        body: Any = None, 
+        status_code: int = None, 
+        headers: dict = None, 
+        **kwargs
+    ) -> None:
         """
-        Constructor for HttpResponse.
+        Constructor for LambdaHttpResponse.
         Args:
             body: The body of the response. Can be a string or a dict.
             status_code: The status code of the response. Defaults to 200.
             headers: The headers of the response. Defaults to {"Content-Type": "application/json"}.
             **kwargs: Configuration of the HTTP response. Possible values: add_default_cors_headers (default is True)
         """
-        _body = body or LambdaHttpResponse.body
-        _headers = headers or LambdaHttpResponse.headers
-        _headers['Access-Control-Allow-Origin'] = '*'
-
-        _status_code = status_code or LambdaHttpResponse.status_code
+        _body = LambdaHttpResponse.body if body is None else body
+        _headers = dict(headers) if headers is not None else dict(LambdaHttpResponse.headers)
+        _status_code = LambdaHttpResponse.status_code if status_code is None else status_code
 
         if kwargs.get("add_default_cors_headers", True):
-            _headers.update({"Access-Control-Allow-Origin": "*"})
+            _headers["Access-Control-Allow-Origin"] = "*"
 
         super().__init__(body=_body, headers=_headers, status_code=_status_code)
 
@@ -37,7 +46,7 @@ class LambdaHttpResponse(HttpResponse):
         Returns a dict representation of the HttpResponse.
         Returns:
             {
-                'statuCode': int
+                'statusCode': int
                 'body': str or dict
                 'headers': dict
                 'isBase64Encoded': bool
@@ -65,9 +74,9 @@ class LambdaDefaultHTTP:
 
     def __init__(self, data: dict = None) -> None:
         """
-        Constructor for LambdaHttp.
+        Constructor for LambdaDefaultHTTP.
         Args:
-            event: dict - the event passed to the lambda function.
+            data: dict - the "http" section of the lambda event requestContext.
         """
         if not data:
             return
@@ -85,9 +94,9 @@ class LambdaDefaultHTTP:
 
 class LambdaHttpRequest(HttpRequest):
     """
-        A class to represent an HTTP request for lambda URL.
-        docs: https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html
-        """
+    A class to represent an HTTP request for lambda URL.
+    docs: https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html
+    """
     version: str
     raw_path: str
     raw_query_string: str
@@ -95,11 +104,13 @@ class LambdaHttpRequest(HttpRequest):
     query_string_parameters: dict
     request_context: dict
     http: LambdaDefaultHTTP
-    body: any
+    body: Any
 
     def __init__(self, data: dict = None) -> None:
         """
-        Constructor for HttpResponse.
+        Constructor for LambdaHttpRequest.
+        Args:
+            data: dict - the event passed to the lambda function.
         """
         _headers = data.get("headers")
         _query_string_parameters = data.get("queryStringParameters")
@@ -118,10 +129,16 @@ class LambdaHttpRequest(HttpRequest):
         self.raw_query_string = data.get("rawQueryString")
         self.query_string_parameters = data.get("queryStringParameters")
         self.request_context = data.get("requestContext")
-        self.http = LambdaDefaultHTTP(self.request_context.get("external_interfaces") if self.request_context else None)
+        self.http = LambdaDefaultHTTP(self.request_context.get("http") if self.request_context else None)
 
+        # path params ganham de body/query (fonte do id na URL REST)
+        path_parameters = data.get("pathParameters") or {}
+        if isinstance(path_parameters, dict):
+            self.data.update(path_parameters)
 
-class HttpResponseRedirect(HttpResponse):
-
-    def __init__(self, location: str) -> None:
-        super().__init__(status_code=302, headers={"Location": location})
+        # injeta DEPOIS do body/query/path para o cliente não spoofar via payload
+        authorizer_user = parse_authorizer_user_from_event(data)
+        if authorizer_user is not None:
+            self.data[USER_FROM_AUTHORIZER_KEY] = authorizer_user
+        else:
+            self.data.pop(USER_FROM_AUTHORIZER_KEY, None)

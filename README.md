@@ -34,11 +34,27 @@ Our folder structure was developed specially for our projects.
 ├── iac
 ├── src
 │   ├── modules
+│   │   ├── create_item
+│   │   │   └── app
+│   │   ├── delete_item
+│   │   │   └── app
+│   │   ├── get_item
+│   │   │   └── app
+│   │   ├── get_all_items
+│   │   │   └── app
+│   │   ├── get_items_by_type
+│   │   │   └── app
+│   │   ├── update_item
+│   │   │   └── app
 │   │   ├── create_user
 │   │   │   └── app
 │   │   ├── delete_user
 │   │   │   └── app
 │   │   ├── get_user
+│   │   │   └── app
+│   │   ├── get_user_by_email
+│   │   │   └── app
+│   │   ├── get_all_users
 │   │   │   └── app
 │   │   └── update_user
 │   │       └── app
@@ -58,11 +74,27 @@ Our folder structure was developed specially for our projects.
 │           └── repositories
 └── tests
     ├── modules
+    │   ├── create_item
+    │   │   └── app
+    │   ├── delete_item
+    │   │   └── app
+    │   ├── get_item
+    │   │   └── app
+    │   ├── get_all_items
+    │   │   └── app
+    │   ├── get_items_by_type
+    │   │   └── app
+    │   ├── update_item
+    │   │   └── app
     │   ├── create_user
     │   │   └── app
     │   ├── delete_user
     │   │   └── app
     │   ├── get_user
+    │   │   └── app
+    │   ├── get_user_by_email
+    │   │   └── app
+    │   ├── get_all_users
     │   │   └── app
     │   └── update_user
     │       └── app
@@ -79,7 +111,7 @@ Our folder structure was developed specially for our projects.
 ### Files and Directories 📁
 
 - Files have the same name as the classes
-- snake_case 🐍 (ex: `./app/create_user_controller.py`)
+- snake_case 🐍 (ex: `./app/create_item_controller.py`)
 
 ### Classes 🕴
 - #### Pattern 📟
@@ -88,17 +120,17 @@ Our folder structure was developed specially for our projects.
 
 - #### Types 🧭
 
-    - **Interface** starts with "I" --> `IUserRepository`, `ISelfieRepository` 😀
-    - **Repository** have the same name as interface, without the "I" and the type in final (ex: `UserRepositoryMock`, `SelfieRepositoryDynamo`) 🥬
-    - **Controller** ends with "Controller" --> `CreateUserController`, `GetSelfieController` 🎮
-    - **Usecase** ends with "Usecase" --> `CreateUserUsecase`, `GetSelfieUsecase` 🏠
-    - **Viewmodel** ends with "Viewmodel" --> `CreateUserViewmodel`, `GetSelfieViewmodel` 👀
-    - **Presenter** ends with "Presenter" --> `CreateUserPresenter`, `GetSelfiePresenter`🎁
+    - **Interface** starts with "I" --> `IItemRepository`, `ISelfieRepository` 😀
+    - **Repository** have the same name as interface, without the "I" and the type in final (ex: `ItemRepositoryMock`, `SelfieRepositoryDynamo`) 🥬
+    - **Controller** ends with "Controller" --> `CreateItemController`, `GetSelfieController` 🎮
+    - **Usecase** ends with "Usecase" --> `CreateItemUsecase`, `GetSelfieUsecase` 🏠
+    - **Viewmodel** ends with "Viewmodel" --> `CreateItemViewmodel`, `GetSelfieViewmodel` 👀
+    - **Presenter** ends with "Presenter" --> `CreateItemPresenter`, `GetSelfiePresenter`🎁
 
 ### Methods 👨‍🏫
 
 - snake_case 🐍
-- Try associate with a verb (ex: `create_user`, `get_user`, `update_selfie`)
+- Try associate with a verb (ex: `create_item`, `get_item`, `update_selfie`)
 
 ### Variables 🅰
 
@@ -130,7 +162,9 @@ Our folder structure was developed specially for our projects.
 
 ## Installation 👩‍💻
 
-Clone the repository using template
+Clone the repository using template.
+
+**Turning this into a real MSS?** Follow [iac/FROM_TEMPLATE.md](iac/FROM_TEMPLATE.md) (rename identity → push `dev` → CD). Do not invent extra CI/STAGE hacks.
 
 ### Create virtual ambient in python (only first time)
 
@@ -170,10 +204,14 @@ Clone the repository using template
 - Bruno Vilardi - [Brvilardi](https://github.com/Brvilardi) 👷‍♂️
 - Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini) 🧙‍♂️
 - João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco) 😎
-- Vitor Soller - [VgsStudio](https://github.com/VgsStudio) 🐱‍💻
-- Lucas Duez - [Lucasdvs10](https://github.com/Lucasdvs10) 🐱‍👤
+- Vitor Soller - [VgsStudio](https://github.com/VgsStudio) ☀
+- Lucas Duez - [Lucasdvs10](https://github.com/Lucasdvs10) 🤡
+- Rodrigo Morales - [RodrigoM2004](https://github.com/RodrigoM2004) 🚗
+- Lucas Milani - [LucasKiller](https://github.com/LucasKiller) 🔪
+- Rafael Rubio - [Rubiozito](https://github.com/Rubiozito) 🎸
+- Leonardo Iorio - [lseixas](https://github.com/lseixas) 🐉
 
-## Especial Thanks 🙏
+## Special Thanks 🙏
 
 - [Dev. Community Mauá](https://www.instagram.com/devcommunitymaua/)
 - [Clean Architecture: A Craftsman's Guide to Software Structure and Design](https://www.amazon.com.br/Clean-Architecture-Craftsmans-Software-Structure/dp/0134494164)

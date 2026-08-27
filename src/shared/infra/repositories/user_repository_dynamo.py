@@ -1,92 +1,152 @@
-from decimal import Decimal
 from typing import List
+from uuid import UUID
+
+from boto3.dynamodb.conditions import Key
+from pydantic import EmailStr
 
 from src.shared.domain.entities.user import User
 from src.shared.domain.repositories.user_repository_interface import IUserRepository
 from src.shared.environments import Environments
-from src.shared.helpers.errors.usecase_errors import NoItemsFound
+from src.shared.helpers.errors.usecase_errors import DuplicatedUser, NoUsersFound
 from src.shared.infra.dto.user_dynamo_dto import UserDynamoDTO
 from src.shared.infra.external.dynamo.datasources.dynamo_datasource import DynamoDatasource
+from src.shared.infra.external.dynamo.dynamo_keys import (
+    EntityKind,
+    GSI2_NAME,
+    GSI2_PK_ATTR,
+    PK_ATTR,
+    gsi2_partition_key,
+    partition_key,
+    sort_key,
+)
 
 
 class UserRepositoryDynamo(IUserRepository):
 
-    @staticmethod
-    def partition_key_format(user_id) -> str:
-        return f"user#{user_id}"
-
-    @staticmethod
-    def sort_key_format(user_id: int) -> str:
-        return f"#{user_id}"
-
     def __init__(self):
-        self.dynamo = DynamoDatasource(endpoint_url=Environments.get_envs().endpoint_url,
-                                       dynamo_table_name=Environments.get_envs().dynamo_table_name,
-                                       region=Environments.get_envs().region,
-                                       partition_key=Environments.get_envs().dynamo_partition_key,
-                                       sort_key=Environments.get_envs().dynamo_sort_key)
-    def get_user(self, user_id: int) -> User:
-        resp = self.dynamo.get_item(partition_key=self.partition_key_format(user_id), sort_key=self.sort_key_format(user_id))
+        envs = Environments.get_envs()
+        self.dynamo = DynamoDatasource(
+            dynamo_table_name=envs.dynamo_table_name,
+            region=envs.region,
+            partition_key=envs.dynamo_partition_key,
+            sort_key=envs.dynamo_sort_key,
+            endpoint_url=envs.dynamo_endpoint_url,
+        )
 
-        if resp.get('Item') is None:
-            raise NoItemsFound("user_id")
+    def _pk(self) -> str:
+        return partition_key(kind=EntityKind.USER)
 
-        user_dto = UserDynamoDTO.from_dynamo(resp["Item"])
-        return user_dto.to_entity()
+    def _sk(self, user_id: UUID) -> str:
+        return sort_key(id=user_id, kind=EntityKind.USER)
 
-    def get_all_user(self) -> List[User]:
-        resp = self.dynamo.get_all_items()
-        users = []
-        for item in resp['Items']:
-            if item.get("entity") == 'user':
-                users.append(UserDynamoDTO.from_dynamo(item).to_entity())
+    def get_user(self, user_id: UUID) -> User:
+        resp = self.dynamo.get_item(
+            partition_key=self._pk(),
+            sort_key=self._sk(user_id),
+        )
 
-        return users
+        if resp.get("Item") is None:
+            raise NoUsersFound("user_id")
 
+        return UserDynamoDTO.from_dynamo_to_entity(resp["Item"])
+
+    def get_user_by_email(self, user_email: EmailStr) -> User:
+        resp = self.dynamo.query(
+            key_condition_expression=Key(GSI2_PK_ATTR).eq(gsi2_partition_key(user_email)),
+            IndexName=GSI2_NAME,
+        )
+
+        items = resp.get("Items", [])
+        if not items:
+            raise NoUsersFound("user_email")
+
+        return UserDynamoDTO.from_dynamo_to_entity(items[0])
+
+    def get_all_users(self) -> List[User]:
+        resp = self.dynamo.query(
+            key_condition_expression=Key(PK_ATTR).eq(self._pk()),
+        )
+
+        return [
+            UserDynamoDTO.from_dynamo_to_entity(user)
+            for user in resp.get("Items", [])
+        ]
 
     def create_user(self, new_user: User) -> User:
-        print(f"repo entered.\n Repo:{self}")
-        print(self.dynamo.dynamo_table.__dict__)
-        new_user.user_id = self.get_user_counter()
-        print(f"nre user id: {new_user.user_id}")
-        user_dto = UserDynamoDTO.from_entity(user=new_user)
-        resp = self.dynamo.put_item(partition_key=self.partition_key_format(new_user.user_id),
-                                    sort_key=self.sort_key_format(user_id=new_user.user_id), item=user_dto.to_dynamo(),
-                                    is_decimal=True)
+        existing = self.dynamo.get_item(
+            partition_key=self._pk(),
+            sort_key=self._sk(new_user.user_id),
+        )
+        if existing.get("Item") is not None:
+            raise DuplicatedUser("user_id")
+
+        # email uniqueness via GSI2
+        email_resp = self.dynamo.query(
+            key_condition_expression=Key(GSI2_PK_ATTR).eq(
+                gsi2_partition_key(new_user.user_email)
+            ),
+            IndexName=GSI2_NAME,
+            Select="COUNT",
+        )
+        if email_resp.get("Count", 0) > 0:
+            raise DuplicatedUser("user_email")
+
+        self.dynamo.put_item(
+            item=UserDynamoDTO.from_entity_to_dynamo(new_user),
+            partition_key=self._pk(),
+            sort_key=self._sk(new_user.user_id),
+        )
         return new_user
 
-    def delete_user(self, user_id: int) -> User:
-        resp = self.dynamo.delete_item(partition_key=self.partition_key_format(user_id), sort_key=self.sort_key_format(user_id))
+    def delete_user(self, user_id: UUID) -> User:
+        resp = self.dynamo.delete_item(
+            partition_key=self._pk(),
+            sort_key=self._sk(user_id),
+        )
 
         if "Attributes" not in resp:
-            raise NoItemsFound("user_id")
+            raise NoUsersFound("user_id")
 
-        return UserDynamoDTO.from_dynamo(resp['Attributes']).to_entity()
+        return UserDynamoDTO.from_dynamo_to_entity(resp["Attributes"])
 
-    def update_user(self, user_id: int, new_name: str) -> User:
+    def update_user(self, updated_user: User) -> User:
+        existing = self.dynamo.get_item(
+            partition_key=self._pk(),
+            sort_key=self._sk(updated_user.user_id),
+        )
+        if existing.get("Item") is None:
+            raise NoUsersFound("user_id")
 
-        user = self.get_user(user_id=user_id)
+        self.dynamo.put_item(
+            item=UserDynamoDTO.from_entity_to_dynamo(updated_user),
+            partition_key=self._pk(),
+            sort_key=self._sk(updated_user.user_id),
+        )
+        return updated_user
 
-        item_to_update = {}
+    def reallocate_user(self, updated_user: User) -> User:
+        existing = self.get_user_by_email(updated_user.user_email)
 
-        if new_name:
-            item_to_update['name'] = new_name
-        else:
-            raise NoItemsFound("Nothing to update")
+        if existing.user_id != updated_user.user_id:
+            conflict = self.dynamo.get_item(
+                partition_key=self._pk(),
+                sort_key=self._sk(updated_user.user_id),
+            )
+            if conflict.get("Item") is not None:
+                raise DuplicatedUser("user_id")
 
-        resp = self.dynamo.update_item(partition_key=self.partition_key_format(user_id), sort_key=self.sort_key_format(user_id), update_dict=item_to_update)
+            self.delete_user(existing.user_id)
 
-        return UserDynamoDTO.from_dynamo(resp['Attributes']).to_entity()
+        self.dynamo.put_item(
+            item=UserDynamoDTO.from_entity_to_dynamo(updated_user),
+            partition_key=self._pk(),
+            sort_key=self._sk(updated_user.user_id),
+        )
+        return updated_user
 
     def get_user_counter(self) -> int:
-
-        return self.update_counter()
-
-    def update_counter(self) -> int: #TODO fix this
-        print("updating counter")
-        counter = int(self.dynamo.get_item(partition_key='COUNTER', sort_key='COUNTER')['Item']['COUNTER'])
-        print(f"counter: {counter}")
-        resp = self.dynamo.update_item(partition_key='COUNTER', sort_key='COUNTER', update_dict={'COUNTER': Decimal(counter+1)})
-        print(f"resp: {resp}")
-
-        return int(resp['Attributes']['COUNTER'])
+        resp = self.dynamo.query(
+            key_condition_expression=Key(PK_ATTR).eq(self._pk()),
+            Select="COUNT",
+        )
+        return resp.get("Count", 0)

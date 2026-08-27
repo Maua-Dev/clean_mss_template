@@ -1,6 +1,5 @@
-pytest==6.2.5
-pytest-cov==4.0.0
-boto3==1.24.88
-python-dotenv==0.21.0
-aws-lambda-powertools==2.9.0
-aws_xray_sdk==2.11.0
+# pacotes necessários em local (lambda não usa)
+-r requirements-app.txt
+pytest==8.4.1
+pytest-cov==6.2.1
+python-dotenv>=1.0.0

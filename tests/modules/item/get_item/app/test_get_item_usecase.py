@@ -1,0 +1,25 @@
+from uuid import UUID
+
+import pytest
+
+from src.modules.item.get_item.app.get_item_usecase import GetItemUsecase
+from src.shared.helpers.errors.usecase_errors import NoItemsFound
+from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMock
+
+
+class Test_GetItemUsecase:
+    def test_get_item(self):
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo)
+        item = item_repo.items[0]
+
+        result = usecase(item_id=item.item_id)
+
+        assert result == item
+
+    def test_get_item_not_found(self):
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo)
+
+        with pytest.raises(NoItemsFound):
+            usecase(item_id=UUID("99999999-9999-4999-8999-999999999999"))
