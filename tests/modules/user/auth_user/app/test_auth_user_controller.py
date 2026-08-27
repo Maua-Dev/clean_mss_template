@@ -20,7 +20,7 @@ class Test_AuthUserController:
             }
         }))
 
-        assert response.status_code == 200
+        assert response.status_code == 201
         assert response.body["user_id"] == "dddddddd-dddd-4ddd-8ddd-dddddddddddd"
         assert response.body["user_name"] == "Dave"
         assert response.body["message"] == "the user was created successfully"
