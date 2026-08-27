@@ -45,6 +45,7 @@ class LambdaConstruct(Construct):
             environment=environment_variables,
             timeout=Duration.seconds(60),
             memory_size=512,
+            tracing=lambda_.Tracing.ACTIVE,
         )
 
     def add_method_to_resource(
@@ -95,6 +96,7 @@ class LambdaConstruct(Construct):
             environment=environment_variables,
             timeout=Duration.seconds(300),
             memory_size=1024,
+            tracing=lambda_.Tracing.ACTIVE,
         )
 
         bucket.add_event_notification(
@@ -149,6 +151,7 @@ class LambdaConstruct(Construct):
             environment=environment_variables,
             timeout=Duration.seconds(15),
             memory_size=512,
+            tracing=lambda_.Tracing.ACTIVE,
         )
         self.functions_that_need_dynamo_db_access.append(self.microsoft_authorizer_function)
 
