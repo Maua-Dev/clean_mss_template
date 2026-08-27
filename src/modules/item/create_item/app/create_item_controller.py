@@ -4,13 +4,14 @@ from .create_item_usecase import CreateItemUsecase
 from .create_item_viewmodel import CreateItemViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
-from src.shared.helpers.errors.usecase_errors import ForbiddenAction, NoItemsFound
+from src.shared.helpers.errors.usecase_errors import DuplicatedItem, ForbiddenAction, NoItemsFound
 from src.shared.helpers.external_interfaces.http_codes import (
     NotFound,
     BadRequest,
     InternalServerError,
     Created,
     Forbidden,
+    Conflict,
 )
 
 
@@ -76,6 +77,9 @@ class CreateItemController:
 
         except ForbiddenAction as err:
             return Forbidden(body=err.message)
+
+        except DuplicatedItem as err:
+            return Conflict(body=err.message)
 
         except NoItemsFound as err:
             return NotFound(body=err.message)

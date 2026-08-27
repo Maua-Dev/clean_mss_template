@@ -6,7 +6,13 @@ from .create_user_viewmodel import CreateUserViewmodel
 from src.shared.helpers.errors.controller_errors import MissingParameters, WrongTypeParameter
 from src.shared.helpers.errors.domain_errors import EntityError
 from src.shared.helpers.errors.usecase_errors import DuplicatedUser, NoUsersFound
-from src.shared.helpers.external_interfaces.http_codes import NotFound, BadRequest, InternalServerError, Created
+from src.shared.helpers.external_interfaces.http_codes import (
+    NotFound,
+    BadRequest,
+    InternalServerError,
+    Created,
+    Conflict,
+)
 
 
 class CreateUserController:
@@ -63,7 +69,7 @@ class CreateUserController:
         except NoUsersFound as err:
             return NotFound(body=err.message)
         except DuplicatedUser as err:
-            return BadRequest(body=err.message)
+            return Conflict(body=err.message)
         except MissingParameters as err:
             return BadRequest(body=err.message)
         except WrongTypeParameter as err:

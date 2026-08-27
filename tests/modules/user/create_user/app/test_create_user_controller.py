@@ -43,5 +43,5 @@ class Test_CreateUserController:
             "user_email": "alice@example.com",
         }))
 
-        assert response.status_code == 400
+        assert response.status_code == 409
         assert "user_email" in response.body
