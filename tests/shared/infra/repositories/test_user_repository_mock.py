@@ -68,6 +68,25 @@ class Test_UserRepositoryMock:
         result = repo.update_user(updated)
         assert result.user_name == "Alice Updated"
 
+    def test_reallocate_user_changes_id(self):
+        repo = UserRepositoryMock()
+        existing = repo.users[1]
+        new_id = UUID("eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee")
+        substituted = User(
+            user_id=new_id,
+            user_name="Bob From Graph",
+            user_email=existing.user_email,
+            user_role=existing.user_role,
+            created_at=existing.created_at,
+        )
+
+        result = repo.reallocate_user(substituted)
+
+        assert result.user_id == new_id
+        assert repo.get_user(new_id).user_name == "Bob From Graph"
+        with pytest.raises(NoUsersFound):
+            repo.get_user(existing.user_id)
+
     def test_get_user_counter(self):
         repo = UserRepositoryMock()
         assert repo.get_user_counter() == 3

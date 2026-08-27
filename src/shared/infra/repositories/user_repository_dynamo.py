@@ -124,6 +124,26 @@ class UserRepositoryDynamo(IUserRepository):
         )
         return updated_user
 
+    def reallocate_user(self, updated_user: User) -> User:
+        existing = self.get_user_by_email(updated_user.user_email)
+
+        if existing.user_id != updated_user.user_id:
+            conflict = self.dynamo.get_item(
+                partition_key=self._pk(),
+                sort_key=self._sk(updated_user.user_id),
+            )
+            if conflict.get("Item") is not None:
+                raise DuplicatedUser("user_id")
+
+            self.delete_user(existing.user_id)
+
+        self.dynamo.put_item(
+            item=UserDynamoDTO.from_entity_to_dynamo(updated_user),
+            partition_key=self._pk(),
+            sort_key=self._sk(updated_user.user_id),
+        )
+        return updated_user
+
     def get_user_counter(self) -> int:
         resp = self.dynamo.query(
             key_condition_expression=Key(PK_ATTR).eq(self._pk()),
