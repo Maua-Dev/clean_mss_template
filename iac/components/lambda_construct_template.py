@@ -46,7 +46,8 @@ class LambdaConstruct(Construct):
             layers=[self.lambda_layer],
             environment=environment_variables,
             timeout=Duration.seconds(60),
-            memory_size=512
+            memory_size=512,
+            tracing=lambda_.Tracing.ACTIVE,
         )
 
         method_options = {
@@ -96,7 +97,8 @@ class LambdaConstruct(Construct):
             layers=[self.lambda_layer],
             environment=environment_variables,
             timeout=Duration.seconds(300), # tempo aumentado pois esse tipo de integracao envolve pdfs e bedrock (ate hoje)
-            memory_size=1024
+            memory_size=1024,
+            tracing=lambda_.Tracing.ACTIVE,
         )
 
         bucket.add_event_notification(
@@ -154,6 +156,7 @@ class LambdaConstruct(Construct):
             environment=environment_variables,
             timeout=Duration.seconds(15),
             memory_size=512,
+            tracing=lambda_.Tracing.ACTIVE,
         )
         self.functions_that_need_dynamo_db_access.append(self.microsoft_authorizer_function)
 

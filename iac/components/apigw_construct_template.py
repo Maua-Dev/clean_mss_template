@@ -61,6 +61,7 @@ class ApigwConstruct(Construct):
                 logging_level=apigateway.MethodLoggingLevel.OFF,
                 data_trace_enabled=False,
                 metrics_enabled=True,
+                tracing_enabled=True,
             ),
             default_cors_preflight_options=cors_options,
         )
