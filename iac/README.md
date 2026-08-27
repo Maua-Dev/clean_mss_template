@@ -1,6 +1,8 @@
 
 # Welcome to your CDK Python project!
 
+> **Saindo do template?** Leia [FROM_TEMPLATE.md](./FROM_TEMPLATE.md) — checklist de rename + vars GitHub.
+
 This is a blank project for CDK development with Python.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.

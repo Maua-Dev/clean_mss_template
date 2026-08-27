@@ -162,7 +162,9 @@ Our folder structure was developed specially for our projects.
 
 ## Installation 👩‍💻
 
-Clone the repository using template
+Clone the repository using template.
+
+**Turning this into a real MSS?** Follow [iac/FROM_TEMPLATE.md](iac/FROM_TEMPLATE.md) (rename identity → push `dev` → CD). Do not invent extra CI/STAGE hacks.
 
 ### Create virtual ambient in python (only first time)
 
