@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from src.shared.helpers.auth.authorizer_user import USER_FROM_AUTHORIZER_KEY
 from src.shared.helpers.external_interfaces.external_interface import IResponse, IRequest
 from .create_user_usecase import CreateUserUsecase
 from .create_user_viewmodel import CreateUserViewmodel
@@ -22,32 +23,37 @@ class CreateUserController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
-            user_id = request.data.get("user_id")
-            user_name = request.data.get("user_name")
-            user_email = request.data.get("user_email")
+            user_from_authorizer = request.data.get(USER_FROM_AUTHORIZER_KEY)
+
+            if user_from_authorizer is None:
+                raise MissingParameters(USER_FROM_AUTHORIZER_KEY)
+
+            user_id = user_from_authorizer.get("sub")
+            user_name = user_from_authorizer.get("name")
+            user_email = user_from_authorizer.get("mail")
 
             if user_id is None:
-                raise MissingParameters("user_id")
+                raise MissingParameters("sub")
             if user_name is None:
-                raise MissingParameters("user_name")
+                raise MissingParameters("name")
             if user_email is None:
-                raise MissingParameters("user_email")
+                raise MissingParameters("mail")
 
             if not isinstance(user_id, str):
                 raise WrongTypeParameter(
-                    fieldName="user_id",
+                    fieldName="sub",
                     fieldTypeExpected="str",
                     fieldTypeReceived=type(user_id).__name__
                 )
             if not isinstance(user_name, str):
                 raise WrongTypeParameter(
-                    fieldName="user_name",
+                    fieldName="name",
                     fieldTypeExpected="str",
                     fieldTypeReceived=type(user_name).__name__
                 )
             if not isinstance(user_email, str):
                 raise WrongTypeParameter(
-                    fieldName="user_email",
+                    fieldName="mail",
                     fieldTypeExpected="str",
                     fieldTypeReceived=type(user_email).__name__
                 )
