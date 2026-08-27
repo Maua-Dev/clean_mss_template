@@ -21,7 +21,7 @@ jobs:
 
   testApp:
     needs: [deployGuard]
-    uses: maua-dev/ci_workflows_reusable/.github/workflows/pytest_ci_313.yml@V1.2
+    uses: maua-dev/ci_workflows_reusable/.github/workflows/pytest_ci_313.yml@V1.3
 
   cdkSynth:
     needs: [deployGuard]
@@ -81,6 +81,7 @@ jobs:
           AWS_REGION: ${{ vars.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID }}
           STACK_NAME: ${{ env.STACK_NAME }}
+          STAGE: ${{ github.ref_name }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
           MSS_NAME: ${{ github.event.repository.name }}
           GRAPH_MICROSOFT_ENDPOINT: ${{ vars.GRAPH_MICROSOFT_ENDPOINT }}

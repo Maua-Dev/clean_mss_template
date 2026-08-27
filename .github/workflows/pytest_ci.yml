@@ -7,7 +7,15 @@ on:
 
 jobs:
   testApp:
-    uses: maua-dev/ci_workflows_reusable/.github/workflows/pytest_ci_313.yml@V1.2
+    uses: maua-dev/ci_workflows_reusable/.github/workflows/pytest_ci_313.yml@V1.3
 
+  # Synth only on push (never pull_request: GITHUB_REF_NAME would be N/merge).
+  # STAGE is normalized in iac/app.py; cdk_synth_ci.yml sets STAGE=ci explicitly.
   cdkSynth:
+    if: >
+      github.event_name != 'pull_request' &&
+      (github.ref_name == 'dev' ||
+       github.ref_name == 'homolog' ||
+       github.ref_name == 'prod' ||
+       startsWith(github.ref_name, 'infra/'))
     uses: ./.github/workflows/cdk_synth_ci.yml
