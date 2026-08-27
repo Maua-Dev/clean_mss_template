@@ -10,10 +10,19 @@ class Test_GetItemsByTypePresenter:
     def test_get_items_by_type(self):
         event = {
             "version": "2.0",
-            "rawPath": "/my/path",
+            "rawPath": "/items/by-type",
             "headers": {},
-            "queryStringParameters": {"item_type": "type1"},
-            "requestContext": {"http": {"method": "GET", "path": "/my/path", "protocol": "HTTP/1.1", "sourceIp": "1.1.1.1", "userAgent": "agent"}},
+            "queryStringParameters": {"type": "type1"},
+            "pathParameters": None,
+            "requestContext": {
+                "http": {
+                    "method": "GET",
+                    "path": "/items/by-type",
+                    "protocol": "HTTP/1.1",
+                    "sourceIp": "1.1.1.1",
+                    "userAgent": "agent",
+                }
+            },
             "body": None,
         }
 

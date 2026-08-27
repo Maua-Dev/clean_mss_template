@@ -10,7 +10,7 @@ class Test_DeleteUserController:
         controller = DeleteUserController(DeleteUserUsecase(user_repo))
         user_id = str(user_repo.users[0].user_id)
 
-        response = controller(HttpRequest(body={"user_id": user_id}))
+        response = controller(HttpRequest(path_params={"user_id": user_id}))
 
         assert response.status_code == 204
         assert not response.body
@@ -19,7 +19,7 @@ class Test_DeleteUserController:
         user_repo = UserRepositoryMock()
         controller = DeleteUserController(DeleteUserUsecase(user_repo))
 
-        response = controller(HttpRequest(body={
+        response = controller(HttpRequest(path_params={
             "user_id": "99999999-9999-4999-8999-999999999999"
         }))
 

@@ -14,13 +14,13 @@ class GetItemsByTypeController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
-            item_type = request.data.get("item_type")
+            item_type = request.data.get("type") or request.data.get("item_type")
 
             if item_type is None:
-                raise MissingParameters("item_type")
+                raise MissingParameters("type")
             if not isinstance(item_type, str):
                 raise WrongTypeParameter(
-                    fieldName="item_type",
+                    fieldName="type",
                     fieldTypeExpected="str",
                     fieldTypeReceived=type(item_type).__name__
                 )

@@ -9,11 +9,20 @@ class Test_DeleteUserPresenter:
     def test_delete_user(self):
         event = {
             "version": "2.0",
-            "rawPath": "/my/path",
+            "rawPath": "/users/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
             "headers": {},
             "queryStringParameters": None,
-            "requestContext": {"http": {"method": "POST", "path": "/my/path", "protocol": "HTTP/1.1", "sourceIp": "1.1.1.1", "userAgent": "agent"}},
-            "body": '{"user_id":"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"}',
+            "pathParameters": {"user_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"},
+            "requestContext": {
+                "http": {
+                    "method": "DELETE",
+                    "path": "/users/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+                    "protocol": "HTTP/1.1",
+                    "sourceIp": "1.1.1.1",
+                    "userAgent": "agent",
+                }
+            },
+            "body": None,
         }
 
         response = lambda_handler(event, None)

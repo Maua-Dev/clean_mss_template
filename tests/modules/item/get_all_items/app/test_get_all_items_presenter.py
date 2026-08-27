@@ -11,7 +11,7 @@ class Test_GetAllItemsPresenter:
         event = {
             "version": "2.0",
             "routeKey": "$default",
-            "rawPath": "/my/path",
+            "rawPath": "/items",
             "rawQueryString": "",
             "headers": {},
             "queryStringParameters": None,
@@ -22,7 +22,7 @@ class Test_GetAllItemsPresenter:
                 "domainPrefix": "<url-id>",
                 "http": {
                     "method": "GET",
-                    "path": "/my/path",
+                    "path": "/items",
                     "protocol": "HTTP/1.1",
                     "sourceIp": "123.123.123.123",
                     "userAgent": "agent"

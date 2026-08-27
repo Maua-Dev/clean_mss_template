@@ -10,10 +10,10 @@ class Test_GetAllUsersPresenter:
     def test_get_all_users(self):
         event = {
             "version": "2.0",
-            "rawPath": "/my/path",
+            "rawPath": "/users",
             "headers": {},
             "queryStringParameters": None,
-            "requestContext": {"http": {"method": "GET", "path": "/my/path", "protocol": "HTTP/1.1", "sourceIp": "1.1.1.1", "userAgent": "agent"}},
+            "requestContext": {"http": {"method": "GET", "path": "/users", "protocol": "HTTP/1.1", "sourceIp": "1.1.1.1", "userAgent": "agent"}},
             "body": None,
         }
 

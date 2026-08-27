@@ -9,7 +9,7 @@ class Test_GetUserByEmailController:
         user_repo = UserRepositoryMock()
         controller = GetUserByEmailController(GetUserByEmailUsecase(user_repo))
 
-        response = controller(HttpRequest(query_params={"user_email": "bob@example.com"}))
+        response = controller(HttpRequest(query_params={"email": "bob@example.com"}))
 
         assert response.status_code == 200
         assert response.body["user_name"] == "Bob User"
@@ -22,12 +22,12 @@ class Test_GetUserByEmailController:
         response = controller(HttpRequest(query_params={}))
 
         assert response.status_code == 400
-        assert response.body == "Field user_email is missing"
+        assert response.body == "Field email is missing"
 
     def test_get_user_by_email_not_found(self):
         user_repo = UserRepositoryMock()
         controller = GetUserByEmailController(GetUserByEmailUsecase(user_repo))
 
-        response = controller(HttpRequest(query_params={"user_email": "nobody@example.com"}))
+        response = controller(HttpRequest(query_params={"email": "nobody@example.com"}))
 
         assert response.status_code == 404

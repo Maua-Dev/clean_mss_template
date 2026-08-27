@@ -17,7 +17,7 @@ class Test_DeleteItemPresenter:
         event = {
             "version": "2.0",
             "routeKey": "$default",
-            "rawPath": "/my/path",
+            "rawPath": "/items/11111111-1111-4111-8111-111111111111",
             "rawQueryString": "",
             "headers": {},
             "queryStringParameters": None,
@@ -27,8 +27,8 @@ class Test_DeleteItemPresenter:
                 "domainName": "<url-id>.lambda-url.us-west-2.on.aws",
                 "domainPrefix": "<url-id>",
                 "http": {
-                    "method": "POST",
-                    "path": "/my/path",
+                    "method": "DELETE",
+                    "path": "/items/11111111-1111-4111-8111-111111111111",
                     "protocol": "HTTP/1.1",
                     "sourceIp": "123.123.123.123",
                     "userAgent": "agent"
@@ -40,8 +40,8 @@ class Test_DeleteItemPresenter:
                 "time": "12/Mar/2020:19:03:58 +0000",
                 "timeEpoch": 1583348638390
             },
-            "body": '{"item_id":"11111111-1111-4111-8111-111111111111"}',
-            "pathParameters": None,
+            "body": None,
+            "pathParameters": {"item_id": "11111111-1111-4111-8111-111111111111"},
             "isBase64Encoded": None,
             "stageVariables": None
         }

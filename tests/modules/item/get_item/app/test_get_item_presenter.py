@@ -11,12 +11,10 @@ class Test_GetItemPresenter:
         event = {
             "version": "2.0",
             "routeKey": "$default",
-            "rawPath": "/my/path",
-            "rawQueryString": "item_id=11111111-1111-4111-8111-111111111111",
+            "rawPath": "/items/11111111-1111-4111-8111-111111111111",
+            "rawQueryString": "",
             "headers": {},
-            "queryStringParameters": {
-                "item_id": "11111111-1111-4111-8111-111111111111"
-            },
+            "queryStringParameters": None,
             "requestContext": {
                 "accountId": "123456789012",
                 "apiId": "<urlid>",
@@ -24,7 +22,7 @@ class Test_GetItemPresenter:
                 "domainPrefix": "<url-id>",
                 "http": {
                     "method": "GET",
-                    "path": "/my/path",
+                    "path": "/items/11111111-1111-4111-8111-111111111111",
                     "protocol": "HTTP/1.1",
                     "sourceIp": "123.123.123.123",
                     "userAgent": "agent"
@@ -36,7 +34,7 @@ class Test_GetItemPresenter:
                 "timeEpoch": 1583348638390
             },
             "body": None,
-            "pathParameters": None,
+            "pathParameters": {"item_id": "11111111-1111-4111-8111-111111111111"},
             "isBase64Encoded": None,
             "stageVariables": None
         }

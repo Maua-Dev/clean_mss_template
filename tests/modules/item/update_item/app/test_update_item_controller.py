@@ -17,8 +17,10 @@ _USER_CLAIMS = {
 }
 
 
-def _body(**fields):
-    return {USER_FROM_AUTHORIZER_KEY: _ADMIN_CLAIMS, **fields}
+def _request(item_id=None, claims=_ADMIN_CLAIMS, **fields):
+    body = {USER_FROM_AUTHORIZER_KEY: claims, **fields}
+    path_params = {"item_id": item_id} if item_id is not None else {}
+    return HttpRequest(body=body, path_params=path_params)
 
 
 class Test_UpdateItemController:
@@ -29,13 +31,13 @@ class Test_UpdateItemController:
         controller = UpdateItemController(usecase=usecase)
 
         item = item_repo.items[0]
-        request = HttpRequest(body=_body(
+        request = _request(
             item_id=str(item.item_id),
             item_name="Ultrabook",
             item_description="Updated description",
             item_type="type2",
             item_image="https://example.com/images/ultrabook.png"
-        ))
+        )
 
         response = controller(request=request)
 
@@ -53,13 +55,15 @@ class Test_UpdateItemController:
         controller = UpdateItemController(usecase=usecase)
 
         item = item_repo.items[0]
-        request = HttpRequest(body={
-            "item_id": str(item.item_id),
-            "item_name": "Ultrabook",
-            "item_description": "Updated description",
-            "item_type": "type2",
-            "item_image": "https://example.com/images/ultrabook.png"
-        })
+        request = HttpRequest(
+            path_params={"item_id": str(item.item_id)},
+            body={
+                "item_name": "Ultrabook",
+                "item_description": "Updated description",
+                "item_type": "type2",
+                "item_image": "https://example.com/images/ultrabook.png"
+            },
+        )
 
         response = controller(request=request)
 
@@ -73,14 +77,14 @@ class Test_UpdateItemController:
         controller = UpdateItemController(usecase=usecase)
 
         item = item_repo.items[0]
-        request = HttpRequest(body={
-            USER_FROM_AUTHORIZER_KEY: _USER_CLAIMS,
-            "item_id": str(item.item_id),
-            "item_name": "Ultrabook",
-            "item_description": "Updated description",
-            "item_type": "type2",
-            "item_image": "https://example.com/images/ultrabook.png"
-        })
+        request = _request(
+            item_id=str(item.item_id),
+            claims=_USER_CLAIMS,
+            item_name="Ultrabook",
+            item_description="Updated description",
+            item_type="type2",
+            item_image="https://example.com/images/ultrabook.png"
+        )
 
         response = controller(request=request)
 
@@ -93,12 +97,12 @@ class Test_UpdateItemController:
         usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
-        request = HttpRequest(body=_body(
+        request = _request(
             item_name="Ultrabook",
             item_description="Updated description",
             item_type="type2",
             item_image="https://example.com/images/ultrabook.png"
-        ))
+        )
 
         response = controller(request=request)
 
@@ -111,12 +115,12 @@ class Test_UpdateItemController:
         usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
-        request = HttpRequest(body=_body(
+        request = _request(
             item_id=str(item_repo.items[0].item_id),
             item_description="Updated description",
             item_type="type2",
             item_image="https://example.com/images/ultrabook.png"
-        ))
+        )
 
         response = controller(request=request)
 
@@ -129,13 +133,13 @@ class Test_UpdateItemController:
         usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
-        request = HttpRequest(body=_body(
+        request = _request(
             item_id=3,
             item_name="Ultrabook",
             item_description="Updated description",
             item_type="type2",
             item_image="https://example.com/images/ultrabook.png"
-        ))
+        )
 
         response = controller(request=request)
 
@@ -150,13 +154,13 @@ class Test_UpdateItemController:
         usecase = UpdateItemUsecase(item_repo, user_repo)
         controller = UpdateItemController(usecase=usecase)
 
-        request = HttpRequest(body=_body(
+        request = _request(
             item_id="99999999-9999-4999-8999-999999999999",
             item_name="Ultrabook",
             item_description="Updated description",
             item_type="type2",
             item_image="https://example.com/images/ultrabook.png"
-        ))
+        )
 
         response = controller(request=request)
 

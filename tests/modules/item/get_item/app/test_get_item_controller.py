@@ -11,7 +11,7 @@ class Test_GetItemController:
         controller = GetItemController(usecase=usecase)
 
         item = item_repo.items[1]
-        request = HttpRequest(query_params={"item_id": str(item.item_id)})
+        request = HttpRequest(path_params={"item_id": str(item.item_id)})
 
         response = controller(request=request)
 
@@ -27,7 +27,7 @@ class Test_GetItemController:
         usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
-        request = HttpRequest(query_params={})
+        request = HttpRequest(path_params={})
 
         response = controller(request=request)
 
@@ -39,7 +39,7 @@ class Test_GetItemController:
         usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
-        request = HttpRequest(query_params={"item_id": 999})
+        request = HttpRequest(path_params={"item_id": 999})
 
         response = controller(request=request)
 
@@ -53,7 +53,7 @@ class Test_GetItemController:
         usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
-        request = HttpRequest(query_params={"item_id": "abc"})
+        request = HttpRequest(path_params={"item_id": "abc"})
 
         response = controller(request=request)
 
@@ -65,7 +65,7 @@ class Test_GetItemController:
         usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
-        request = HttpRequest(query_params={
+        request = HttpRequest(path_params={
             "item_id": "99999999-9999-4999-8999-999999999999"
         })
 

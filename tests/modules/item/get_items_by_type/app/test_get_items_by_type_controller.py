@@ -9,7 +9,7 @@ class Test_GetItemsByTypeController:
         item_repo = ItemRepositoryMock()
         controller = GetItemsByTypeController(GetItemsByTypeUsecase(item_repo))
 
-        response = controller(HttpRequest(query_params={"item_type": "type1"}))
+        response = controller(HttpRequest(query_params={"type": "type1"}))
 
         assert response.status_code == 200
         assert len(response.body["items"]) == 1
@@ -20,7 +20,7 @@ class Test_GetItemsByTypeController:
         item_repo = ItemRepositoryMock()
         controller = GetItemsByTypeController(GetItemsByTypeUsecase(item_repo))
 
-        response = controller(HttpRequest(query_params={"item_type": "invalid"}))
+        response = controller(HttpRequest(query_params={"type": "invalid"}))
 
         assert response.status_code == 400
         assert response.body == "Field item_type is not valid"
@@ -32,3 +32,4 @@ class Test_GetItemsByTypeController:
         response = controller(HttpRequest(query_params={}))
 
         assert response.status_code == 400
+        assert response.body == "Field type is missing"

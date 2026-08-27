@@ -14,13 +14,13 @@ class GetUserByEmailController:
 
     def __call__(self, request: IRequest) -> IResponse:
         try:
-            user_email = request.data.get("user_email")
+            user_email = request.data.get("email") or request.data.get("user_email")
 
             if user_email is None:
-                raise MissingParameters("user_email")
+                raise MissingParameters("email")
             if not isinstance(user_email, str):
                 raise WrongTypeParameter(
-                    fieldName="user_email",
+                    fieldName="email",
                     fieldTypeExpected="str",
                     fieldTypeReceived=type(user_email).__name__
                 )
