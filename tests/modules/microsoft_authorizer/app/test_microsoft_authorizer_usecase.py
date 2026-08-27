@@ -80,7 +80,7 @@ class Test_MicrosoftAuthorizerUsecase:
         )
         usecase = MicrosoftAuthorizerUsecase(graph, self.user_repo)
         method_arn = (
-            "arn:aws:execute-api:sa-east-1:123456789012:abcdef123/dev/POST/create-user"
+            "arn:aws:execute-api:sa-east-1:123456789012:abcdef123/dev/POST/auth-user"
         )
 
         policy = usecase("Bearer token-123", method_arn)
