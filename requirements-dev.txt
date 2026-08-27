@@ -2,4 +2,4 @@
 -r requirements-app.txt
 pytest==8.4.1
 pytest-cov==6.2.1
-boto3==1.43.60
+python-dotenv>=1.0.0

@@ -24,6 +24,8 @@ jobs:
           pip install -r iac/requirements-infra.txt
           npm install -g aws-cdk
 
+      # STAGE/GITHUB_REF_NAME fixos: iac/app.py normaliza; não precisa de step "Resolve STAGE".
+      # No projeto real, renomeie só o prefixo de STACK_NAME (e MSS_NAME se quiser).
       - name: CDK synth
         working-directory: iac
         run: cdk synth
@@ -31,5 +33,7 @@ jobs:
           AWS_REGION: eu-east-1
           AWS_ACCOUNT_ID: "000000000000"
           STACK_NAME: CleanMssTemplateStackCi
+          STAGE: ci
           GITHUB_REF_NAME: ci
           MSS_NAME: clean_mss_template
+          GRAPH_MICROSOFT_ENDPOINT: https://graph.microsoft.com/v1.0/me
