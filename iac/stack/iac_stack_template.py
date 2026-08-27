@@ -72,6 +72,10 @@ class IacStack(Stack):
             "DYNAMO_PARTITION_KEY": "pk",
             "DYNAMO_SORT_KEY": "sk",
             "MSS_NAME": stack_name,
+            "GRAPH_MICROSOFT_ENDPOINT": os.environ.get(
+                "GRAPH_MICROSOFT_ENDPOINT",
+                "https://graph.microsoft.com/v1.0/me", #não há problema em exibir esse endpoint
+            ),
             # "EVENT_SECRET_ARN": self.sm_construct.event_secret.secret_arn
             # variaveis acessives às funções lambda
             # coisas como bucket name, table name etc...
