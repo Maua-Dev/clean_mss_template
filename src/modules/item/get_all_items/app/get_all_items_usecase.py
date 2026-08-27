@@ -5,8 +5,8 @@ from src.shared.domain.repositories.item_repository_interface import IItemReposi
 
 
 class GetAllItemsUsecase:
-    def __init__(self, repo: IItemRepository):
-        self.repo = repo
+    def __init__(self, item_repo: IItemRepository):
+        self.item_repo = item_repo
 
     def __call__(self) -> List[Item]:
-        return self.repo.get_all_item()
+        return self.item_repo.get_all_item()

@@ -8,8 +8,8 @@ from src.shared.helpers.errors.usecase_errors import ForbiddenAction, NoUsersFou
 
 
 class DeleteItemUsecase:
-    def __init__(self, repo: IItemRepository, user_repo: IUserRepository):
-        self.repo = repo
+    def __init__(self, item_repo: IItemRepository, user_repo: IUserRepository):
+        self.item_repo = item_repo
         self.user_repo = user_repo
 
     def __call__(self, item_id: UUID, user_from_authorizer: dict) -> Item:
@@ -25,4 +25,4 @@ class DeleteItemUsecase:
         if user.user_role != UserRoleEnum.ADMIN:
             raise ForbiddenAction("user")
 
-        return self.repo.delete_item(item_id)
+        return self.item_repo.delete_item(item_id)

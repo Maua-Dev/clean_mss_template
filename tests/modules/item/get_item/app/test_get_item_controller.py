@@ -6,11 +6,11 @@ from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMoc
 
 class Test_GetItemController:
     def test_get_item_controller(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
-        item = repo.items[1]
+        item = item_repo.items[1]
         request = HttpRequest(query_params={"item_id": str(item.item_id)})
 
         response = controller(request=request)
@@ -23,8 +23,8 @@ class Test_GetItemController:
         assert response.body["message"] == "the item was retrieved successfully"
 
     def test_get_item_controller_missing_parameters(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
         request = HttpRequest(query_params={})
@@ -35,8 +35,8 @@ class Test_GetItemController:
         assert response.body == "Field item_id is missing"
 
     def test_get_item_controller_wrong_type_parameter(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
         request = HttpRequest(query_params={"item_id": 999})
@@ -49,8 +49,8 @@ class Test_GetItemController:
         )
 
     def test_get_item_controller_entity_error(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
         request = HttpRequest(query_params={"item_id": "abc"})
@@ -61,8 +61,8 @@ class Test_GetItemController:
         assert response.body == "Field item_id is not valid"
 
     def test_get_item_controller_no_items_found(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo=repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo=item_repo)
         controller = GetItemController(usecase=usecase)
 
         request = HttpRequest(query_params={

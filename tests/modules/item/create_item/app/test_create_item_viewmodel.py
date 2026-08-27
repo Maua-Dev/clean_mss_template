@@ -4,8 +4,8 @@ from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMoc
 
 class Test_CreateItemViewModel:
     def test_create_item_viewmodel(self):
-        repo = ItemRepositoryMock()
-        item = repo.items[0]
+        item_repo = ItemRepositoryMock()
+        item = item_repo.items[0]
         result = CreateItemViewmodel(item=item).to_dict()
 
         assert result["item_id"] == str(item.item_id)

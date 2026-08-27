@@ -8,8 +8,8 @@ from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMoc
 
 class Test_GetItemsByTypeUsecase:
     def test_get_items_by_type(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemsByTypeUsecase(repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemsByTypeUsecase(item_repo)
 
         items = usecase("type2")
 
@@ -17,8 +17,8 @@ class Test_GetItemsByTypeUsecase:
         assert items[0].item_type == ItemTypeEnum.TYPE2
 
     def test_get_items_by_type_invalid(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemsByTypeUsecase(repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemsByTypeUsecase(item_repo)
 
         with pytest.raises(EntityError):
             usecase("nope")

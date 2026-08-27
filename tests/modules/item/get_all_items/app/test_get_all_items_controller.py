@@ -5,8 +5,8 @@ from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMoc
 
 class Test_GetAllItemsController:
     def test_get_all_items_controller(self):
-        repo_mock = ItemRepositoryMock()
-        usecase = GetAllItemsUsecase(repo_mock)
+        item_repo = ItemRepositoryMock()
+        usecase = GetAllItemsUsecase(item_repo)
         controller = GetAllItemsController(usecase)
 
         response = controller(None)

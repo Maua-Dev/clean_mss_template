@@ -7,8 +7,8 @@ from src.shared.helpers.errors.domain_errors import EntityError
 
 
 class GetItemsByTypeUsecase:
-    def __init__(self, repo: IItemRepository):
-        self.repo = repo
+    def __init__(self, item_repo: IItemRepository):
+        self.item_repo = item_repo
 
     def __call__(self, item_type: str) -> List[Item]:
         try:
@@ -16,4 +16,4 @@ class GetItemsByTypeUsecase:
         except ValueError as err:
             raise EntityError("item_type") from err
 
-        return self.repo.get_items_by_type(parsed_type)
+        return self.item_repo.get_items_by_type(parsed_type)

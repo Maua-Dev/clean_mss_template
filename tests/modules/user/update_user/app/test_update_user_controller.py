@@ -6,9 +6,9 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_UpdateUserController:
     def test_update_user_controller(self):
-        repo = UserRepositoryMock()
-        controller = UpdateUserController(UpdateUserUsecase(repo))
-        user = repo.users[0]
+        user_repo = UserRepositoryMock()
+        controller = UpdateUserController(UpdateUserUsecase(user_repo))
+        user = user_repo.users[0]
 
         response = controller(HttpRequest(body={
             "user_id": str(user.user_id),
@@ -22,8 +22,8 @@ class Test_UpdateUserController:
         assert response.body["message"] == "the user was updated successfully"
 
     def test_update_user_not_found(self):
-        repo = UserRepositoryMock()
-        controller = UpdateUserController(UpdateUserUsecase(repo))
+        user_repo = UserRepositoryMock()
+        controller = UpdateUserController(UpdateUserUsecase(user_repo))
 
         response = controller(HttpRequest(body={
             "user_id": "99999999-9999-4999-8999-999999999999",

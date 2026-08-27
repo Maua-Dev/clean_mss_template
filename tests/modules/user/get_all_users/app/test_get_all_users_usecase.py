@@ -4,5 +4,5 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_GetAllUsersUsecase:
     def test_get_all_users(self):
-        repo = UserRepositoryMock()
-        assert len(GetAllUsersUsecase(repo)()) == 3
+        user_repo = UserRepositoryMock()
+        assert len(GetAllUsersUsecase(user_repo)()) == 3

@@ -9,15 +9,15 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_GetUserUsecase:
     def test_get_user(self):
-        repo = UserRepositoryMock()
-        usecase = GetUserUsecase(repo)
-        user = repo.users[0]
+        user_repo = UserRepositoryMock()
+        usecase = GetUserUsecase(user_repo)
+        user = user_repo.users[0]
 
         assert usecase(user.user_id) == user
 
     def test_get_user_not_found(self):
-        repo = UserRepositoryMock()
-        usecase = GetUserUsecase(repo)
+        user_repo = UserRepositoryMock()
+        usecase = GetUserUsecase(user_repo)
 
         with pytest.raises(NoUsersFound):
             usecase(UUID("99999999-9999-4999-8999-999999999999"))

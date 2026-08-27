@@ -5,8 +5,8 @@ from src.shared.domain.repositories.item_repository_interface import IItemReposi
 
 
 class GetItemUsecase:
-    def __init__(self, repo: IItemRepository):
-        self.repo = repo
+    def __init__(self, item_repo: IItemRepository):
+        self.item_repo = item_repo
 
     def __call__(self, item_id: UUID) -> Item:
-        return self.repo.get_item(item_id)
+        return self.item_repo.get_item(item_id)

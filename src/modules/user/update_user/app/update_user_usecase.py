@@ -5,8 +5,8 @@ from src.shared.domain.repositories.user_repository_interface import IUserReposi
 
 
 class UpdateUserUsecase:
-    def __init__(self, repo: IUserRepository):
-        self.repo = repo
+    def __init__(self, user_repo: IUserRepository):
+        self.user_repo = user_repo
 
     def __call__(
         self,
@@ -15,7 +15,7 @@ class UpdateUserUsecase:
         user_email: str,
         user_role: str,
     ) -> User:
-        existing = self.repo.get_user(user_id)
+        existing = self.user_repo.get_user(user_id)
 
         updated_user = User(
             user_id=existing.user_id,
@@ -25,4 +25,4 @@ class UpdateUserUsecase:
             created_at=existing.created_at,
         )
 
-        return self.repo.update_user(updated_user)
+        return self.user_repo.update_user(updated_user)

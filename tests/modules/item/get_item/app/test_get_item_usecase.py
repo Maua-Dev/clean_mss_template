@@ -9,17 +9,17 @@ from src.shared.infra.repositories.item_repository_mock import ItemRepositoryMoc
 
 class Test_GetItemUsecase:
     def test_get_item(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo)
-        item = repo.items[0]
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo)
+        item = item_repo.items[0]
 
         result = usecase(item_id=item.item_id)
 
         assert result == item
 
     def test_get_item_not_found(self):
-        repo = ItemRepositoryMock()
-        usecase = GetItemUsecase(repo)
+        item_repo = ItemRepositoryMock()
+        usecase = GetItemUsecase(item_repo)
 
         with pytest.raises(NoItemsFound):
             usecase(item_id=UUID("99999999-9999-4999-8999-999999999999"))

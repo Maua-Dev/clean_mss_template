@@ -9,9 +9,9 @@ from src.shared.infra.repositories.user_repository_mock import UserRepositoryMoc
 
 class Test_UpdateUserUsecase:
     def test_update_user(self):
-        repo = UserRepositoryMock()
-        usecase = UpdateUserUsecase(repo)
-        user = repo.users[0]
+        user_repo = UserRepositoryMock()
+        usecase = UpdateUserUsecase(user_repo)
+        user = user_repo.users[0]
 
         updated = usecase(
             user_id=user.user_id,
@@ -24,8 +24,8 @@ class Test_UpdateUserUsecase:
         assert updated.created_at == user.created_at
 
     def test_update_user_not_found(self):
-        repo = UserRepositoryMock()
-        usecase = UpdateUserUsecase(repo)
+        user_repo = UserRepositoryMock()
+        usecase = UpdateUserUsecase(user_repo)
 
         with pytest.raises(NoUsersFound):
             usecase(

@@ -6,8 +6,8 @@ from src.shared.helpers.errors.usecase_errors import ForbiddenAction, NoUsersFou
 
 
 class CreateItemUsecase:
-    def __init__(self, repo: IItemRepository, user_repo: IUserRepository):
-        self.repo = repo
+    def __init__(self, item_repo: IItemRepository, user_repo: IUserRepository):
+        self.item_repo = item_repo
         self.user_repo = user_repo
 
     def __call__(
@@ -37,4 +37,4 @@ class CreateItemUsecase:
             item_image=item_image
         )
 
-        return self.repo.create_item(item)
+        return self.item_repo.create_item(item)
